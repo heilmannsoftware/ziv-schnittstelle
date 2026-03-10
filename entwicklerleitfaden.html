@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZIV Datenmodell 4.0 - Entwicklerleitfaden</title>
+<style>
+:root {
+    --bg: #f5f5f7;
+    --card-bg: #ffffff;
+    --accent: #0071e3;
+    --accent-light: #e8f2ff;
+    --green: #30d158;
+    --green-light: #e8faf0;
+    --orange: #ff9f0a;
+    --orange-light: #fff8e8;
+    --red: #ff3b30;
+    --red-light: #fff0ef;
+    --purple: #af52de;
+    --purple-light: #f5eafc;
+    --text: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --border: #e5e5e7;
+    --code-bg: #1d1d1f;
+    --code-text: #f5f5f7;
+    --radius: 16px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+/* ===== Hero ===== */
+.hero {
+    background: linear-gradient(135deg, #1d1d1f 0%, #2c2c2e 50%, #1a3a5c 100%);
+    color: white;
+    padding: 80px 24px 60px;
+    text-align: center;
+}
+.hero-content { max-width: 800px; margin: 0 auto; }
+.hero h1 { font-size: 52px; font-weight: 700; letter-spacing: -1px; margin-bottom: 12px; }
+.hero .subtitle { font-size: 22px; color: #a1a1a6; margin-bottom: 12px; font-weight: 400; }
+.hero .version-badge {
+    display: inline-block;
+    background: rgba(0,113,227,0.3);
+    color: #5ac8fa;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 16px;
+}
+
+/* ===== Layout ===== */
+.layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 32px;
+    padding: 32px 24px;
+    align-items: flex-start;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+.sidebar-inner {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+}
+.sidebar h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+}
+.sidebar a {
+    display: block;
+    padding: 8px 12px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    transition: background 0.15s;
+}
+.sidebar a:hover { background: var(--accent-light); color: var(--accent); }
+.sidebar .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    padding: 16px 12px 4px;
+    font-weight: 600;
+}
+
+/* ===== Main Content ===== */
+.main-content { flex: 1; min-width: 0; }
+
+/* ===== Section ===== */
+.section {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px;
+    margin-bottom: 24px;
+}
+.section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+.section h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 28px 0 12px;
+}
+.section h4 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+}
+.section p { margin-bottom: 14px; color: #3a3a3c; }
+.section ul, .section ol { margin: 12px 0 16px 24px; }
+.section li { margin-bottom: 6px; color: #3a3a3c; }
+
+/* ===== Code Blocks ===== */
+pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 12px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-family: 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 16px 0;
+    -webkit-overflow-scrolling: touch;
+}
+code {
+    font-family: 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+}
+p code, li code, td code {
+    background: #f0f0f2;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--accent);
+}
+
+/* ===== Keyword coloring in code blocks ===== */
+.kw { color: #ff7b72; }
+.str { color: #a5d6ff; }
+.cm { color: #8b949e; }
+.fn { color: #d2a8ff; }
+.num { color: #79c0ff; }
+.type { color: #ff9f0a; }
+
+/* ===== Info/Tip/Warning Boxes ===== */
+.callout {
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+.callout-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.callout-body { flex: 1; }
+.callout-body strong { display: block; margin-bottom: 4px; }
+.callout-body p { margin-bottom: 6px; }
+.callout-body p:last-child { margin-bottom: 0; }
+
+.callout-info { background: var(--accent-light); border-left: 4px solid var(--accent); }
+.callout-tip { background: var(--green-light); border-left: 4px solid var(--green); }
+.callout-warning { background: var(--orange-light); border-left: 4px solid var(--orange); }
+.callout-danger { background: var(--red-light); border-left: 4px solid var(--red); }
+
+/* ===== Tables ===== */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+}
+.data-table thead th {
+    text-align: left;
+    padding: 12px 14px;
+    background: var(--bg);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border);
+}
+.data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #f0f0f2;
+    vertical-align: top;
+}
+.data-table tbody tr:nth-child(even) { background: #fafafa; }
+
+/* ===== Diagram / Tree ===== */
+.tree {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 12px;
+    padding: 24px 28px;
+    font-family: 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+.tree .hl { color: #5ac8fa; font-weight: 600; }
+.tree .hl-green { color: #30d158; }
+.tree .hl-orange { color: #ff9f0a; }
+.tree .hl-purple { color: #af52de; }
+.tree .dim { color: #636366; }
+
+/* ===== Step Cards ===== */
+.step-card {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 16px 0;
+    border-left: 4px solid var(--accent);
+}
+.step-card .step-number {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 10px;
+}
+.step-card h4 { display: inline; font-size: 16px; }
+.step-card p { margin-top: 10px; }
+
+/* ===== Badge ===== */
+.badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 5px;
+    vertical-align: middle;
+}
+.badge-blue { background: var(--accent); color: #fff; }
+.badge-green { background: var(--green); color: #fff; }
+.badge-orange { background: var(--orange); color: #fff; }
+.badge-red { background: var(--red); color: #fff; }
+.badge-purple { background: var(--purple); color: #fff; }
+
+/* ===== Anchor Link ===== */
+.anchor-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+.anchor-link:hover { text-decoration: underline; }
+
+/* ===== Back to Top ===== */
+.back-to-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,113,227,0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.back-to-top:hover { transform: scale(1.1); }
+.back-to-top.visible { display: flex; }
+
+/* ===== Footer ===== */
+.footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+    .sidebar { display: none; }
+    .layout { flex-direction: column; padding: 16px; }
+    .hero h1 { font-size: 34px; }
+    .section { padding: 24px; }
+    pre { padding: 16px; font-size: 12px; }
+}
+
+/* ===== Scrollbar ===== */
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ========== HERO ========== -->
+<header class="hero">
+<div class="hero-content">
+    <h1>Entwicklerleitfaden</h1>
+    <p class="subtitle">ZIV Datenmodell 4.0 &mdash; Datenaustausch zwischen Kehrbezirksverwaltungssystemen</p>
+    <span class="version-badge">Version 4.0 &middot; SQLite &middot; Schnittstellenstandard</span>
+</div>
+</header>
+
+<!-- ========== LAYOUT ========== -->
+<div class="layout">
+
+<!-- ===== Sidebar ===== -->
+<nav class="sidebar">
+<div class="sidebar-inner">
+    <h3>Inhalt</h3>
+
+    <div class="section-label">Grundlagen</div>
+    <a href="#einfuehrung">Einf&uuml;hrung</a>
+    <a href="#schnelleinstieg">Schnelleinstieg</a>
+    <a href="#dateien">Dateien &amp; Artefakte</a>
+
+    <div class="section-label">Datenmodell</div>
+    <a href="#hierarchie">Standort-Hierarchie</a>
+    <a href="#anlagen">Anlagen &amp; Feuerst&auml;tten</a>
+    <a href="#spezialisierung">Spezialisierungsmuster</a>
+    <a href="#kehrbuch">Kehrbuch (Snapshot)</a>
+    <a href="#enums">Enums &amp; Stammdaten</a>
+
+    <div class="section-label">Implementierung</div>
+    <a href="#import">Import-Reihenfolge</a>
+    <a href="#export">Export erstellen</a>
+    <a href="#validierung">Validierung</a>
+    <a href="#art-felder">Art-Klassifikation</a>
+
+    <div class="section-label">Praxis</div>
+    <a href="#beispiel-import">Beispiel: Import</a>
+    <a href="#beispiel-export">Beispiel: Export</a>
+    <a href="#fehlerbehandlung">Fehlerbehandlung</a>
+    <a href="#faq">FAQ</a>
+</div>
+</nav>
+
+<!-- ===== Main ===== -->
+<main class="main-content">
+
+<!-- ==================== EINF&Uuml;HRUNG ==================== -->
+<div class="section" id="einfuehrung">
+<h2>Einf&uuml;hrung</h2>
+
+<p>Das <strong>ZIV Datenmodell 4.0</strong> definiert ein einheitliches Datenbankschema f&uuml;r den Austausch von Kehrbezirksdaten zwischen verschiedenen propriet&auml;ren Softwaresystemen der Schornsteinfegerbranche. Es erm&ouml;glicht den verlustfreien Transfer aller relevanten Daten beim Wechsel der Verwaltungssoftware oder bei der &Uuml;bergabe eines Kehrbezirks.</p>
+
+<h3>Wof&uuml;r wird das Modell gebraucht?</h3>
+<ul>
+    <li><strong>Softwarewechsel:</strong> Ein Schornsteinfeger wechselt von Programm A zu Programm B &mdash; alle Daten m&uuml;ssen &uuml;bertragen werden</li>
+    <li><strong>Kehrbezirks&uuml;bergabe:</strong> Ein Bezirk wird an einen neuen bevollm&auml;chtigten Bezirksschornsteinfeger &uuml;bergeben</li>
+    <li><strong>Archivierung:</strong> Erstellen einer standardisierten Datensicherung des Kehrbezirks</li>
+</ul>
+
+<h3>Grundprinzip</h3>
+<p>Der Datenaustausch erfolgt &uuml;ber eine <strong>SQLite-Datenbank</strong>. Das exportierende System schreibt alle Daten in eine <code>.db</code>-Datei nach dem definierten Schema. Das importierende System liest diese Datei und &uuml;berf&uuml;hrt die Daten in seine eigene Struktur.</p>
+
+<div class="tree">
+<span class="dim">Exportierendes System</span>          <span class="dim">Importierendes System</span>
+<span class="hl">Programm A</span>                       <span class="hl">Programm B</span>
+     &boxdr;&boxh; Eigene Datenbank              &boxdr;&boxh; Eigene Datenbank
+     &boxdr;&boxh; Mapping auf ZIV-Schema        &boxdr;&boxh; Mapping von ZIV-Schema
+     &boxv;                                &boxv;
+     &boxur;&boxh;&boxh;&boxh;&boxh;&gt; <span class="hl-green">kehrbezirk_export.db</span> &boxh;&boxh;&boxh;&boxh;&gt;&boxur;&boxh;&boxh;&gt; Import &amp; Zuordnung
+              <span class="dim">(SQLite, ZIV 4.0)</span>
+</div>
+
+<div class="callout callout-info">
+    <span class="callout-icon">&#9432;</span>
+    <div class="callout-body">
+        <strong>Warum SQLite?</strong>
+        <p>SQLite ist plattformunabh&auml;ngig, ben&ouml;tigt keinen Server, ist in jeder Programmiersprache verf&uuml;gbar und die gesamte Datenbank ist eine einzelne Datei. Das macht es ideal f&uuml;r den Offline-Datenaustausch.</p>
+    </div>
+</div>
+</div>
+
+<!-- ==================== SCHNELLEINSTIEG ==================== -->
+<div class="section" id="schnelleinstieg">
+<h2>Schnelleinstieg</h2>
+
+<p>Um das Datenmodell in Ihrer Software zu integrieren, ben&ouml;tigen Sie im Wesentlichen drei Schritte:</p>
+
+<div class="step-card">
+    <span class="step-number">1</span>
+    <h4>Schema erstellen</h4>
+    <p>F&uuml;hren Sie <code>schema.sql</code> und <code>stammdaten_enums.sql</code> gegen eine neue SQLite-Datenbank aus. Damit haben Sie alle 89 Tabellen und 118 Enum-Wertetabellen.</p>
+</div>
+
+<div class="step-card">
+    <span class="step-number">2</span>
+    <h4>Daten mappen</h4>
+    <p>Erstellen Sie ein Mapping zwischen Ihren internen Datenstrukturen und den ZIV-Tabellen. Die <a href="dokumentation.html" class="anchor-link">Dokumentation</a> beschreibt jedes Feld mit Datentyp, Constraints und fachlicher Bedeutung.</p>
+</div>
+
+<div class="step-card">
+    <span class="step-number">3</span>
+    <h4>Import/Export implementieren</h4>
+    <p>Implementieren Sie die Export-Logik (eigene DB &rarr; ZIV-SQLite) und Import-Logik (ZIV-SQLite &rarr; eigene DB). Beachten Sie dabei die <a href="#import" class="anchor-link">Einf&uuml;gereihenfolge</a> der Tabellen.</p>
+</div>
+
+<pre><span class="cm">-- Schnelltest: Schema erstellen und validieren</span>
+<span class="kw">sqlite3</span> export.db &lt; schema.sql
+<span class="kw">sqlite3</span> export.db &lt; stammdaten_enums.sql
+<span class="kw">sqlite3</span> export.db <span class="str">"SELECT count(*) FROM sqlite_master WHERE type='table';"</span>
+<span class="cm">-- Erwartetes Ergebnis: 208 (89 Datentabellen + ~118 Enum-Tabellen + sqlite_sequence)</span></pre>
+</div>
+
+<!-- ==================== DATEIEN ==================== -->
+<div class="section" id="dateien">
+<h2>Dateien &amp; Artefakte</h2>
+
+<table class="data-table">
+<thead><tr><th>Datei</th><th>Zweck</th><th>F&uuml;r Entwickler</th></tr></thead>
+<tbody>
+<tr>
+    <td><code>schema.sql</code></td>
+    <td>DDL-Schema mit allen 89 Tabellen</td>
+    <td><span class="badge badge-red">Pflicht</span> Zum Erstellen der Austausch-DB</td>
+</tr>
+<tr>
+    <td><code>stammdaten_enums.sql</code></td>
+    <td>118 Enum-Wertetabellen mit INSERT-Statements</td>
+    <td><span class="badge badge-red">Pflicht</span> Referenzwerte f&uuml;r CHECK-Constraints</td>
+</tr>
+<tr>
+    <td><code>dokumentation.html</code></td>
+    <td>Interaktive Feld-Dokumentation</td>
+    <td><span class="badge badge-blue">Referenz</span> Nachschlagen von Feldbedeutungen</td>
+</tr>
+<tr>
+    <td><code>Datenmodell4_0.dbml</code></td>
+    <td>Semantisches Datenmodell (DBML-Format)</td>
+    <td><span class="badge badge-blue">Referenz</span> Maschinenlesbares Modell</td>
+</tr>
+<tr>
+    <td><code>relationen_zuordnung.csv</code></td>
+    <td>FK-Beziehungen mit Kardinalit&auml;ten</td>
+    <td><span class="badge badge-green">Hilfreich</span> &Uuml;bersicht &uuml;ber alle Beziehungen</td>
+</tr>
+<tr>
+    <td><code>entwicklerleitfaden.html</code></td>
+    <td>Dieses Dokument</td>
+    <td><span class="badge badge-green">Hilfreich</span> Einstiegshilfe</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- ==================== STANDORT-HIERARCHIE ==================== -->
+<div class="section" id="hierarchie">
+<h2>Standort-Hierarchie</h2>
+
+<p>Das Datenmodell ist als <strong>strenge Baumstruktur</strong> aufgebaut. Jedes Geb&auml;ude, jede Wohnung, jeder Raum und jede Anlage h&auml;ngt an einem definierten Elternobjekt. Der Baum beginnt beim Ort und endet beim einzelnen Raum.</p>
+
+<div class="tree">
+<span class="hl">Ort</span>
+ &boxur;&boxh; <span class="hl">Strasse</span>                              <span class="dim">n Strassen pro Ort</span>
+     &boxur;&boxh; <span class="hl">Grundstueck</span>                        <span class="dim">n Grundst&uuml;cke pro Strasse</span>
+         &boxdr;&boxh; <span class="hl-purple">Grundstueck_Eigentuemer</span>          <span class="dim">n:m &uuml;ber Junction-Table</span>
+         &boxur;&boxh; <span class="hl">Gebaeude_Gebaeudeteil</span>            <span class="dim">n Geb&auml;ude pro Grundst&uuml;ck</span>
+             &boxdr;&boxh; <span class="hl-purple">Gebaeude_Eigentuemer</span>         <span class="dim">n:m &uuml;ber Junction-Table</span>
+             &boxdr;&boxh; <span class="hl-orange">Abgasanlage</span>                  <span class="dim">n Abgasanlagen pro Geb&auml;ude</span>
+             &boxdr;&boxh; <span class="hl-orange">Lueftungsanlage</span>              <span class="dim">n L&uuml;ftungsanlagen pro Geb&auml;ude</span>
+             &boxdr;&boxh; <span class="hl-orange">Dunstabzuganlage_Leitung</span>     <span class="dim">n Dunstabzugsleitungen pro Geb&auml;ude</span>
+             &boxur;&boxh; <span class="hl-green">Nutzungseinheit</span>              <span class="dim">n Nutzungseinheiten pro Geb&auml;ude</span>
+                  &boxdr;&boxh; <span class="hl-orange">Brennstoffversorgungsanlage</span>
+                  &boxdr;&boxh; <span class="hl-orange">Raeucheranlage</span>
+                  &boxur;&boxh; <span class="hl-green">Wohnung</span>                  <span class="dim">n Wohnungen pro Nutzungseinheit</span>
+                       &boxur;&boxh; <span class="hl-green">Raum</span>                 <span class="dim">n R&auml;ume pro Wohnung</span>
+                            &boxdr;&boxh; <span class="hl-orange">Feuerstaette</span>     <span class="dim">n Feuerst&auml;tten pro Raum</span>
+                            &boxur;&boxh; <span class="hl-orange">Waermepumpe</span>      <span class="dim">n W&auml;rmepumpen pro Raum</span>
+</div>
+
+<div class="callout callout-warning">
+    <span class="callout-icon">&#9888;</span>
+    <div class="callout-body">
+        <strong>Wichtig: Einf&uuml;gereihenfolge beachten!</strong>
+        <p>Beim Import m&uuml;ssen Eltern-Datens&auml;tze <em>vor</em> ihren Kindern eingef&uuml;gt werden, da Foreign Keys aktiv sind. Ort &rarr; Strasse &rarr; Grundstueck &rarr; Gebaeude &rarr; Nutzungseinheit &rarr; Wohnung &rarr; Raum &rarr; Feuerstaette.</p>
+    </div>
+</div>
+
+<h3>Eigent&uuml;mer (n:m-Beziehung)</h3>
+<p>Grundst&uuml;cke und Geb&auml;ude k&ouml;nnen <strong>mehrere Eigent&uuml;mer</strong> haben. Dies wird &uuml;ber Junction-Tables abgebildet:</p>
+
+<pre><span class="cm">-- Eigent&uuml;mer eines Grundst&uuml;cks abfragen</span>
+<span class="kw">SELECT</span> k.Name, k.Vorname, ge.Anteil, ge.Sprecher
+<span class="kw">FROM</span> Grundstueck_Eigentuemer ge
+<span class="kw">JOIN</span> Kommunikation k <span class="kw">ON</span> k.ID_Kommunikation = ge.ID_Kommunikation
+<span class="kw">WHERE</span> ge.ID_Grundstueck = <span class="num">42</span>;
+
+<span class="cm">-- Struktur der Junction-Table:</span>
+<span class="cm">-- ID_Grundstueck_Eigentuemer  (PK)</span>
+<span class="cm">-- ID_Grundstueck              (FK &rarr; Grundstueck)</span>
+<span class="cm">-- ID_Kommunikation            (FK &rarr; Kommunikation, = Person/Firma)</span>
+<span class="cm">-- Anteil                      (REAL, z.B. 0.5 f&uuml;r 50%)</span>
+<span class="cm">-- Sprecher                    (BOOL, Sprecher der Eigent&uuml;mergemeinschaft)</span></pre>
+</div>
+
+<!-- ==================== ANLAGEN ==================== -->
+<div class="section" id="anlagen">
+<h2>Anlagen &amp; Feuerst&auml;tten</h2>
+
+<p>Anlagen sind technische Einrichtungen in einem Geb&auml;ude, die vom Schornsteinfeger gepr&uuml;ft und gewartet werden. Sie sind die zentralen Fachobjekte des Datenmodells.</p>
+
+<h3>Anlagentypen und ihre Zuordnung</h3>
+
+<table class="data-table">
+<thead><tr><th>Anlage</th><th>H&auml;ngt an</th><th>Beschreibung</th></tr></thead>
+<tbody>
+<tr><td><code>Abgasanlage</code></td><td>Gebaeude_Gebaeudeteil</td><td>Schornsteine, Abgasleitungen, Abgassch&auml;chte</td></tr>
+<tr><td><code>Feuerstaette</code></td><td>Raum</td><td>Heizungsanlage, Kamin, Ofen (steht in einem Raum)</td></tr>
+<tr><td><code>Waermepumpe</code></td><td>Raum</td><td>W&auml;rmepumpe (steht in einem Raum)</td></tr>
+<tr><td><code>Lueftungsanlage</code></td><td>Gebaeude_Gebaeudeteil</td><td>Zentrale L&uuml;ftungsanlage</td></tr>
+<tr><td><code>Raumlueftung</code></td><td>Gebaeude_Gebaeudeteil</td><td>Dezentrale Rauml&uuml;ftung</td></tr>
+<tr><td><code>Dunstabzuganlage_Leitung</code></td><td>Gebaeude_Gebaeudeteil</td><td>Dunstabzugsleitung (Abluftschacht)</td></tr>
+<tr><td><code>Brennstoffversorgungsanlage</code></td><td>Nutzungseinheit</td><td>Gastank, &Ouml;ltank etc.</td></tr>
+<tr><td><code>Raeucheranlage</code></td><td>Nutzungseinheit</td><td>R&auml;ucheranlagen (gewerblich)</td></tr>
+</tbody>
+</table>
+
+<h3>Abgasanlage im Detail</h3>
+<p>Eine Abgasanlage (Schornstein) hat eine hierarchische Unterstruktur:</p>
+
+<div class="tree">
+<span class="hl">Abgasanlage</span>                    <span class="dim">z.B. ein Schornstein</span>
+ &boxdr;&boxh; <span class="hl-green">Abschnitt</span> <span class="dim">(Sortiernummer)</span>     <span class="dim">z.B. 3 Abschnitte &uuml;bereinander</span>
+ &boxv;   &boxur;&boxh; <span class="hl-green">Schicht</span>                  <span class="dim">Innenschicht, Au&szlig;enschicht etc.</span>
+ &boxdr;&boxh; <span class="hl-orange">Muendung</span> <span class="dim">(1:1, UNIQUE)</span>      <span class="dim">Genau eine M&uuml;ndung pro Abgasanlage</span>
+ &boxdr;&boxh; <span class="hl-orange">Reinigungsart</span>              <span class="dim">n Reinigungsarten pro Abgasanlage</span>
+ &boxur;&boxh; <span class="hl-purple">Feuerstaette</span> <span class="dim">(n:1)</span>         <span class="dim">n Feuerst&auml;tten angeschlossen</span>
+</div>
+
+<h3>Dunstabzug-Hierarchie</h3>
+<div class="tree">
+<span class="hl">Dunstabzuganlage_Leitung</span>         <span class="dim">Dunstabzugsschacht im Geb&auml;ude</span>
+ &boxdr;&boxh; <span class="hl-green">Abschnitt_Dunstabzugsleitung</span>  <span class="dim">Abschnitte mit Sortiernummer</span>
+ &boxdr;&boxh; <span class="hl-green">Ventilator_Dunstabzug</span>        <span class="dim">Ventilatoren</span>
+ &boxur;&boxh; <span class="hl-orange">Dunstabzugsanlage_Haube</span>      <span class="dim">Hauben (in einem Raum)</span>
+      &boxur;&boxh; <span class="hl-purple">Dunstabzugsanlage_Feuerstaette</span> <span class="dim">Feuerst&auml;tten an der Haube</span>
+</div>
+</div>
+
+<!-- ==================== SPEZIALISIERUNG ==================== -->
+<div class="section" id="spezialisierung">
+<h2>Spezialisierungsmuster</h2>
+
+<p>Feuerst&auml;tten verwenden ein <strong>Table-per-Type</strong>-Muster. Es gibt eine Basistabelle <code>Feuerstaette</code> mit gemeinsamen Feldern und spezialisierte Tabellen f&uuml;r jeden Brennstofftyp mit einer <strong>1:1-Beziehung</strong>.</p>
+
+<div class="tree">
+<span class="hl">Feuerstaette</span> <span class="dim">(Basistabelle: Raum, Abgasanlage, gemeinsame Felder)</span>
+ &boxdr;&boxh; <span class="hl-green">Gasfeuerstaette</span>                  <span class="dim">1:1 &rarr; spezifische Gas-Felder</span>
+ &boxv;    &boxur;&boxh; Mess_Pruefergebnisse_Gas...       <span class="dim">n Messergebnisse</span>
+ &boxdr;&boxh; <span class="hl-orange">Oelfeuerstaette</span>                  <span class="dim">1:1 &rarr; spezifische &Ouml;l-Felder</span>
+ &boxv;    &boxur;&boxh; Mess_Pruefergebnisse_Oel...       <span class="dim">n Messergebnisse</span>
+ &boxdr;&boxh; <span class="hl-purple">Feste_Brennstoff_Feuerstaette</span>    <span class="dim">1:1 &rarr; Holz/Kohle/Pellets</span>
+ &boxv;    &boxdr;&boxh; Mess_Pruefergebnisse_..._HK       <span class="dim">n Handkehrmessungen</span>
+ &boxv;    &boxur;&boxh; Mess_Pruefergebnisse_..._ERF      <span class="dim">n ERF-Messungen</span>
+ &boxur;&boxh; <span class="hl">Sonderfeuerstaetten</span>              <span class="dim">1:1 &rarr; BHKW, Brennstoffzellen etc.</span>
+      &boxur;&boxh; Mess_Pruefergebnisse_Sonder...    <span class="dim">n Messergebnisse</span>
+</div>
+
+<pre><span class="cm">-- Beispiel: Gas-Feuerst&auml;tte mit Messergebnissen abfragen</span>
+<span class="kw">SELECT</span>
+    f.ID_Feuerstaette,
+    g.Nennwaermeleistung,
+    g.Hersteller,
+    m.Abgastemperatur,
+    m.CO_Wert,
+    m.Datum_Messung
+<span class="kw">FROM</span> Feuerstaette f
+<span class="kw">JOIN</span> Gasfeuerstaette g <span class="kw">ON</span> g.ID_Feuerstaette = f.ID_Feuerstaette
+<span class="kw">LEFT JOIN</span> Mess_Pruefergebnisse_Gasfeuerstaette m
+    <span class="kw">ON</span> m.ID_Gasfeuerstaette = g.ID_Gasfeuerstaette
+<span class="kw">WHERE</span> f.ID_Raum = <span class="num">123</span>;</pre>
+
+<div class="callout callout-tip">
+    <span class="callout-icon">&#128161;</span>
+    <div class="callout-body">
+        <strong>Tipp f&uuml;r Entwickler</strong>
+        <p>Beim Import einer Feuerst&auml;tte m&uuml;ssen Sie immer <em>zuerst</em> den Basisdatensatz in <code>Feuerstaette</code> anlegen und dann den spezialisierten Datensatz (z.B. <code>Gasfeuerstaette</code>) mit Verweis auf die neue ID.</p>
+    </div>
+</div>
+</div>
+
+<!-- ==================== KEHRBUCH ==================== -->
+<div class="section" id="kehrbuch">
+<h2>Kehrbuch (Snapshot-Prinzip)</h2>
+
+<p>Das Kehrbuch ist das zentrale Nachweisinstrument des Schornsteinfegers. Es dokumentiert f&uuml;r einen <strong>bestimmten Zeitraum</strong> (Gesch&auml;ftsjahr) den Zustand aller Anlagen und durchgef&uuml;hrten T&auml;tigkeiten.</p>
+
+<div class="callout callout-info">
+    <span class="callout-icon">&#9432;</span>
+    <div class="callout-body">
+        <strong>Warum Snapshot?</strong>
+        <p>Stammdaten (Eigent&uuml;mer, Adressen) k&ouml;nnen sich &auml;ndern. Das Kehrbuch speichert den Zustand <em>zum Zeitpunkt der Eintragung</em>. Daher gibt es eigene Kehrbuch-Tabellen, die Stammdaten-Referenzen einfrieren.</p>
+    </div>
+</div>
+
+<div class="tree">
+<span class="hl">Kehrbuch</span> <span class="dim">(pro Kehrbezirk + Zeitraum)</span>
+ &boxur;&boxh; <span class="hl-green">Kehrbuch_Gebaeude</span>               <span class="dim">Geb&auml;ude-Snapshot (+ Eigent&uuml;mer, Verwalter, Mieter)</span>
+      &boxdr;&boxh; <span class="hl-purple">Kehrbuch_Gebaeude_Eigentuemer</span> <span class="dim">Eigent&uuml;mer zum Kehrbuchzeitpunkt</span>
+      &boxdr;&boxh; <span class="hl-green">Kehrbuch_Nutzungseinheit</span>     <span class="dim">Nutzungseinheit-Snapshot</span>
+      &boxv;    &boxdr;&boxh; <span class="hl-orange">Kehrbuch_Abnahme</span>           <span class="dim">Referenz &rarr; Abnahme</span>
+      &boxv;    &boxur;&boxh; <span class="hl-orange">Kehrbuch_Anlassbez._Ueberpruefung</span>
+      &boxur;&boxh; <span class="hl">Kehrbuch_Anlage</span>              <span class="dim">Polymorphe Anlagen-Referenz</span>
+           &boxur;&boxh; <span class="hl-orange">Kehrbuch_Taetigkeit</span>       <span class="dim">Durchgef&uuml;hrte Arbeiten</span>
+                &boxur;&boxh; <span class="hl-purple">Mangel</span>               <span class="dim">Festgestellte M&auml;ngel</span>
+</div>
+
+<h3>Kehrbuch_Anlage: Polymorphe Referenz</h3>
+<p>Die Tabelle <code>Kehrbuch_Anlage</code> hat <strong>8 optionale Foreign Keys</strong>, von denen genau einer gesetzt sein sollte. So wird jede beliebige Anlage im Kehrbuch referenziert:</p>
+
+<pre><span class="cm">-- Kehrbuch_Anlage: Genau ein FK ist gesetzt</span>
+ID_Abgasanlage                 <span class="cm">-- Schornstein/Abgasanlage</span>
+ID_Feuerstaette                <span class="cm">-- Feuerst&auml;tte</span>
+ID_Raumluftoeffnung            <span class="cm">-- Raum&ouml;ffnung</span>
+ID_Dunstabzuganlage_Leitung    <span class="cm">-- Dunstabzugsschacht</span>
+ID_Lueftungsanlage             <span class="cm">-- L&uuml;ftungsanlage</span>
+ID_Raumlueftung                <span class="cm">-- Rauml&uuml;ftung</span>
+ID_Raeucheranlage              <span class="cm">-- R&auml;ucheranlage</span>
+ID_Brennstoffversorgungsanlage <span class="cm">-- Brennstoffversorgung</span></pre>
+</div>
+
+<!-- ==================== ENUMS ==================== -->
+<div class="section" id="enums">
+<h2>Enums &amp; Stammdaten</h2>
+
+<p>Das Modell verwendet <strong>118 Enum-Tabellen</strong> als Wertelisten. Diese sind in <code>stammdaten_enums.sql</code> definiert und stellen sicher, dass nur g&uuml;ltige Werte verwendet werden.</p>
+
+<h3>Aufbau einer Enum-Tabelle</h3>
+<pre><span class="kw">CREATE TABLE IF NOT EXISTS</span> Enum_AbgasanlageArt (
+    Wert <span class="type">TEXT</span> <span class="kw">PRIMARY KEY</span>,
+    Beschreibung <span class="type">TEXT</span>
+);
+
+<span class="kw">INSERT INTO</span> Enum_AbgasanlageArt (Wert, Beschreibung) <span class="kw">VALUES</span>
+  (<span class="str">'SN'</span>, <span class="str">'Schornstein | Erl&auml;uterung: ...'</span>),
+  (<span class="str">'AL'</span>, <span class="str">'Abgasleitung (ohne Schacht) | ...'</span>),
+  (<span class="str">'VS'</span>, <span class="str">'Verbindungsst&uuml;ck | ...'</span>);</pre>
+
+<h3>Verwendung in der Datentabelle</h3>
+<p>Die Datentabellen verwenden <code>CHECK</code>-Constraints, die auf die g&uuml;ltigen Enum-Werte verweisen:</p>
+
+<pre><span class="kw">CREATE TABLE</span> Abgasanlage (
+    ...
+    Art <span class="type">TEXT</span> <span class="kw">CHECK</span>(Art <span class="kw">IN</span> (<span class="str">'AB'</span>,<span class="str">'AL'</span>,<span class="str">'AT'</span>,<span class="str">'AX'</span>,<span class="str">'LA'</span>,...)),
+    ...
+);</pre>
+
+<div class="callout callout-warning">
+    <span class="callout-icon">&#9888;</span>
+    <div class="callout-body">
+        <strong>CHECK-Constraints sind aktiv!</strong>
+        <p>SQLite pr&uuml;ft die CHECK-Constraints beim INSERT. Stellen Sie sicher, dass Ihre Werte exakt mit den Enum-Werten &uuml;bereinstimmen (case-sensitive!). Eine Abfrage der Enum-Tabelle vor dem Export hilft, Zuordnungsfehler zu vermeiden.</p>
+    </div>
+</div>
+
+<h3>Beispiele f&uuml;r Enum-Kategorien</h3>
+<table class="data-table">
+<thead><tr><th>Enum-Tabelle</th><th>Verwendet in</th><th>Beispielwerte</th></tr></thead>
+<tbody>
+<tr><td><code>Enum_AbgasanlageArt</code></td><td>Abgasanlage.Art</td><td>SN, AL, VS, LA, LU, ...</td></tr>
+<tr><td><code>Enum_ArtGebaeude</code></td><td>Gebaeude_Gebaeudeteil.Art</td><td>EH, MH, HA, GA, ...</td></tr>
+<tr><td><code>Enum_Brennstoff</code></td><td>Feuerstaette.Brennstoff</td><td>Erdgas, Heiz&ouml;l, Holz, ...</td></tr>
+<tr><td><code>Enum_Etage</code></td><td>7 Felder in verschiedenen Tabellen</td><td>KG, EG, 01, 02, ..., DG</td></tr>
+<tr><td><code>Enum_WaermepumpeBauart</code></td><td>Waermepumpe.Bauart</td><td>Luft, Wasser, Sole, ...</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ==================== IMPORT-REIHENFOLGE ==================== -->
+<div class="section" id="import">
+<h2>Import-Reihenfolge</h2>
+
+<p>Da Foreign Keys aktiviert sind (<code>PRAGMA foreign_keys = ON</code>), m&uuml;ssen Datens&auml;tze in der richtigen Reihenfolge eingef&uuml;gt werden. Die <code>schema.sql</code> ist bereits <strong>topologisch sortiert</strong> &mdash; die Tabellenreihenfolge in der Datei ist eine g&uuml;ltige Einf&uuml;gereihenfolge.</p>
+
+<h3>Empfohlene Reihenfolge (vereinfacht)</h3>
+
+<table class="data-table">
+<thead><tr><th>Phase</th><th>Tabellen</th><th>Begr&uuml;ndung</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-blue">1</span></td><td>Meta</td><td>Metadaten zum Export (Version, Software, Datum)</td></tr>
+<tr><td><span class="badge badge-blue">2</span></td><td>Kommunikation, Vertreter</td><td>Stammdaten ohne FK-Abh&auml;ngigkeiten untereinander</td></tr>
+<tr><td><span class="badge badge-blue">3</span></td><td>Kehrbezirk, Mitarbeiter, Fremdfirma, UAB</td><td>Verwaltung (referenziert Kommunikation/Vertreter)</td></tr>
+<tr><td><span class="badge badge-green">4</span></td><td>Ort &rarr; Strasse &rarr; Grundstueck &rarr; Gebaeude</td><td>Standort-Hierarchie top-down</td></tr>
+<tr><td><span class="badge badge-green">5</span></td><td>Nutzungseinheit &rarr; Wohnung &rarr; Raum</td><td>Nutzungs-Hierarchie</td></tr>
+<tr><td><span class="badge badge-orange">6</span></td><td>Abgasanlage, Abschnitt, Schicht, M&uuml;ndung</td><td>Abgasanlagen mit Unterstruktur</td></tr>
+<tr><td><span class="badge badge-orange">7</span></td><td>Feuerstaette &rarr; Gas-/&Ouml;l-/Feststoff-Spez.</td><td>Feuerst&auml;tten (brauchen Raum + Abgasanlage)</td></tr>
+<tr><td><span class="badge badge-orange">8</span></td><td>Mess_Pruefergebnisse_*</td><td>Messergebnisse (brauchen Feuerst&auml;tten)</td></tr>
+<tr><td><span class="badge badge-purple">9</span></td><td>Hoheitliche: Abnahme, Feuerstaettenschau, ...</td><td>Beh&ouml;rdliche T&auml;tigkeiten</td></tr>
+<tr><td><span class="badge badge-purple">10</span></td><td>Bescheid, Leistung, Rechnung</td><td>Bescheide und Abrechnung</td></tr>
+<tr><td><span class="badge badge-red">11</span></td><td>Kehrbuch &rarr; KB_Gebaeude &rarr; KB_Anlage &rarr; ...</td><td>Kehrbuch-Snapshots (referenziert alles)</td></tr>
+<tr><td><span class="badge badge-red">12</span></td><td>Dokument, Mangel, Gefaehrdungsbeurteilung</td><td>Querschnittsobjekte (viele optionale FKs)</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-tip">
+    <span class="callout-icon">&#128161;</span>
+    <div class="callout-body">
+        <strong>Pragmatischer Ansatz</strong>
+        <p>Sie k&ouml;nnen <code>PRAGMA foreign_keys = OFF</code> setzen, alle Daten in beliebiger Reihenfolge laden, und danach mit <code>PRAGMA foreign_key_check</code> die Integrit&auml;t pr&uuml;fen. Das ist oft einfacher als eine exakte Sortierung.</p>
+    </div>
+</div>
+</div>
+
+<!-- ==================== EXPORT ==================== -->
+<div class="section" id="export">
+<h2>Export erstellen</h2>
+
+<p>Als Softwarehersteller implementieren Sie den Export Ihrer internen Daten in das ZIV-Format. Hier die empfohlenen Schritte:</p>
+
+<h3>Schritt-f&uuml;r-Schritt</h3>
+
+<div class="step-card">
+    <span class="step-number">1</span>
+    <h4>Leere Datenbank erzeugen</h4>
+    <p>Erstellen Sie eine neue SQLite-Datei und f&uuml;hren Sie <code>schema.sql</code> sowie <code>stammdaten_enums.sql</code> aus.</p>
+</div>
+
+<div class="step-card">
+    <span class="step-number">2</span>
+    <h4>Meta-Tabelle bef&uuml;llen</h4>
+    <p>Schreiben Sie einen Eintrag in <code>Meta</code> mit Exportdatum, Softwarename, Version und Modellversion (<code>4.0</code>).</p>
+</div>
+
+<div class="step-card">
+    <span class="step-number">3</span>
+    <h4>ID-Mapping aufbauen</h4>
+    <p>Ihre internen IDs weichen vermutlich von den ZIV-IDs ab. Bauen Sie w&auml;hrend des Exports eine Mapping-Tabelle auf: <code>interne_id &rarr; ziv_id</code>. Das brauchen Sie, um Foreign Keys korrekt zu setzen.</p>
+</div>
+
+<div class="step-card">
+    <span class="step-number">4</span>
+    <h4>Daten schreiben (top-down)</h4>
+    <p>Schreiben Sie die Daten in der <a href="#import" class="anchor-link">Import-Reihenfolge</a>. Nutzen Sie <code>AUTOINCREMENT</code>-IDs &mdash; SQLite vergibt diese automatisch, wenn Sie die ID-Spalte beim INSERT weglassen.</p>
+</div>
+
+<div class="step-card">
+    <span class="step-number">5</span>
+    <h4>Validieren</h4>
+    <p>Pr&uuml;fen Sie die Datei mit <code>PRAGMA integrity_check</code> und <code>PRAGMA foreign_key_check</code>.</p>
+</div>
+
+<pre><span class="cm">-- Meta-Eintrag beim Export</span>
+<span class="kw">INSERT INTO</span> Meta (Abgabe, Version_Modell, Software, Version_Software, Geschaeftsjahr)
+<span class="kw">VALUES</span> (
+    <span class="str">'2026-03-09T14:30:00'</span>,  <span class="cm">-- Exportzeitpunkt</span>
+    <span class="str">'4.0'</span>,                  <span class="cm">-- ZIV-Modellversion</span>
+    <span class="str">'MeineProgramm Pro'</span>,    <span class="cm">-- Name Ihrer Software</span>
+    <span class="str">'3.2.1'</span>,                <span class="cm">-- Ihre Softwareversion</span>
+    <span class="num">2025</span>                    <span class="cm">-- Gesch&auml;ftsjahr</span>
+);</pre>
+</div>
+
+<!-- ==================== VALIDIERUNG ==================== -->
+<div class="section" id="validierung">
+<h2>Validierung</h2>
+
+<p>Nach dem Bef&uuml;llen der Export-Datenbank sollten Sie mehrere Pr&uuml;fungen durchf&uuml;hren:</p>
+
+<h3>1. Strukturelle Integrit&auml;t</h3>
+<pre><span class="cm">-- Allgemeine Integrit&auml;tspr&uuml;fung</span>
+<span class="kw">PRAGMA</span> integrity_check;
+<span class="cm">-- Erwartet: "ok"</span>
+
+<span class="cm">-- Foreign-Key-Pr&uuml;fung (findet verwaiste Referenzen)</span>
+<span class="kw">PRAGMA</span> foreign_key_check;
+<span class="cm">-- Erwartet: keine Ergebnisse (= keine Verletzungen)</span></pre>
+
+<h3>2. Vollst&auml;ndigkeitspr&uuml;fungen</h3>
+<pre><span class="cm">-- Gibt es mindestens einen Kehrbezirk?</span>
+<span class="kw">SELECT</span> count(*) <span class="kw">FROM</span> Kehrbezirk;
+
+<span class="cm">-- Haben alle Geb&auml;ude ein Grundst&uuml;ck?</span>
+<span class="kw">SELECT</span> g.ID_Gebaeude_Gebaeudeteil
+<span class="kw">FROM</span> Gebaeude_Gebaeudeteil g
+<span class="kw">LEFT JOIN</span> Grundstueck gr <span class="kw">ON</span> gr.ID_Grundstueck = g.ID_Grundstueck
+<span class="kw">WHERE</span> gr.ID_Grundstueck <span class="kw">IS NULL</span>;
+<span class="cm">-- Erwartet: keine Ergebnisse</span>
+
+<span class="cm">-- Haben alle Feuerst&auml;tten genau eine Spezialisierung?</span>
+<span class="kw">SELECT</span> f.ID_Feuerstaette,
+    (g.ID_Gasfeuerstaette <span class="kw">IS NOT NULL</span>) +
+    (o.ID_Oelfeuerstaette <span class="kw">IS NOT NULL</span>) +
+    (fb.ID_Feste_Brennstoff_Feuerstaette <span class="kw">IS NOT NULL</span>) +
+    (s.ID_Sonderfeuerstaetten <span class="kw">IS NOT NULL</span>) <span class="kw">AS</span> anz
+<span class="kw">FROM</span> Feuerstaette f
+<span class="kw">LEFT JOIN</span> Gasfeuerstaette g <span class="kw">ON</span> g.ID_Feuerstaette = f.ID_Feuerstaette
+<span class="kw">LEFT JOIN</span> Oelfeuerstaette o <span class="kw">ON</span> o.ID_Feuerstaette = f.ID_Feuerstaette
+<span class="kw">LEFT JOIN</span> Feste_Brennstoff_Feuerstaette fb <span class="kw">ON</span> fb.ID_Feuerstaette = f.ID_Feuerstaette
+<span class="kw">LEFT JOIN</span> Sonderfeuerstaetten s <span class="kw">ON</span> s.ID_Feuerstaette = f.ID_Feuerstaette
+<span class="kw">WHERE</span> anz != <span class="num">1</span>;
+<span class="cm">-- Erwartet: keine Ergebnisse (jede Feuerst&auml;tte hat genau 1 Typ)</span></pre>
+
+<h3>3. Validierung mit Python</h3>
+<pre><span class="kw">import</span> sqlite3
+
+conn = sqlite3.connect(<span class="str">'export.db'</span>)
+conn.execute(<span class="str">'PRAGMA foreign_keys = ON'</span>)
+
+<span class="cm"># Strukturcheck</span>
+result = conn.execute(<span class="str">'PRAGMA integrity_check'</span>).fetchone()
+<span class="kw">assert</span> result[<span class="num">0</span>] == <span class="str">'ok'</span>, <span class="str">f'Integrit&auml;tsfehler: {result}'</span>
+
+<span class="cm"># FK-Check</span>
+violations = conn.execute(<span class="str">'PRAGMA foreign_key_check'</span>).fetchall()
+<span class="kw">assert</span> len(violations) == <span class="num">0</span>, <span class="str">f'FK-Verletzungen: {violations}'</span>
+
+<span class="cm"># Tabellenanzahl pr&uuml;fen</span>
+tables = conn.execute(
+    <span class="str">"SELECT count(*) FROM sqlite_master WHERE type='table'"</span>
+).fetchone()[<span class="num">0</span>]
+<span class="fn">print</span>(<span class="str">f'Tabellen: {tables}'</span>)  <span class="cm"># Erwartet: ~208</span>
+
+conn.close()</pre>
+</div>
+
+<!-- ==================== ART-KLASSIFIKATION ==================== -->
+<div class="section" id="art-felder">
+<h2>Art-Klassifikation der Felder</h2>
+
+<p>Jedes Feld im Datenmodell ist mit einer <strong>Art-Kennzeichnung</strong> versehen, die Ihnen beim Mapping hilft. Diese Kennzeichnung gibt an, woher das Feld stammt und ob es f&uuml;r den Feuerst&auml;ttenbescheid relevant ist.</p>
+
+<table class="data-table">
+<thead><tr><th>Chip</th><th>Bedeutung</th><th>Anzahl</th><th>Hinweis f&uuml;r Entwickler</th></tr></thead>
+<tbody>
+<tr>
+    <td><span class="badge badge-blue">QS</span></td>
+    <td>Qualit&auml;tssicherung / eigene Daten</td>
+    <td>~350 Felder</td>
+    <td>Interne Verwaltungsdaten, nicht auf dem Feuerst&auml;ttenbescheid</td>
+</tr>
+<tr>
+    <td><span class="badge badge-green">19K</span></td>
+    <td>&sect; 19 Kommunikation (Kundenrelevant)</td>
+    <td>~210 Felder</td>
+    <td>Felder, die auf dem Feuerst&auml;ttenbescheid f&uuml;r den Kunden erscheinen</td>
+</tr>
+<tr>
+    <td><span class="badge badge-green">19B</span></td>
+    <td>&sect; 19 Beh&ouml;rde (Meldepflichtig)</td>
+    <td>~590 Felder</td>
+    <td>Felder, die an die Aufsichtsbeh&ouml;rde gemeldet werden</td>
+</tr>
+<tr>
+    <td><span class="badge" style="background:#ff3b30;color:#fff;">NEIN</span></td>
+    <td>Nicht im Austauschformat vorgesehen</td>
+    <td>~21 Felder</td>
+    <td>K&ouml;nnen beim Export leer gelassen werden</td>
+</tr>
+</tbody>
+</table>
+
+<div class="callout callout-tip">
+    <span class="callout-icon">&#128161;</span>
+    <div class="callout-body">
+        <strong>Priorisierung beim Mapping</strong>
+        <p>Beginnen Sie mit den <span class="badge badge-green">19K</span> und <span class="badge badge-green">19B</span> Feldern &mdash; diese sind gesetzlich vorgeschrieben. <span class="badge badge-blue">QS</span>-Felder sind erg&auml;nzende Qualit&auml;tsdaten, die den Austausch verbessern.</p>
+    </div>
+</div>
+
+<p>Zus&auml;tzlich gibt es Varianten wie <span class="badge badge-blue">QS MGH</span> (Mehrgeb&auml;udehaus-spezifisch) oder <span class="badge badge-green">19K MGH</span>. Die Zuordnung finden Sie in der <a href="dokumentation.html" class="anchor-link">interaktiven Dokumentation</a> in der Spalte &ldquo;Art&rdquo;.</p>
+</div>
+
+<!-- ==================== BEISPIEL IMPORT ==================== -->
+<div class="section" id="beispiel-import">
+<h2>Beispiel: Vollst&auml;ndiger Import (Python)</h2>
+
+<p>Dieses Beispiel zeigt, wie Sie eine ZIV-Export-Datei einlesen und die Standort-Hierarchie in Ihre eigene Datenstruktur &uuml;berf&uuml;hren.</p>
+
+<pre><span class="kw">import</span> sqlite3
+
+<span class="kw">def</span> <span class="fn">import_ziv</span>(ziv_db_path):
+    <span class="str">"""Importiert eine ZIV 4.0 Exportdatei."""</span>
+    conn = sqlite3.connect(ziv_db_path)
+    conn.row_factory = sqlite3.Row
+    conn.execute(<span class="str">'PRAGMA foreign_keys = ON'</span>)
+
+    <span class="cm"># 1. Meta pr&uuml;fen</span>
+    meta = conn.execute(<span class="str">'SELECT * FROM Meta'</span>).fetchone()
+    <span class="fn">print</span>(<span class="str">f"Import von: {meta['Software']} {meta['Version_Software']}"</span>)
+    <span class="fn">print</span>(<span class="str">f"Modellversion: {meta['Version_Modell']}"</span>)
+
+    <span class="cm"># 2. Standort-Hierarchie einlesen</span>
+    orte = conn.execute(<span class="str">'SELECT * FROM Ort'</span>).fetchall()
+    <span class="kw">for</span> ort <span class="kw">in</span> orte:
+        <span class="cm"># In eigene DB &uuml;berf&uuml;hren...</span>
+        strassen = conn.execute(
+            <span class="str">'SELECT * FROM Strasse WHERE ID_Ort = ?'</span>,
+            (ort[<span class="str">'ID_Ort'</span>],)
+        ).fetchall()
+
+        <span class="kw">for</span> strasse <span class="kw">in</span> strassen:
+            grundstuecke = conn.execute(
+                <span class="str">'SELECT * FROM Grundstueck WHERE ID_Strasse = ?'</span>,
+                (strasse[<span class="str">'ID_Strasse'</span>],)
+            ).fetchall()
+
+            <span class="kw">for</span> gs <span class="kw">in</span> grundstuecke:
+                <span class="cm"># Eigent&uuml;mer auslesen (n:m)</span>
+                eigentuemer = conn.execute(<span class="str">"""
+                    SELECT k.*, ge.Anteil, ge.Sprecher
+                    FROM Grundstueck_Eigentuemer ge
+                    JOIN Kommunikation k ON k.ID_Kommunikation = ge.ID_Kommunikation
+                    WHERE ge.ID_Grundstueck = ?
+                """</span>, (gs[<span class="str">'ID_Grundstueck'</span>],)).fetchall()
+
+                <span class="cm"># Geb&auml;ude auslesen</span>
+                gebaeude = conn.execute(
+                    <span class="str">'SELECT * FROM Gebaeude_Gebaeudeteil WHERE ID_Grundstueck = ?'</span>,
+                    (gs[<span class="str">'ID_Grundstueck'</span>],)
+                ).fetchall()
+
+                <span class="kw">for</span> geb <span class="kw">in</span> gebaeude:
+                    <span class="cm"># Nutzungseinheiten &rarr; Wohnungen &rarr; R&auml;ume &rarr; Feuerst&auml;tten</span>
+                    <span class="fn">import_gebaeude_details</span>(conn, geb)
+
+    conn.close()
+
+<span class="kw">def</span> <span class="fn">import_gebaeude_details</span>(conn, geb):
+    <span class="str">"""Liest alle Unterstrukturen eines Geb&auml;udes."""</span>
+    geb_id = geb[<span class="str">'ID_Gebaeude_Gebaeudeteil'</span>]
+
+    <span class="cm"># Abgasanlagen</span>
+    abgas = conn.execute(
+        <span class="str">'SELECT * FROM Abgasanlage WHERE ID_Gebaeude_Gebaeudeteil = ?'</span>,
+        (geb_id,)
+    ).fetchall()
+
+    <span class="cm"># Nutzungseinheiten mit Unterhierarchie</span>
+    nes = conn.execute(
+        <span class="str">'SELECT * FROM Nutzungseinheit WHERE ID_Gebaeude_Gebaeudeteil = ?'</span>,
+        (geb_id,)
+    ).fetchall()
+
+    <span class="kw">for</span> ne <span class="kw">in</span> nes:
+        wohnungen = conn.execute(
+            <span class="str">'SELECT * FROM Wohnung WHERE ID_Nutzungseinheit = ?'</span>,
+            (ne[<span class="str">'ID_Nutzungseinheit'</span>],)
+        ).fetchall()
+        <span class="kw">for</span> woh <span class="kw">in</span> wohnungen:
+            raeume = conn.execute(
+                <span class="str">'SELECT * FROM Raum WHERE ID_Wohnung = ?'</span>,
+                (woh[<span class="str">'ID_Wohnung'</span>],)
+            ).fetchall()
+            <span class="kw">for</span> raum <span class="kw">in</span> raeume:
+                <span class="cm"># Feuerst&auml;tten im Raum</span>
+                fsts = conn.execute(
+                    <span class="str">'SELECT * FROM Feuerstaette WHERE ID_Raum = ?'</span>,
+                    (raum[<span class="str">'ID_Raum'</span>],)
+                ).fetchall()
+                <span class="kw">for</span> fst <span class="kw">in</span> fsts:
+                    <span class="cm"># Spezialisierung ermitteln</span>
+                    gas = conn.execute(
+                        <span class="str">'SELECT * FROM Gasfeuerstaette WHERE ID_Feuerstaette = ?'</span>,
+                        (fst[<span class="str">'ID_Feuerstaette'</span>],)
+                    ).fetchone()
+                    <span class="kw">if</span> gas:
+                        <span class="fn">print</span>(<span class="str">f"  Gas-FS: {gas['Hersteller']}"</span>)
+                        <span class="cm"># Messergebnisse...</span></pre>
+</div>
+
+<!-- ==================== BEISPIEL EXPORT ==================== -->
+<div class="section" id="beispiel-export">
+<h2>Beispiel: Export erstellen (Python)</h2>
+
+<pre><span class="kw">import</span> sqlite3
+<span class="kw">import</span> os
+
+<span class="kw">def</span> <span class="fn">export_ziv</span>(output_path, eigene_db):
+    <span class="str">"""Erstellt eine ZIV 4.0 Exportdatei."""</span>
+
+    <span class="cm"># 1. Neue DB mit Schema erstellen</span>
+    <span class="kw">if</span> os.path.exists(output_path):
+        os.remove(output_path)
+
+    conn = sqlite3.connect(output_path)
+    conn.execute(<span class="str">'PRAGMA foreign_keys = OFF'</span>)  <span class="cm"># Erst am Ende pr&uuml;fen</span>
+
+    <span class="cm"># Schema laden</span>
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="str">'schema.sql'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> f:
+        conn.executescript(f.read())
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="str">'stammdaten_enums.sql'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> f:
+        conn.executescript(f.read())
+
+    <span class="cm"># 2. Meta</span>
+    conn.execute(<span class="str">"""
+        INSERT INTO Meta (Abgabe, Version_Modell, Software, Version_Software, Geschaeftsjahr)
+        VALUES (datetime('now'), '4.0', 'MeinSoftware', '2.0', 2025)
+    """</span>)
+
+    <span class="cm"># 3. ID-Mapping: interne ID &rarr; neue ZIV-ID</span>
+    id_map = {}  <span class="cm"># {'Tabelle:interne_id': ziv_id}</span>
+
+    <span class="cm"># 4. Kommunikation exportieren (keine FK-Abh&auml;ngigkeiten)</span>
+    <span class="kw">for</span> person <span class="kw">in</span> eigene_db.get_alle_personen():
+        cursor = conn.execute(<span class="str">"""
+            INSERT INTO Kommunikation (Name, Vorname, Strasse, PLZ, Ort, Land)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """</span>, (person.name, person.vorname, person.strasse,
+            person.plz, person.ort, <span class="str">'DE'</span>))
+        id_map[<span class="str">f'Kommunikation:{person.id}'</span>] = cursor.lastrowid
+
+    <span class="cm"># 5. Grundst&uuml;cke, Geb&auml;ude etc. analog...</span>
+    <span class="cm"># (immer id_map verwenden f&uuml;r FK-Werte)</span>
+
+    <span class="cm"># 6. Validierung</span>
+    conn.execute(<span class="str">'PRAGMA foreign_keys = ON'</span>)
+    violations = conn.execute(<span class="str">'PRAGMA foreign_key_check'</span>).fetchall()
+    <span class="kw">if</span> violations:
+        <span class="fn">print</span>(<span class="str">f"WARNUNG: {len(violations)} FK-Verletzungen!"</span>)
+        <span class="kw">for</span> v <span class="kw">in</span> violations:
+            <span class="fn">print</span>(<span class="str">f"  Tabelle: {v[0]}, Row: {v[1]}, "
+                  f"Referenz: {v[2]}, FK-Index: {v[3]}"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"Export erfolgreich validiert!"</span>)
+
+    conn.commit()
+    conn.close()
+    <span class="fn">print</span>(<span class="str">f"Export geschrieben: {output_path}"</span>)</pre>
+</div>
+
+<!-- ==================== FEHLERBEHANDLUNG ==================== -->
+<div class="section" id="fehlerbehandlung">
+<h2>Fehlerbehandlung</h2>
+
+<h3>H&auml;ufige Fehler beim Import</h3>
+
+<table class="data-table">
+<thead><tr><th>Fehler</th><th>Ursache</th><th>L&ouml;sung</th></tr></thead>
+<tbody>
+<tr>
+    <td><code>FOREIGN KEY constraint failed</code></td>
+    <td>Eltern-Datensatz fehlt oder falsche ID</td>
+    <td>Einf&uuml;gereihenfolge pr&uuml;fen; <code>PRAGMA foreign_key_check</code> zeigt Details</td>
+</tr>
+<tr>
+    <td><code>CHECK constraint failed</code></td>
+    <td>Ung&uuml;ltiger Enum-Wert</td>
+    <td>Wert gegen Enum-Tabelle pr&uuml;fen (case-sensitive!)</td>
+</tr>
+<tr>
+    <td><code>UNIQUE constraint failed</code></td>
+    <td>Doppelte ID oder UNIQUE-Verletzung (z.B. Muendung)</td>
+    <td>Pr&uuml;fen, ob Datensatz bereits existiert</td>
+</tr>
+<tr>
+    <td><code>NOT NULL constraint failed</code></td>
+    <td>Pflichtfeld nicht bef&uuml;llt</td>
+    <td>Pflichtfelder in der Dokumentation nachschlagen (Spalte &ldquo;NOT NULL&rdquo;)</td>
+</tr>
+<tr>
+    <td>Tabelle nicht gefunden</td>
+    <td>Schema nicht geladen oder falsche Version</td>
+    <td><code>Meta.Version_Modell</code> pr&uuml;fen</td>
+</tr>
+</tbody>
+</table>
+
+<h3>H&auml;ufige Fehler beim Export</h3>
+
+<div class="callout callout-danger">
+    <span class="callout-icon">&#9888;</span>
+    <div class="callout-body">
+        <strong>Typische Stolperfallen</strong>
+        <ul style="margin-top:8px;">
+            <li><strong>DATE-Format:</strong> Verwenden Sie <code>YYYY-MM-DD</code> (ISO 8601). Nicht <code>DD.MM.YYYY</code>!</li>
+            <li><strong>BOOL-Werte:</strong> Verwenden Sie <code>0</code> und <code>1</code> (nicht <code>'true'</code>/<code>'false'</code>)</li>
+            <li><strong>Leere Strings vs. NULL:</strong> Optionale Felder sollten <code>NULL</code> sein, nicht <code>''</code></li>
+            <li><strong>Encoding:</strong> SQLite speichert Text als UTF-8. Stellen Sie sicher, dass Umlaute korrekt sind</li>
+            <li><strong>Dezimaltrennzeichen:</strong> Punkt, nicht Komma (<code>12.5</code> nicht <code>12,5</code>)</li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<!-- ==================== FAQ ==================== -->
+<div class="section" id="faq">
+<h2>FAQ</h2>
+
+<h4>Muss ich alle 89 Tabellen bef&uuml;llen?</h4>
+<p>Nein. Bef&uuml;llen Sie nur die Tabellen, f&uuml;r die Ihr System Daten hat. Leere Tabellen sind kein Problem. Die <code>Meta</code>-Tabelle ist jedoch Pflicht.</p>
+
+<h4>Kann ich eigene IDs verwenden?</h4>
+<p>Ja, Sie k&ouml;nnen die <code>AUTOINCREMENT</code>-IDs selbst vergeben, solange sie eindeutig sind und die FK-Beziehungen stimmen. Alternativ lassen Sie SQLite die IDs vergeben und merken sich das Mapping.</p>
+
+<h4>Was passiert mit Feldern, die mein System nicht kennt?</h4>
+<p>Lassen Sie diese als <code>NULL</code> (sofern kein NOT NULL). Das importierende System muss damit umgehen k&ouml;nnen.</p>
+
+<h4>Wie gehe ich mit &Auml;nderungen am Modell um?</h4>
+<p>Die Modellversion steht in <code>Meta.Version_Modell</code>. Pr&uuml;fen Sie diese beim Import und passen Sie Ihr Mapping entsprechend an. Abw&auml;rtskompatible &Auml;nderungen (neue Spalten) sind unkritisch.</p>
+
+<h4>Muss ich die Enum-Tabellen mit exportieren?</h4>
+<p>Ja. F&uuml;hren Sie <code>stammdaten_enums.sql</code> beim Erstellen der Exportdatei aus. Die Enum-Tabellen dienen als Referenz und werden f&uuml;r die CHECK-Constraints ben&ouml;tigt.</p>
+
+<h4>Was bedeuten die DEPRECATED-Tabellen?</h4>
+<p>Die Tabellen <code>Belegungsplan</code> und <code>Bericht</code> sind als veraltet markiert. Sie existieren noch f&uuml;r die Abw&auml;rtskompatibilit&auml;t, sollten aber nicht mehr aktiv bef&uuml;llt werden. Verwenden Sie stattdessen die <code>Dokument</code>-Tabelle.</p>
+
+<h4>Wo finde ich die Bedeutung eines einzelnen Feldes?</h4>
+<p>&Ouml;ffnen Sie die <a href="dokumentation.html" class="anchor-link">interaktive Dokumentation</a>. Dort k&ouml;nnen Sie nach Tabellen- und Feldnamen suchen und sehen Datentyp, Constraints, FK-Beziehungen, Enum-Referenzen und die fachliche Beschreibung.</p>
+
+<h4>Kann ich die Datenbank auch mit anderen Sprachen als Python lesen?</h4>
+<p>Ja. SQLite-Bibliotheken gibt es f&uuml;r praktisch jede Sprache: C#/.NET (<code>Microsoft.Data.Sqlite</code>), Java (<code>sqlite-jdbc</code>), PHP (<code>PDO::sqlite</code>), Node.js (<code>better-sqlite3</code>), Delphi, Go, Rust, etc.</p>
+</div>
+
+</main>
+</div>
+
+<!-- ===== Back to Top ===== -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Nach oben">&#8679;</button>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+    <p>ZIV Datenmodell 4.0 &mdash; Entwicklerleitfaden</p>
+    <p>89 Tabellen &middot; 118 Enums &middot; SQLite-basierter Datenaustausch</p>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+    var btn = document.getElementById('backToTop');
+    if (window.scrollY > 400) {
+        btn.classList.add('visible');
+    } else {
+        btn.classList.remove('visible');
+    }
+});
+</script>
+
+</body>
+</html>
