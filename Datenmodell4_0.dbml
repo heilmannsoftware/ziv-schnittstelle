@@ -135,7 +135,6 @@ Table Grundstueck {
   ID_Strasse int [not null, ref: > Strasse.ID_Strasse, note: '§ 19_K | Straße']
 }
 
-
 Table Gebaeude_Gebaeudeteil {
   ID_Gebaeude_Gebaeudeteil int [pk, increment, unique, note: 'Sollte der Arbeitsreihenfolge / Sortierfolge entsprechen']
   Hausnummer text [note: '§ 19_K | Hausnummer']
@@ -217,7 +216,6 @@ Table Abgasanlage {
   Benutzungsintensitaet _Benutzungsintensitaet [note: '§ 19_B | Kennzeichen für die Intensität der Benutzung der Abgasanlage. | Siehe Kennzeichnungstabelle 4.1']
   ID_Gebaeude_Gebaeudeteil int [not null, ref: > Gebaeude_Gebaeudeteil.ID_Gebaeude_Gebaeudeteil, note: '§ 19_K | Gebäude']
 }
-
 
 Table Abschnitt {
   ID_Abschnitt int [pk, increment, unique]
@@ -2093,7 +2091,6 @@ Enum _MessgeraeteTyp {
   SG [note: "Andere Messgerät"]
 }
 
-// TODO Seelbach bitte auf aktualität prüfen
 Enum _PruefstelleMessgeraete {
   // Baden-Württemberg
   BW1 [note: "Messgeräteprüfstand der Schornsteinfegerinnung für den Regierungsbezirk Freiburg, Ahornweg 18, 79822 Titisee-Neustadt"]
@@ -2915,29 +2912,6 @@ Enum _GebaeudestatusGEG {
   NN [note: "Neubau im Neubaugebiet"]
 }
 
-//Kennzeichnung 3.1.1.7 Matrix für Zusatzkennzeichnungen 3.1 und 3.1.1.6
-// Enum matrix_fuer_zusatzkennzeichnungen_3_1_und_3_1_1_6 {
-  // AN [note: "Bezeichnung: Anbau | Verbrauchssektor (früher 3.1): 0, 1, 2, 3, 4, 5, 6 | Gebäudeart GEG24 (früher 3.1.1.5): 1, 2, 3"]
-  // EH [note: "Bezeichnung: Einfamilienhaus | Verbrauchssektor (früher 3.1): 0, 1 | Gebäudeart GEG24 (früher 3.1.1.5): 1"]
-  // GA [note: "Bezeichnung: Garage | Verbrauchssektor (früher 3.1): 0, 1, 2, 3, 4, 5, 6 | Gebäudeart GEG24 (früher 3.1.1.5): 1, 2, 3"]
-  // HA [note: "Bezeichnung: Halle (Werk-, Industrie-, Logistik- oder Verkaufshalle) | Verbrauchssektor (früher 3.1): 0, 2, 3, 4, 6 | Gebäudeart GEG24 (früher 3.1.1.5): 4, 5"]
-  // LR [note: "Bezeichnung: Lager- und Abstellhalle | Verbrauchssektor (früher 3.1): 0, 2, 3, 4, 6 | Gebäudeart GEG24 (früher 3.1.1.5): 4, 5"]
-  // MH [note: "Bezeichnung: Mehrfamilienhaus | Verbrauchssektor (früher 3.1): 0, 1 | Gebäudeart GEG24 (früher 3.1.1.5): 2"]
-  // WI [note: "Bezeichnung: Wirtschaftsgebäude | Verbrauchssektor (früher 3.1): 0, 2, 3, 6 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // OEG [note: "Bezeichnung: Öffentliches Gebäude (Schule, Kita, Verwaltung usw.) | Verbrauchssektor (früher 3.1): 0, 4 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // GR [note: "Bezeichnung: Gartenlaube | Verbrauchssektor (früher 3.1): 0, 5 | Gebäudeart GEG24 (früher 3.1.1.5): 1"]
-  // UB [note: "Bezeichnung: U-Bahnhof | Verbrauchssektor (früher 3.1): 0, 4 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // SB [note: "Bezeichnung: S-Bahnhof | Verbrauchssektor (früher 3.1): 0, 4 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // GW [note: "Bezeichnung: Gewächshaus | Verbrauchssektor (früher 3.1): 0, 2 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // MZ [note: "Bezeichnung: Mehrzweckgebäude | Verbrauchssektor (früher 3.1): 0, 2, 3, 4, 6 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // KI [note: "Bezeichnung: Kirche | Erläuterung: Gebäude, die dem Gottesdienst oder anderen religösen Zwecken gewidemet sind. | Verbrauchssektor (früher 3.1): 0, 4 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // BN [note: "Bezeichnung: Bahnhof | Verbrauchssektor (früher 3.1): 0, 4 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // BG [note: "Bezeichnung: Bürogebäude | Verbrauchssektor (früher 3.1): 0, 2, 3, 4, 6 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // BT [note: "Bezeichnung: Beherbungsstätte/Hotel/Hostel | Verbrauchssektor (früher 3.1): 0, 2, 4, 6 | Gebäudeart GEG24 (früher 3.1.1.5): 3"]
-  // VU [note: "Bezeichnung: Veranstaltungsgebäude (z. B. Sporthalle, Messehalle) | Verbrauchssektor (früher 3.1): 0, 4, 6 | Gebäudeart GEG24 (früher 3.1.1.5): 3, 4, 5"]
-  // ZH [note: "Bezeichnung: Zweifamilienhaus | Verbrauchssektor (früher 3.1): 0, 1 | Gebäudeart GEG24 (früher 3.1.1.5): 1"]
-// }
-
 //Kennzeichnung 3.1.1.8 Rechtsbezug für Kehrbuch / GEG
 Enum _RechtsbezugGEG {
   P72A4 [note: "§72 (4) Ablauf fossilie Energietäger | | 01.01.2045"]
@@ -2955,108 +2929,6 @@ Enum _RechtsbezugGEG {
   P71J2 [note: "§ 71 j (2) Wärmenetz EE65 Einstellungs-Bescheid | z. B. Aufhebungsbescheid Netzausbau | Bescheid + 3 Jahre"]
   P71J3 [note: "§ 71 j (3) Wärmenetz EE65 Fristverzug | | Frist + 3 Jahre"]
 }
-
-//Kennzeichnung 3.1.1.9 Mustertexte für GEG-Bescheinigungen zum Thema - A b n a h m e
-// Enum _MustertexteGEGAbnahme {
-  // I1 [note: "Bei nicht vorliegender Wärmeplanung oder nach Ablauf der Fristen Wärmeplanung 2026/2028 | 71 | 11 | Vor Einbau und Aufstellung einer Heizungsanlage, die mit einem festen, flüssigen oder gasförmigen Brennstoff betrieben wird, hat eine Beratung zu erfolgen, die auf mögliche Auswirkungen der Wärmeplanung und eine mögliche Unwirtschaftlichkeit, insbesondere aufgrund der ansteigenden CO2-Bepreisung, hinweist. [§ 97 Abs. 2, § 71 Abs. 11 GEG] | - | Bescheinigung liegt vor ja/nein | Wenn nein: Beratung nach §71 Abs. 11 wurde nicht ordnungsgemäß durchgeführt | -"]
-  // I2 [note: "Hinweistext bei flüssigen und gasförmigen Brennstoffen | 71 | 9 | Ab dem 01. Januar 2029 müssen mindestens 15%, ab dem 01. Januar 2035 mindestens 30% und ab dem 01. Januar 2040 mindestens 60% der mit der Anlage bereitgestellten Wärme aus erneuerbaren Energien Brennstoffen (Bio-Gas,Bio-Heizöl) erzeugt werden. | 01.01.2029 | Hinweis: Die Nachweise sind nach §96 (5) dem bevollmächtigten Bezirksschornsteinfeger bei der Feuerstätenschau nachzuweisen. | Der Betreiber einer mit flüssigen oder gasförmigen Brennstoff beschickten Heizungsanlage, die nach Ablauf des 31. Dezember 2023 und vor beschlossener kommunaler Wärmeplanung oder vor Ablauf von einem Monat nach der Bekanntgabe der Entscheidung eingebaut wird und die nicht die Anforderungen von 65% EE erfüllt muss deise Anforderung erfüllen. | in 24 abgebildet"]
-  // I3 [note: "Immer bei der Abnahme heizungstechnische Anlagen | 97 | 2 | Neu eingebaute Heizungsanlagen dürfen nach dem Einbau in bestehende Gebäude (Verbot von Veränderungen; entgegenstehende Rechtsvorschriften) die energetische Qualität eines Gebäudes nicht verschlechtern. Dies betrifft ausschließlich Gebäude mit Bauantrag ab 1. Februar 2002. Ein entsprechender Nachweis ist zu führen [§ 97 Abs. 2 Nr. 1 GEG, § 57 Abs. 1 GEG]. | - | Verschlechterungsverbot eingehalten ja/nein | Das Verschlechterungsverbot für die technische Gebäudeausrüstung betrifft sämtliche Anlagen, die bei der Erfüllung energiesparrechtlicher Vorschriften berücksichtigt wurden (Wärmeschutznachweis). Im Rahmen des Einbaus des neuen Wärmeerzeugers ist ein Nachweis zu führen, das die gesetzlichen Anforderungen an die Anlagentechnik zum Zeitpunkt der Errichtung des Gebäudes weiterhin eingehalten werden. | in 11 abgebildet"]
-  // I4 [note: "Immer bei der Abnahme heizungstechnische Anlagen | 97 | 2 | Zentralheizungen müssen mit Regelanlagen (zentrale selbsttätig wirkende Einrichtung zur Verringerung und Abschaltung der Wärmezufuhr sowie zur Ein- und Ausschaltung elektrischer Antriebe in Abhängigkeit von der Außentemperatur oder einer anderen geeigneten Führungsgröße (Außentemperatur- oder Raumtemperaturfühler) und der Zeit (Zeitschaltuhr)) ausgestattet sein. [§ 97 Abs. 2 Nr. 2, § 61 Absatz 1 GEG]. | - | Zentralheizung ist mit geforderter Regelungstechnik ausgestattet ja/nein | Die Heizungsanlage muss für einen möglichst effizienten Betrieb mit Regelanlagen ausgestattet werden. Über die Außentemperatur oder einer anderen geeigneten Führungsgröße (beispielsweise die Raumtemperatur) ist die Heizleistung an den Gebäudebedarf anzupassen. | in 12 + 33 abgebildet"]
-  // I4A [note: "Immer bei der Abnahme heizungstechnische Anlagen | 97 | 2 | Zentralheizungen müssen mit Regelanlagen (zentrale selbsttätig wirkende Einrichtung zur Verringerung und Abschaltung der Wärmezufuhr sowie zur Ein- und Ausschaltung elektrischer Antriebe in Abhängigkeit von der Außentemperatur oder einer anderen geeigneten Führungsgröße (Außentemperatur- oder Raumtemperaturfühler) und der Zeit (Zeitschaltuhr)) ausgestattet sein. [§ 97 Abs. 2 Nr. 2, § 61 Absatz 1 GEG]. | - | Zentralheizung ist mit geforderter Regelungstechnik ausgestattet ja/nein | Die Heizungsanlage muss für einen möglichst effizienten Betrieb mit Regelanlagen ausgestattet werden. Über die Zeitschaltuhr soll die Heizungsanlage in den Zeiten mit geringem Wärmebedarf oder Abwesenheit heruntergefahren oder abgeschaltet werden (Tag- Nachtabsenkung). | in 12+ 33 abgebildet"]
-  // I5 [note: "Immer bei der Abnahme heizungstechnische Anlagen Formulierung in Nr. 39 ergänzt | 97 | 2 | Heizkessel die mit flüssigen oder gasförmigen Brennstoffen entgegen den Anforderungen des GEG eingebaut werden müssen notwendige Nachweise, Belege oder Erklärungen zur Prüfung vorlegen (Brennstoffabrechnungen) [§ 97 Abs. 2 Nr. 3, § 71 bis 71m GEG]. | - | Bescheinigung liegt vor ja/nein | Im Falle der Nutzung von flüssiger bzw. gasförmiger Biomasse oder grünem bzw. blauem Wasserstoff sind die Abrechnungen über den Brennstoffbezug inkl. der entsprechenden Bestätigungen in den ersten 15 Jahren nach Inbetriebnahme der Heizungsanlage, mindestens fünf Jahre nach der ersten Lieferung aufzubewahren. | als Erweiterte Formulierung in Nr. 39 eingefüft"]
-  // I6 [note: "Immer bei der Abnahme heizungstechnische Anlagen | 97 | 2 | Werden Wärmeverteilungs- und Warmwasserleitungen sowie Armaturen erstmalig in Gebäude eingebaut oder werden sie ersetzt, hat der Bauherr oder der Eigentümer dafür Sorge zu tragen, dass die Wärmeabgabe der Rohrleitungen und Armaturen nach Anlage 8 begrenzt wird. [§ 69 Abs. 1, § 97 Abs. 2 Nummer 4 GEG] | - | Ausreichende Wärmedämmung vorhanden ja/nein | Die Wärmedämmung der Wärmeverteilungs- und Warmwasserleitungen sowie Armaturen entspricht nicht der Anlage 8 des Gebäudeenergiegesetzes (optische Überprüfung). | Dopplung = 39"]
-  // I7 [note: "Abnahme von Anlagen zur Nutzung fester Biomasse | 97 | 2 | Der Betreiber einer Feuerungsanlage im Sinne von § 1 Abs. 1 und § 2 Nummer 5 der Verordnung über kleine und mittlere Feuerungsanlagen (1. BImSchV) hat bei der Nutzung von fester Biomasse sicherzustellen, dass 1. die Nutzung in einem automatsich beschickten Biomasseofen mit Wasser als Wärmeträger oder einem Biomassekessel erfolgt, | - | Anforderungen erfüllt ja/nein | - | -"]
-  // I7A [note: "Abnahme von Anlagen zur Nutzung fester Biomasse | 97 | 2 | Der Betreiber einer Feuerungsanlage im Sinne von § 1 Abs. 1 und § 2 Nummer 5 der Verordnung über kleine und mittlere Feuerungsanlagen (1. BImSchV) hat bei der Nutzung von fester Biomasse sicherzustellen, dass 2. ausschließlich Biomasse nach § 3 Absatz 1 Nummer 4,5,5a, 8 oder Nummer 13 der 1. BImSchV | - | Anforderungen erfüllt ja/nein | - | -"]
-  // I7B [note: "Abnahme von Anlagen zur Nutzung fester Biomasse | 97 | 2 | Der Betreiber einer Feuerungsanlage im Sinne von § 1 Abs. 1 und § 2 Nummer 5 der Verordnung über kleine und mittlere Feuerungsanlagen (1. BImSchV) hat bei der Nutzung von fester Biomasse sicherzustellen, dass 3. die eingesetzte Biomasse der Nachhaltigkeitsverordnung der europäischen Union entspricht | - | Anforderungen erfüllt ja/nein | - | in 19 abgebildet"]
-  // I7C [note: "Abnahme von Anlagen zur Nutzung fester Biomasse | 97 | 2 | Im Falle der Nutzung von fester Biomasse darf die Nutzung ausschließlich in einem automatisch beschickten Biomasseofen mit Wasser als Wärmeträger (Pelletofen, Pellet- oder Hackgutheizung) oder einem Biomassekessel (Stückholzheizung) erfolgen | - | - | - | -"]
-  // I7D [note: "Abnahme von Anlagen zur Nutzung fester Biomasse | 97 | 2 | Es darf ausschließlich Biomasse nach § 3 Absatz 1 Nummer 4 (naturbelassenes stückiges Holz), 5 (naturbelassenes nicht stückiges Holz), 5a (Pelletbrennstoffe), 8 (Stroh und ähnliche pflanzliche Stoffe) oder Nummer 13 (sonstige nachwachsende Rohstoffe) der 1. BImSchV eingesetzt werden | - | - | - | -"]
-  // I7E [note: "Abnahme von Anlagen zur Nutzung fester Biomasse | 97 | 2 | Der eingesetzte Brennstoffe muss den Richtlinien einer nachhaltigen Forstwirtschaft entsprechen. Die entsprechenden Nachweise müssen vom Brennstofflieferanten gegenüber dem Betreiber der Anlage erbracht werden. | - | - | - | -"]
-  // I8 [note: "Immer bei §71h | 97 | 2 | Wärmepumpen- oder Solarthermie-Hybridheizungen müssen technische und brennstoffspezifische Anforderungen einhalten: [§ 97 Abs. 2 Nr. 6, § 71h GEG] | - | - | Auswahltexte | -"]
-  // I11 [note: "- | 97 | 2 | Die neu eingebaute Heizungsanlage führt zu keiner Verschlechterung (Verbot von Veränderungen; entgegenstehende Rechtsvorschriften) der energetischen Qualität des Gebäudes. Ein Nachweis ist vorhanden [§ 97 Abs. 2 Nr. 1 GEG, § 57 Abs. 1 GEG]. | - | - | - | -"]
-  // I12 [note: "- | 97 | 2 | Die Zentralheizung ist mit Regelanlagen (zentrale selbsttätig wirkende Einrichtung zur Verringerung und Abschaltung der Wärmezufuhr sowie zur Ein- und Ausschaltung elektrischer Antriebe in Abhängigkeit von der Außentemperatur oder einer anderen geeigneten Führungsgröße und der Zeit) ausgestattet. [§ 97 Abs. 2 Nr. 2, § 61 Absatz 1 GEG]. | - | - | - | -"]
-  // I13 [note: "- | 97 | 2 | Für den Heizkessel, der mit flüssigen oder gasförmigen Brennstoffen betrieben wird liegen notwendige Nachweise, Belege oder Erklärungen zur Prüfung vor [§ 97 Abs. 2 Nr. 3, § 71 bis 71m GEG]. | - | - | - | Dopplung"]
-  // I14 [note: "- | 97 | 2 | Die Dämmung von Wärmeverteilungs- und Warmwasserleitungen sowie Armaturen nach erstmaligen Einbau oder Ersetzung ist vorhanden. [§ 97 Abs. 2 Nr. 4, § 69 i.V. mit Anlage 8 GEG]. | - | - | - | -"]
-  // I15 [note: "- | 97 | 2 | Für den automatisch beschickten Biomasseofen mit Wasser als Wärmeträger oder Biomassekessel wurde der eingesetzten Brennstoff nachgewiesen: [§ 97 Abs. 2 Nr. 5, § 71g GEG] | - | - | - | -"]
-  // I16 [note: "- | 97 | 2 | Die Wärmepumpen- oder Solarthermie-Hybridheizung hält die technische und brennstoffspezifische Anforderungen ein: [§ 97 Abs. 2 Nr. 6, § 71h GEG] | - | - | - | -"]
-  // I17 [note: "- | 71 | 2 | Die Einhaltung der Anforderungen wurde mittels Berechnung nach DIN V 18599:2018-09 nachgewiesen. | - | - | - | -"]
-  // I18 [note: "- | 71f | - | Die Einhaltung an die Brennstoffanforderungen wurden mittels Beleg über die Lieferung nachgewiesen. | - | - | - | -"]
-  // I19 [note: "- | 71g | - | Eingesetzter Brennstoff entspricht den Anforderungen einer nachhaltigen Holzwirtschaft. Der eingesetzte Brennstoff, entspricht § 3 der 1.BImSchV Absatz 1 - Brennstoffe Nummer 4, 5, 5a, 8 oder Nummer 13. | - | - | - | -"]
-  // I20 [note: "- | 71h | 1 | Leistungsanteil der Wärmepumpe entspricht den Vorgaben im (bivalent parallelen / bivalent teilparallelen / bivalent alternativen) Betrieb. Die Vorrangschaltung gegenüber dem Spitzenlastkessel ist gegeben. Es ist eine gemeinsame, fernansprechbare Steuerung verbaut. Es ist als Spitzenlastwärmeerzeuger ein Brennwertkessel verbaut | - | - | - | -"]
-  // I21 [note: "- | 71h | 2 | Die technischen Anforderungen an die Mindestaperturflächen in Verbindung mit dem Beleg über die Brennstofflieferung wurden nachgewiesen [§ 97 Abs. 2 Nr. 6, § 71h Abs. 2 GEG] | - | - | - | -"]
-  // I22 [note: "- | 71h | 2 | Die technischen Anforderungen an die Aperturflächen in Verbindung mit dem Beleg über die kompensierende Brennstofflieferung wurden nachgewiesen [§ 97 Abs. 2 Nr. 6, § 71h Abs. 5 GEG] | - | - | - | -"]
-  // I23 [note: "- | 71k | - | Die Einhaltung an die Wasserstoffnetzanforderungen sowie die technischen Anforderungen (H2-Ready) wurden mittels Nachweis und einer Hersteller- oder Handwerkserklärung bis zum 30.06.2028 nachgewiesen. [§ 97 Abs. 2 Nr. 3, § 71k GEG] | - | - | - | -"]
-  // I24 [note: "- | 71l | - | Aufgrund des Übergangszeitraumes während der Übergangsphase zur Wärmenetzausweisung durch ein Beschluss von der Kommune, muss diese Heizung ab 2029 mit 15 % erneuerbaren Energien, ab 2035 mit 30 % erneuerbaren Energien und ab 2040 mit 60 % erneuerbaren Energien betrieben werden. [§ 97 Abs. 2 Nr. 3, § 71l GEG] | - | - | - | -"]
-  // I25 [note: "- | 71l | - | Dem bevollmächtigten Bezirksschornsteinfeger muss das Ergebnis der Planung zur Umstellung der Wärmeversorgung in Textform mitgeteilt werden [§ 97 Abs. 2 Nr. 3, § 71l GEG] | erster Austausch einer Anlage nach der KWP 5 Jahre | Die Frist ist bei jeder weiteren Anlage fortzuführen | - | -"]
-  // I26 [note: "- | 71l | - | Die Planung zur Umstellung der Wärmeversorgung muss umgesetzt werden [§ 97 Abs. 2 Nr. 3, § 71l GEG] | (Beginn der Arbeiten zum Austausch (ausfall der ersten Gasetagenheizung in diesem Gebäuden) + 9 Jahr) | Anforderungen erfüllt ja/nein | - | -"]
-  // I27 [note: "- | 71m | - | Erste Anlage: Die Anlage muss außer Betrieb genommen werden oder nachgerüstet werden mit 65 % erneuerbarer Energien. [§ 97 Abs. 2 Nr. 3, § 71m GEG] Alternativ kann der Nachweis nach § 71 m Abs. 2 Satz 2 und 3 nachgewiesen werden. | (Beginn der Arbeiten zum Austausch (ausfall der ersten Hallenheizung in diesem Gebäuden) + 2 Jahre) | BdA + 10 Jahre= Ende Ausnahmetatbestand | - | -"]
-  // I28 [note: "- | 71m | - | Weitere Anlage: Die Anlage muss außer Betrieb genommen werden [§ 97 Abs. 2 Nr. 3, § 71m GEG] | (Beginn der Arbeiten zum Austausch (Ausfall der ersten Hallenheizung in diesem Gebäuden) + 11 Jahr) | BdA + 11 Jahre= Ende Ausnahmetatbestand | - | in 39 abgeblidet"]
-  // I29 [note: "- | 71i | - | Die Heizungsanlage muss mit 65 % erneuerbaren Energien betrieben werden [§ 97 Abs. 2 Nr. 3, § 71i, §71l GEG] | (Beginn der Arbeiten zum Austausch + 5 Jahre) | BdA + 5 Jahre= Ende Ausnahmetatbestand | Ergebnis (Datum) muss ins Kehrbuch übernommen werden. | Anpassung in der Grafik, wenn die Frist vorbei ist dann ein Mangel"]
-  // I30 [note: "- | 71j | - | Die Heizungsanlage muss mit 65 % erneuerbaren Energien betrieben werden. Der Vertrag zum Anschluss an ein Wärmenetz liegt vor. [§ 97 Abs. 2 Nr. 3, § 71j GEG] | (Beginn der Arbeiten zum Austausch + 10 Jahre) | BdA + 10 Jahre= Ende Ausnahmetatbestand | Anschluss an das Wärmenetz muss im Kehrbuch vermerkt werden. | -"]
-  // I31 [note: "- | 71k | - | Die Anforderung an den § 71 Abs. 1 (65 % erneuerbare Energien), sind erfüllt da sich die Heizung im H2-Planungsgebiet befindet. Die Heizungsanlage ist 100 % H2 ready. [GEG § 71k] | 31.12.2044 | Vollständiger Betrieb über Wasserstoff | - | -"]
-  // I32 [note: "- | 97 | 2 | Aufgrund der optische Überprüfung liegen Bedenken über die Verschlechterung der Heizungsanlage des Gebäudes vor. Ein Nachweis über die Einhaltung der energiesparrechtlichen Anforderungen zum Zeitpunkt des Bauantrags sind nachzureichen | freie Frist | Weiterleitung an die Behörde nach Ablauf der Frist | - | -"]
-  // I33 [note: "- | 97 | 2 | Die Zentralheizung ist nicht mit Regelanlagen ... ausgestattet. [§ 97 Abs. 2 Nr. 2, § 61 Absatz 1 GEG]. | - | - | - | -"]
-  // I34 [note: "- | 97 | 2 | Für den Heizkessel der mit flüssigen oder gasförmigen Brennstoffen entgegen den Anforderungen des GEG eingebaut wurde, liegen notwendige Nachweise, Belege oder Erklärungen zur Prüfung nicht vor. [§ 97 Abs. 2 Nr. 3, § 71 bis 71m GEG] | - | - | Notwendige Nachweise, Belege oder Erklärungen können Herstellererklärungen oder rechnerische Nachweise durch § 88 berechtigte Personen sein. Grundsätzlich muss der Nachweis über den Einsatz von 65 % erneuerbarer Energien nachgewiesen werden können. | in 39 abgebildet"]
-  // I35 [note: "- | 97 | 2 | Die Dämmung von Wärmeverteilungs- und Warmwasserleitungen sowie Armaturen nach erstmaligen Einbau oder Ersetzung ist nicht fachgerecht bzw. nicht gemäß den Vorgaben des Gebäudeenergiegesetzes ausgeführt worden. [§ 97 Abs. 2 Nr. 4, § 69 i.V. mit Anlage 8 GEG] | freie Frist | - | - | -"]
-  // I36 [note: "- | 97 | 2 | Für den automatisch beschickten Biomasseofen mit Wasser als Wärmeträger oder Biomassekessel wurde der eingesetzte Brennstoff nicht nachgewiesen: [§ 97 Abs. 2 Nr. 5, § 71g GEG] | - | - | - | in 40, 41 abgebildet"]
-  // I37 [note: "- | 97 | 2 | Die Wärmepumpen- oder Solarthermie-Hybridheizung hält technischen und/oder brennstoffspezifischen Anforderungen nicht ein: [§ 97 Abs. 2 Nr. 6, § 71h GEG] | - | - | - | in 42-46 abgebildet"]
-  // I38 [note: "- | 71 | 2 | Die Einhaltung der Anforderungen muss mittels Berechnung nach DIN V 18599:2018-09 durch eine nach § 88 berechtigte Person nachzuweisen und vorzulegen. [§ 97 Abs. 2, § 71 Abs. 2 GEG] | - | - | Die Anforderungen an den Einsatz von 65 % erneuerbarer Energien konnten nicht über die pauschaliesierten Ansätze nachgewiesen werden. Alternativ kann durch eine nach § 88 berechtigte Person vor Inbetriebnahme die Einhaltung der Anforderungen nach § 71 Abs. 1 ein entsprechender Nachweis geführt werden. | -"]
-  // I39A [note: "- | 71f/71h | 2 | Heizkessel ... notwendige Nachweise ...; Brennstoffanforderungen konnten nicht mittels Beleg über die Lieferung nachgewiesen werden und sind nachzureichen. [§ 97 Abs. 2 Nr. 6, § 71f GEG], §71h | - | - | - | -"]
-  // I39B [note: "- | 71f | 2 | - | - | - | - | -"]
-  // I40 [note: "- | 71g | - | Der verwendete Brennstoff muss den Anforderungen einer nachhaltigen Holzwirtschaft entsprechen. Ein Nachweis konnte nicht erbracht werden. [§ 97 Abs. 2 Nr. 6, § 71g Nummer 3 GEG] | - | - | - | -"]
-  // I41 [note: "- | 71g | - | Der eingesetzte Brennstoff entspricht nicht § 3 der 1. BImSchV Abs. 1 - Brennstoffe Nr. 4, 5, 5a, 8 oder 13. [§ 97 Abs. 2 Nr. 6, § 71g Nummer 2 GEG] | - | - | Es darf ausschließlich Biomasse nach § 3 Absatz 1 Nummer 4, 5, 5a, 8 oder 13 der 1. BImSchV eingesetzt werden | -"]
-  // I42 [note: "- | 71h | 1 | Leistungsanteil der Wärmepumpe entspricht nicht den Vorgaben ... [§ 97 Abs. 2 Nr. 6, § 71h Abs. 1 GEG] | - | - | Für die Einhaltung ... muss die Leistung der Wärmepumpe mindestens 30 % der Heizlast ... bzw. 40 % der Leistung des Spitzenlastwärmeerzeugers ... entsprechen. | -"]
-  // I43 [note: "- | 71h | 1 | Die Vorrangschaltung gegenüber dem Spitzenlastkessel ist nicht gegeben [§ 97 Abs. 2 Nr. 6, § 71 Abs. 1 Nummer 1 GEG] | - | - | Um den Einsatz von 65 % EE zu gewährleisten, darf der Brennwertkessel nur für den Spitzenlastbetrieb eingesetzt werden. Der Wärmepumpe ist grundsätzlich Vorrang zu gewähren. | -"]
-  // I44 [note: "- | 71h | 1 | Es ist keine gemeinsame, fernansprechbare Steuerung verbaut [§ 97 Abs. 2 Nr. 6, § 71 Abs. 1 Nummer 2 GEG] | - | - | - | -"]
-  // I45 [note: "- | 71h | 1 | Bei dem Spitzenlastwärmeerzeuger handelt es sich nicht um einen Brennwertkessel [§ 97 Abs. 2 Nr. 6, § 71 Abs. 1 Nummer 3 GEG] | - | - | - | -"]
-  // I46 [note: "- | 71h | 3 | Die Anforderungen an die Mindestgröße der Aperturflächen ... wurden nicht nachgewiesen [§ 97 Abs. 2 Nr. 6, § 71h Abs. 2-5 GEG] | - | - | Die Quote von 65 % EE ... konnte über Aperturfläche + Brennstoffnachweis nicht vollständig geführt werden. | -"]
-  // I47 [note: "- | 71k | - | Es liegt kein Vertrag für den Anschluss an ein Wasserstoffnetzgebiet vor. [§ 97 Abs. 2 Nr. 3, § 71k GEG] | Frist §71i | - | Die Heizungsanlage muss nach 5 Jahren mit 65 % erneuerbaren Energien betrieben werden [§ 97 Abs. 2 Nr. 3, § 71i GEG] | -"]
-  // I48 [note: "- | 71k | - | Die technischen Anforderungen (H2-Ready) wurden nicht nachgewiesen. [§ 97 Abs. 2 Nr. 3, § 71k GEG] | - | - | Eine Heizungsanlage ist auf 100 % Wasserstoff nur umrüstbar ...; Nachweis durch Hersteller-/Handwerkererklärung nicht erbracht. Weiterer Betrieb nur über 65 % EE. | -"]
-  // I49 [note: "- | 71l | - | Die aufgestellte Heizungsanlage verstößt gegen den Plan zur Umsetzung der Wärmeversorgung [§ 97 Abs. 2 Nr. 3, § 71l GEG] | - | - | - | -"]
-  // I50 [note: "- | 71 | - | Die aufgestellte Heizungsanlage verstößt gegen den Grundsatz des Einsatzes von 65 % erneuerbarer Energien [§ 71-71m; § 97 Abs. 2 Nr. 3, § 71-71m GEG] | - | - | Die Heizungsanlage darf nicht weiter betrieben werden. Der weitere Betrieb kann nur über den Nachweis der Verwendung von 65 % erneuerbarer Energien erfolgen. | schon abgebildet"]
-  // I51 [note: "- | 71m | - | Die eingebaute Anlage verfügt nicht über die bestverfügbare Technik, die auf dem Markt erhältlich wäre. [§ 97 Abs. 2 Nr. 3, § 71 m Abs. 1 Satz 1] | - | - | - | -"]
-  // I52 [note: "- | 71m | - | Alle dezentralen Heizungsanlagen der betreffenden Halle müssen mit mindestens 65 % erneuerbare Energien betrieben werden. | Beginn der Arbeiten an der ersten Hallenheizung + 10 + 1 Jahre | - | Innerhalb eines Jahres nach Ablauf der Übergangsfrist von maximal 10 Jahren ... müssen sämtliche ... mit 65 % EE betrieben werden. Nachweise vorzulegen. | -"]
-  // I53 [note: "- | 97 | 2 | Die Dämmung von Wärmeverteilungs- und Warmwasserleitungen sowie Armaturen entsprechen dem GEG. [§ 97 Abs. 2 Nr. 4, § 69 i.V. mit Anlage 8 GEG] | - | - | - | -"]
-  // I54 [note: "- | 71g | - | Der verwendete Wärmeerzeuger ist für den Einsatz von fester Biomasse nicht geeigent [GEG §71g Nr. 1] | - | - | - | -"]
-  // I55 [note: "- | 97 | 2 | Die Heizungsanlage unterliegt nicht dem Verschlechterungsgebot des GEG. [GEG § 97 Abs. 2 Nr. 1, § 57 Abs. 1] | - | - | - | -"]
-  // I56 [note: "- | 97 | 2 | Die Frist verlängert sich um weitere 8 Jahre bei Vorlage einer Bestätigung zur Zentralisierung. [§ 97 Abs. 2 Nr. 3 und § 71 l Abs. 2 GEG] | Beginn der Arbeiten an der Heizungsanlage + 13 Jahre | - | - | -"]
-  // I57 [note: "- | 97 | 2 | Die Heizungsanlage muss mit 65 % erneuerbaren Energien betrieben werden [§ 97 Abs. 2 Nr. 3, § 71l GEG] | (Beginn der Arbeiten zum Austausch + 13 Jahre) | BdA + 13 Jahre= Ende Ausnahmetatbestand | - | -"]
-  // I58 [note: "- | 97 | 2 | Es wurde eine weitere Etagenheizung ausgetauscht. Diese Heizungsanlage ist spätestens ein Jahr nach Fertigstellung an die vorgesehene zentrale Wärmeversorgung anzuschließen. [§ 97 Abs. 2 und § 71 l Abs. 2 GEG] | (Beginn der Arbeiten der ersten Etagenheizung zum Austausch + 14 Jahre) | BdA + 14 Jahre= Ende Ausnahmetatbestand | - | -"]
-  // I59 [note: "- | 97 | 2 | Sie haben 5 Jahre Zeit sich zu entscheiden, ob Sie künfrig weiterhin Dezentral heizen oder eine Zentralheizung einbauen. | erster Austausch einer Anlage nach der KWP 5 Jahre | - | - | -"]
-// }
-
-//Kennzeichnung 3.1.1.10 Mustertexte für GEG-Bescheinigungen zum Thema - F e u e r t ä t t e n s c h a u
-// Enum _MustertexteGEGFeuerstaettenschau {
-  // I1 [note: "Hinweistext bei Brennstoff flüssig und gas | 71 | 9 | Ab dem 01. Januar 2029 müssen mindestens 15%, ab dem 01. Januar 2035 mindestens 30% und ab dem 01. Januar 2040 mindestens 60% der mit der Anlage bereitgestellten Wärme aus EE Brennstoffen erzeugt werden. | - | Heinweistext Bescheinigung | Der Betreiber einer mit flüssigen oder gasförmigen Brennstoff beschickten Heizungsanlage, die nach Ablauf des 31. Dezember 2023 und vor beschlossener Wärmeplanung oder vor Ablauf von einem Monat nach der Bekanntgabe der Entscheidung eingebaut wird und die nicht die Anforderungen von 65% EE erfüllt muss deise Anforderung erfüllen. | -"]
-  // I2 [note: "Bei Feuerstättenschau | 97 | 4 | Zentralheizungen müssen mit Regelanlagen (zentrale selbsttätig wirkende Einrichtung) zur Verringerung und Abschaltung der Wärmezufuhr sowie zur Ein- und Ausschaltung elektrischer Antriebe in Abhängigkeit von der Außentemperatur oder einer anderen geeigneten Führungsgröße und der Zeit bis zum 30.12.2021 ausgestattet sein. [§ 97 Abs. 4, § 61 Abs. 2 GEG]. | Meldung an Behörde | Zentralheizung ist mit geforderter Regelungstechnik ausgestattet weiterhin ja/nein | Information: Der Fristverzug wird an die zuständige Behörde weitergeleitet. | -"]
-  // I3 [note: "Bei Feuerstättenschau | 97 | 1 | Es liegt eine Ausnahme nach § 72 und § 73 vor. [§ 97 Abs. 1 Nr. 1, § 71i bis 71m sowie § 72 GEG]. | - | Positiv Text | - | -"]
-  // I4 [note: "Bei Feuerstättenschau | 97 | 1 | Ein Heizkessel, der nach Ablauf der Übergangsfristen nach den §§ 71i bis 71m oder nach § 72, auch in Verbindung mit § 73, außer Betrieb genommen werden musste, weiterhin betrieben wird. [§ 97 Abs. 1 Nr. 1, § 71i bis 71m sowie § 72 GEG]. | - | Negativ Text | Auswahltexte | -"]
-  // I5 [note: "Bei Feuerstättenschau <= 2 WE | 97 | 1 | Heizkessel, die nach Ablauf von 30 Jahren und nach Eigentumswechsel betrieben werden sind innerhalb von 2 Jahren nach Eigentümerwechsel auszutauschen. | Frist beträgt zwei Jahre nach dem Eigentümerwechesel | - | - | -"]
-  // I6 [note: "Bei Feuerstättenschau >2 WE | 97 | 1 | Heizkessel, die mit einem flüssigen oder gasförmigen Brennstoff beschickt werden, sind nach Ablauf von 30 Jahren nach Einbau oder Aufstellung nicht mehr zu betreiben. | Frist | - | - | -"]
-  // I7 [note: "Bei Feuerstättenschau Hinweis | 97 | 1 | Der Heizkessel muss nach Ablauf der Übergangsfristen der §§ 71i bis 71m mit 65% Erneuerbaren Energien betrieben werden. | Datum fortführen aus BDA | - | - | -"]
-  // I8 [note: "Unterpunkt Mangel | - | - | Die Frist zur Pflichterfüllung war 2 Jahre ab dem ersten Eigentumsübergang nach dem 1. Februar 2002. [§ 73 Abs. 2 GEG] | Frist | - | - | -"]
-  // I9 [note: "Unterpunkt Hinweis (innerhalb der Frist) | - | - | Die Frist zur Pflichterfüllung beträgt 2 Jahre ab dem ersten Eigentumsübergang nach dem 1. Februar 2002. [§ 73 Abs. 2 GEG] | Frist Datum | - | - | -"]
-  // I10 [note: "Feuerstättenschau | 97 | 1 | Die Frist zur Pflichterfüllung der Nutzungs von erneuerbaren Energien ist abgelaufen. Die Anforderungen wurden nicht erfüllt. [§ 71 in Verbindung mit §71i - 71m GEG] | Frist Errichtungsdatum + 5 Jahre?? | - | - | -"]
-  // I11 [note: "Unterpunkte | - | - | Es werden weiterhin ausschließlich fossile Energien genutzt. Es ist ein Anschluss an die vorhandene Zentralheizung erforderlich. | Fristsetzung nach Beschluss + 1 Jahr | - | - | -"]
-  // I11A [note: "Feuerstättenschau | 97 | 1 | Es werden weiterhin ausschließlich fossile Energien genutzt. | - | - | - | -"]
-  // I12 [note: "Unterpunkte | - | - | Die Heizungsanlage muss mit 65 % erneuerbaren Energien betrieben werden. | Erste Etagenheizung 5 Jahre nach BDA/ je weiterer Heizungsanlage + 1 Jahr | - | - | -"]
-  // I12A [note: "Feuerstättenschau | 97 | 1 | Die Heizungsanlage muss mit 65 % erneuerbaren Energien betrieben werden. | 2 Jahre Frist alternativ Umstellung des gesamten Systems innerhalb von 10 Jahre | - | - | -"]
-  // I13 [note: "Bei Feuerstättenschau | 97 | 1 | Die Dämmung von bisher ungedämmten, zugänglichen Wärmeverteilungs- und Warmwasserleitungen in nicht beheizten Räumen ist nicht eingehalten. | - | - | - | -"]
-  // I13A [note: "Bei Feuerstättenschau | 97 | 1 | Die Dämmung der zugänglichen Wärmeverteilungs- und Warmwasserleitungen in unbeheizten Räumen enstspricht nicht § 97 Abs. 1 Nr. 2 und § 69 Abs. 2, auch in Verbindung mit § 73 mit Anlage 8 GEG. | Die Dämmung zugänglichen Wärmeverteilungs- und Warmwasserleitungen in nicht beheizten Räumen enstspricht § (97 Abs. 1 Nr. 2 und § 69 Absatz 2, auch in Verbindung mit § 73. mit Anlage 8 GEG]. | - | - | -"]
-  // I14 [note: "Unterpunkt 1 | 97 | 1 | Bei am 1. Februar 2002 vom Eigentümer bewohnten 1- und 2-Familienhäusern innerhalb von 2 Jahren nach Eigentümerwechsel. [§ 73 Abs. 1 GEG] | - | - | - | -"]
-  // I15 [note: "Unterpunkt 2 | 97 | 1 | Die Frist zur Pflichterfüllung beträgt 2 Jahre ab dem ersten Eigentumsübergang nach dem 1. Februar 2002. [§ 73 Abs. 2 GEG] | Datum Eigentumsübergang +2 Jahre | - | - | -"]
-  // I16 [note: "Bei Feuerstättenschau | 97 | 1 | Die Abrechnungen und Bestätigungen nach § 96 Abs. 5 liegen vor. | - | Positiv | - | -"]
-  // I17 [note: "Unterpunkte | 97 | 1 | Die Bestätigung für die Nutzung flüssiger oder gasförmiger Biomasse oder grünem oder blauem Wasserstoff einschließlich daraus hergestellter Derivate sind nachzuweisen. | Frist | - | - | -"]
-  // I18 [note: "Feuerstättenschau | 97 | 1 | Der Anteil nachzuweisender flüssiger oder gasförmiger Biomasse oder grünem oder blauen Wasserstoff einschließlich daraus hergestellten Derivaten erfüllt nicht die gesetzlichen Anforderungen. | Frist Setzung | - | - | -"]
-  // I19 [note: "Feuerstättenschau | 97 | 1 | Der eingesetzten Brennstoff erfüllt nicht die Anforderungen an einen nachhaltigen Anbau und eine nachhaltige Herstellung. | - | - | - | -"]
-  // I20 [note: "Feuerstättenschau | - | - | In der Heizungsanlage darf ausschließlich Biomasse nach § 3 Abs. 1 Nr. 4, 5, 5a, 8 oder Nr. 13 der Verordnung über kleine und mittlere Feuerungsanlagen eingesetzt werden. | - | - | - | -"]
-  // I21 [note: "Hinweistext für Anteil EE Brennstoff wenn Frist noch nicht abgelaufen | - | - | Die Bestätigung für die Nutzung flüssiger, gasförmiger oder fester, nachhaltiger Biomasse oder grünem oder blauem Wasserstoff einschließlich daraus hergestellter Derivate sind nach der Frist nachzuweisen. [Datum: FRIST aus Abnahme!] | ALTE Frist aus vorheriger Abnahme | - | - | -"]
-  // I22 [note: "Feuerstättenschau | 97 | 1 | Der eingesetzte Brennstoff entspricht nicht den Anforderungen nach 1.BImSchV. | Frist | - | - | -"]
-  // I23 [note: "Feuerstättenschau | 97 | 1 | Der Nachweis über den nachhaltigen Anbau des Brennstoffes fehlt. | Frist | - | - | -"]
-  // I24 [note: "Feuerstättenschau | 97 | 1 | Der Anschluss an ein Wärmenetz hat nicht stattgefunden. Die Anforderungen nach § 71 Abs. 1 (65% Anteil erneuerbarer Energien) müssen nach Ablauf von drei Jahren eingehalten werden. | Frist 3 Jahre | - | - | -"]
-  // I24A [note: "Feuerstättenschau | 97 | 1 | Mit dem Anschluss an ein Wärmenetz sind die Anforderungen nach § 71 Abs. 1 (65% Anteil erneuerbarer Energieen) eingehalten. | - | - | - | -"]
-  // I25 [note: "Feuerstättenschau | 97 | 1 | Der geplante Neu-oder Umbau des Wärmenetzes findet nicht statt, die Anforderungen nach § 71 Abs. 1 (65% Anteil erneuerbarer Energieen) müssen nach Ablauf von drei Jahren nach Bekanntgabe eingehalten werden. | Frist 3 Jahre | - | - | -"]
-  // I26 [note: "Feuerstättenschau | 97 | 1 | Der geplante Bau eines Wasserstoffnetzes findet nicht statt. Die Anforderungen nach § 71 Abs. 1 (65% Anteil erneuerbarer Energieen) müssen nach Ablauf von drei Jahren nach Bekanntgabe eingehalten werden. | Frist 3 Jahre | - | - | -"]
-// }
 
 //Kennzeichnung 3.1.2 Geschosse im Gebäude
 Enum _Etage {
@@ -3197,7 +3069,6 @@ Enum _Lage2 {
   WV [note: "weit vorne"]
   WH [note: "weit hinten"]
 }
-
 
 //Kennzeichnung 3.1.4 Raum in der Nutzungseinheit
 Enum _Raum {
