@@ -430,8 +430,7 @@ Table Mess_Pruefergebnis_Dunstabzugsleitung {
   Bemerkung text [note: '§ 19_B | Bemerkung zur Dunstabzugsanlage']
   Reinigungdurchfuehrung _ErgebnisDunstDurchfuehrung [note: '§ 19_B | Reinigungdurchführung der Anlage']
   Wartungsvertrag bool [note: '§ 19_B | Merkmal, ob ein Wartungsvertrag vorliegt.']
-  // TODO Wartungsfirma sollten wir als Kommununikation modellieren
-  // Wartungsfirma text [note: '§ 19_B | Angabe, welche Firma die Wartung durchfuehrt.']
+  ID_Kommunikation_Wartungsfirma int [ref: > Kommunikation.ID_Kommunikation, note: '§ 19_B | Verweis auf die Kommunikation der Wartungsfirma.']
   // TODO es gibt doch nicht nur einen Feuerlöscher
   Feuerloescher_Brandklasse _FeuerloescherBrandklasse [note: '§ 19_B | Brandklasse des Feuerlöschers']
   Feuerloescher_Groesse float [note: '§ 19_B | Größe des Feuerlöschers']
@@ -487,6 +486,7 @@ Table Feuerstaette {
   ID_Feuerstaette int [pk, increment, unique]
   ID_Raum int [not null, ref: > Raum.ID_Raum, note: '§ 19_B | Verweis auf Raum. Feuerstaette steht in einem Raum']
   ID_Abgasanlage int [ref: > Abgasanlage.ID_Abgasanlage, note: '§ 19_B | Feuerstaetten sind an einer Abgasanlage angeschlossen (ID_Abgasanlage in Abgasanlage-Kommentar)']
+  ID_BImSchV44_Aggregationspool int [ref: > BImSchV44_Aggregationspool.ID_BImSchV44_Aggregationspool, note: '§ 19_B | Aggregationspool nach 44. BImSchV, dem diese Feuerstätte zugeordnet ist.']
   NWL_min float [note: 'QS | Minimale Nennwärmeleistung in kW']
   NWL_max float [note: 'QS | Maximale Nennwärmeleistung in kW']
   NWL_eingestellt float [note: '§ 19_K | Eingestellte Nennwärmeleistung in kW']
@@ -536,6 +536,10 @@ Table Feuerstaette {
   Schreiben_Behoerde_Fristverlaengerung_BImSchV int [ref: - Dokument.ID_Dokument, note: '§ 19_K | Verweis auf PDF-Dokument – Schreiben der Behoerde hinsichtlich Fristverlaengerung']
   Etagenheizung_GEG24 bool [note: '§ 19_B | Merkmal, ob die Feuerstätte eine Etagenheizung ist.']
   Etagenheizung_ERF_Austausch_GEG24 bool [note: '§ 19_B | Merkmal, ob die ERF mit fossilen Brennstoffen betrieben wird und nach der Wärmeplanung ausgestauscht wurde.']
+}
+
+Table BImSchV44_Aggregationspool {
+  ID_BImSchV44_Aggregationspool int [pk, increment, unique]
 }
 
 Table Gasfeuerstaette {
@@ -830,8 +834,8 @@ Table Feste_Brennstoff_Ableitbedingungen {
   Abstand_Muendung_Dach float [note: '§ 19_B | Horizontaler Abstand der Mündung zum Dach in Meter']
   Abstand_Mueuendung_Lueftung float [note: '§ 19_B | Horizontaler Abstand der Mündung zu Lüftungsöffnung in Meter']
   Berechnung_VDI3781Blatt4 bool [note: '§ 19_B | Merkmal, ob die Ableitbedingungen nach der VDI 3781 Blatt 4 berechnet worden sind.']
-  Berechnung_VDI3781Blatt4_Dokument int [note: 'QS | Verweis auf PDF-Dokument']
-  Berechnung_Par19_ABC_Dokument int [note: 'QS | Verweis auf PDF-Dokument']
+  Berechnung_VDI3781Blatt4_Dokument int [ref: > Dokument.ID_Dokument, note: 'QS | Verweis auf PDF-Dokument']
+  Berechnung_Par19_ABC_Dokument int [ref: > Dokument.ID_Dokument, note: 'QS | Verweis auf PDF-Dokument']
   Firstnah_angeordnet bool [note: 'QS | Merkmal, ob der Schornstein nach § 19 der 1. BImSchV firstnah angeordnet ist oder nicht!']
   Horizontaler_Abstand_First_Schornstein float [note: 'QS | Siehe § 19 Abs. 1 Nr. 1']
   Horizontaler_Abstand_Schornstein_Traufe float [note: 'QS | Siehe § 19 Abs. 1 Nr. 1']
@@ -1108,7 +1112,7 @@ Table GEG {
   Verschlechterungsverbot_FU_Neu bool [note: '§ 19_B | Fachunternehmererklärung über die Einhaltung des Verschlechterungsverbotes bei Neuanlage liegt vor.']
   Pruefung_Landesrecht bool [note: '§ 19_B | GEG-Prüfung ist nicht notwendig. Achtung: Auslegung erfolgt nach Landesrecht!']
   Fristverlaengerung_Behoerde date [note: '§ 19_B | Festgelegtes Datum der Behörde hinsichtlich Nachrüstverpflichtung der Feuerungsanlage']
-  Fristverlaengerung_Behoerde_Schreiben int [note: '§ 19_B | Verweis auf PDF-Dokument – Schreiben der Behörde hinsichtlich Fristverlängerung']
+  Fristverlaengerung_Behoerde_Schreiben int [ref: > Dokument.ID_Dokument, note: '§ 19_B | Verweis auf PDF-Dokument – Schreiben der Behörde hinsichtlich Fristverlängerung']
   Brennstoff_marktueblich bool [note: '§ 19_B | Merkmal, ob ein marktüblicher Brennstoff verwendet wird.']
   Regeleinrichtung bool [note: '§ 19_B | Merkmal, ob eine Regeleinrichtung vorhanden in Abhängigkeit der Außentemperatur oder einer anderen geeignten Führungsgröße und der Zeit ist.']
   Heizkessel_einzeln_produziert bool [note: '§ 19_B | Der Heizkessel wurde einzeln produziert']
@@ -1281,7 +1285,7 @@ Table Sonstige_Arbeit {
 
 Table Dunstabzugsanlage_Haube {
   ID_Dunstabzugsanlage_Haube int [pk, increment, unique]
-  ID_Dunstabzuganlage_Leitung int [not null, ref: > Dunstabzuganlage_Leitung.ID_Dunstabzuganlage_Leitung, note: '§ 19_B | Haube gehoert zu Dunstabzugsleitung']
+  ID_Abschnitt_Dunstabzugsleitung int [not null, ref: > Abschnitt_Dunstabzugsleitung.ID_Abschnitt_Dunstabzugsleitung, note: '§ 19_B | Abschnitt der Dunstabzugsleitung, an dem die Haube hängt.']
   ID_Raum int [not null, ref: > Raum.ID_Raum, note: '§ 19_B | Raum in dem die Dunstabzugshaube steht.']
   Bauform _DunstabzugHaubeBauform [note: '§ 19_B | Bauformen von Dunstabzugs¬hauben oder Lüftungsdecken, gemäß Anhang D VDI 2052']
   Nutzung _DunstabzugHaubeNutzung [note: '§ 19_B | Nutzungsart des Dunstabzugs.']
@@ -1648,7 +1652,8 @@ Table Rechnung {
 
 Table Zubehoer {
   ID_Zubehoer int [pk, increment, unique]
-  ID_Abschnitt int [not null, ref: > Abschnitt.ID_Abschnitt, note: '§ 19_B | Zubehoer gehoert zu einem Abschnitt']
+  Anlagetyp _ZubehoerAnlagetyp [not null, note: '§ 19_B | Typ der Anlage (bestimmt Zieltabelle von ID_Anlage)']
+  ID_Anlage int [not null, note: '§ 19_B | ID der Anlage (Zieltabelle ergibt sich aus Anlagetyp)']
   Zubehoer _Zubehoer [note: '§ 19_B | Beschreibung des Zubehörs. | Siehe Kennzeichnungstabelle 3.3']
 }
 
@@ -1759,6 +1764,11 @@ Enum _MangelHerkunftstyp {
   Kehrbuch_Abnahme
   Kehrbuch_Feuerstaettenschau
   Kehrbuch_Anlassbezogene_Ueberpruefung
+}
+
+Enum _ZubehoerAnlagetyp {
+  Abschnitt
+  Dunstabzuganlage_Leitung
 }
 
 Enum _DokumentHerkunftstyp {

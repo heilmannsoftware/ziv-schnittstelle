@@ -338,7 +338,7 @@ def generate_html(tables, enums, relations, notes, arts):
         ("Abgasanlagen", ['Abgasanlage', 'Abschnitt', 'Schicht', 'Muendung', 'Reinigungsart', 'Zubehoer']),
         ("Lueftungsanlagen", ['Lueftungsanlage', 'Raumlueftung', 'Raumlueftungsleitung', 'Raumluftoeffnung', 'Mess_Pruefergebnis_Raumluftoeffnung']),
         ("Nutzung/Wohnung/Raum", ['Nutzungseinheit', 'Nutzungseinheit_Eigentuemer', 'Wohnung', 'Raum']),
-        ("Feuerstätten", ['Feuerstaette', 'Gasfeuerstaette', 'Oelfeuerstaette', 'Feste_Brennstoff_Feuerstaette', 'Sonderfeuerstaette', 'Waermepumpe', 'Feste_Brennstoff_Ableitbedingungen', 'Nachgeschalteter_Waermeaustauscher', 'Brennstoffversorgungsanlage', 'Raeucheranlage', 'Effizienzlabel']),
+        ("Feuerstätten", ['Feuerstaette', 'BImSchV44_Aggregationspool', 'Gasfeuerstaette', 'Oelfeuerstaette', 'Feste_Brennstoff_Feuerstaette', 'Sonderfeuerstaette', 'Waermepumpe', 'Feste_Brennstoff_Ableitbedingungen', 'Nachgeschalteter_Waermeaustauscher', 'Brennstoffversorgungsanlage', 'Raeucheranlage', 'Effizienzlabel']),
         ("Messergebnisse", ['Mess_Pruefergebnis_Gasfeuerstaette', 'Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette', 'Mess_Pruefergebnis_Oelfeuerstaette', 'Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette', 'Mess_Pruefergebnis_Feststofffeuerstaette_HK', 'Mess_Pruefergebnis_Feststofffeuerstaette_ERF', 'Mess_Pruefergebnis_Sonderfeuerstaette', 'Mess_Pruefergebnis_Waermepumpe', 'Messgeraet', 'Messgeraet_44', 'Messunsicherheit']),
         ("Dunstabzug", ['Dunstabzuganlage_Leitung', 'Dunstabzugsanlage_Haube', 'Dunstabzugsanlage_Feuerstaette', 'Abschnitt_Dunstabzugsleitung', 'Ventilator_Dunstabzug', 'Mess_Pruefergebnis_Dunstabzugsleitung']),
         ("Verbrennungsluft", ['Verbrennungsluftzufuhr_Element', 'Feuerst_Verbr_Element']),

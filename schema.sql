@@ -41,6 +41,10 @@ CREATE TABLE Abschnitt (
     ID_Anlage INTEGER NOT NULL
 );
 
+CREATE TABLE BImSchV44_Aggregationspool (
+    ID_BImSchV44_Aggregationspool INTEGER PRIMARY KEY AUTOINCREMENT
+);
+
 CREATE TABLE Bundes_KUEO (
     ID_Bundes_KUEO INTEGER PRIMARY KEY AUTOINCREMENT,
     Gebuehrentext TEXT,
@@ -156,6 +160,13 @@ CREATE TABLE Ort (
     Name TEXT
 );
 
+CREATE TABLE Zubehoer (
+    ID_Zubehoer INTEGER PRIMARY KEY AUTOINCREMENT,
+    Anlagetyp TEXT NOT NULL CHECK(Anlagetyp IN ('Abschnitt', 'Dunstabzuganlage_Leitung')),
+    ID_Anlage INTEGER NOT NULL,
+    Zubehoer TEXT CHECK(Zubehoer IN ('AA', 'AK', 'AM', 'AV', 'BK', 'BS', 'DH', 'DK', 'DM', 'FA', 'FE', 'KA', 'LF', 'NE', 'NK', 'NM', 'NV', 'ROE', 'RV', 'SL', 'TB', 'VA', 'VV', 'ZD', 'ZG', 'ZW', 'BF', 'BV', 'FM', 'FV', 'UV'))
+);
+
 CREATE TABLE Schicht (
     ID_Schicht INTEGER PRIMARY KEY AUTOINCREMENT,
     Nummer INTEGER,
@@ -174,13 +185,6 @@ CREATE TABLE Schicht (
     Feuerwiderstandsklasse TEXT CHECK(Feuerwiderstandsklasse IN ('L00', 'L30', 'L60', 'L90', 'L120', 'L30A', 'L90A')),
     Waermedurchlasswiderstand REAL,
     ID_Abschnitt INTEGER NOT NULL,
-    FOREIGN KEY (ID_Abschnitt) REFERENCES Abschnitt (ID_Abschnitt)
-);
-
-CREATE TABLE Zubehoer (
-    ID_Zubehoer INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Abschnitt INTEGER NOT NULL,
-    Zubehoer TEXT CHECK(Zubehoer IN ('AA', 'AK', 'AM', 'AV', 'BK', 'BS', 'DH', 'DK', 'DM', 'FA', 'FE', 'KA', 'LF', 'NE', 'NK', 'NM', 'NV', 'ROE', 'RV', 'SL', 'TB', 'VA', 'VV', 'ZD', 'ZG', 'ZW', 'BF', 'BV', 'FM', 'FV', 'UV')),
     FOREIGN KEY (ID_Abschnitt) REFERENCES Abschnitt (ID_Abschnitt)
 );
 
@@ -418,10 +422,7 @@ CREATE TABLE Dunstabzuganlage_Leitung (
     Geraete_Kategorie TEXT CHECK(Geraete_Kategorie IN ('BA', 'BH', 'BO', 'DW', 'FC', 'GK', 'GO', 'HD', 'HE', 'HK', 'HO', 'KE', 'KH', 'KK', 'KO', 'KW', 'LE', 'LT', 'OK', 'RA', 'RD', 'RF', 'RH', 'RT', 'SD', 'SF', 'SG', 'SH', 'SO', 'UW', 'VM', 'VW', 'WA', 'WK', 'WL', 'WM', 'WP', 'WT', 'NO', 'PO', 'BP', 'EA', 'FT', 'GY', 'KB', 'KV', 'SI', 'WB', 'WO', 'SP', 'DE', 'KG', 'HG', 'GF', 'LP', 'KP', 'NR', 'FW', 'BB', 'SA', 'HT', 'GN', 'HB')),
     Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
     Leistung REAL,
-    Sonstige_Maengel TEXT,
-    Maengel_Frist DATE,
     Bemerkung TEXT,
-    Zubehoer TEXT,
     FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
 );
 
@@ -590,6 +591,8 @@ CREATE TABLE Feste_Brennstoff_Ableitbedingungen (
     Abstand_Muendung_Dach REAL,
     Abstand_Mueuendung_Lueftung REAL,
     Berechnung_VDI3781Blatt4 BOOL,
+    Berechnung_VDI3781Blatt4_Dokument INTEGER,
+    Berechnung_Par19_ABC_Dokument INTEGER,
     Firstnah_angeordnet BOOL,
     Horizontaler_Abstand_First_Schornstein REAL,
     Horizontaler_Abstand_Schornstein_Traufe REAL,
@@ -598,7 +601,9 @@ CREATE TABLE Feste_Brennstoff_Ableitbedingungen (
     Dachneigung REAL,
     Hoehe_ueber_Flachdach REAL,
     Dachtiefe REAL,
-    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
+    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage),
+    FOREIGN KEY (Berechnung_VDI3781Blatt4_Dokument) REFERENCES Dokument (ID_Dokument),
+    FOREIGN KEY (Berechnung_Par19_ABC_Dokument) REFERENCES Dokument (ID_Dokument)
 );
 
 CREATE TABLE Muendung (
@@ -698,12 +703,14 @@ CREATE TABLE Mess_Pruefergebnis_Dunstabzugsleitung (
     Bemerkung TEXT,
     Reinigungdurchfuehrung TEXT CHECK(Reinigungdurchfuehrung IN ('BT', 'FF', 'WF', 'AB', 'CH')),
     Wartungsvertrag BOOL,
+    ID_Kommunikation_Wartungsfirma INTEGER,
     Feuerloescher_Brandklasse TEXT CHECK(Feuerloescher_Brandklasse IN ('A', 'B', 'C', 'D', 'F')),
     Feuerloescher_Groesse REAL,
     Feuerloescher_Groesse_Einheit TEXT CHECK(Feuerloescher_Groesse_Einheit IN ('L', 'KG')),
     Feuerloescher_Loeschmittel TEXT CHECK(Feuerloescher_Loeschmittel IN ('W', 'S', 'P', 'CO2', 'FET')),
     Loeschanlage BOOL,
-    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung)
+    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung),
+    FOREIGN KEY (ID_Kommunikation_Wartungsfirma) REFERENCES Kommunikation (ID_Kommunikation)
 );
 
 CREATE TABLE Ventilator_Dunstabzug (
@@ -768,7 +775,7 @@ CREATE TABLE Abnahme (
     ID_Abnahme INTEGER PRIMARY KEY AUTOINCREMENT,
     ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
     ID_Nutzungseinheit INTEGER,
-    Typ INTEGER,
+    Typ TEXT,
     Berechnungstyp TEXT CHECK(Berechnungstyp IN ('MIN', 'AW', 'EUR')),
     Berechnungswert REAL,
     Ergebnis_ok BOOL,
@@ -1044,7 +1051,7 @@ CREATE TABLE Kehrbuch_Taetigkeit (
 
 CREATE TABLE Dunstabzugsanlage_Haube (
     ID_Dunstabzugsanlage_Haube INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Dunstabzuganlage_Leitung INTEGER NOT NULL,
+    ID_Abschnitt_Dunstabzugsleitung INTEGER NOT NULL,
     ID_Raum INTEGER NOT NULL,
     Bauform TEXT CHECK(Bauform IN ('SO', 'DE', 'MI', 'WA', 'GR', 'MA', 'IN', 'LG', 'LD', 'GS', 'LO', 'LR')),
     Nutzung TEXT CHECK(Nutzung IN ('H', 'G', 'U')),
@@ -1072,7 +1079,7 @@ CREATE TABLE Dunstabzugsanlage_Haube (
     Behandlung_Abluft TEXT CHECK(Behandlung_Abluft IN ('SO', 'AK', 'UV', 'WA', 'NV')),
     Injektionshaube BOOL,
     Schalter_Installation TEXT,
-    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung),
+    FOREIGN KEY (ID_Abschnitt_Dunstabzugsleitung) REFERENCES Abschnitt_Dunstabzugsleitung (ID_Abschnitt_Dunstabzugsleitung),
     FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum)
 );
 
@@ -1080,6 +1087,7 @@ CREATE TABLE Feuerstaette (
     ID_Feuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
     ID_Raum INTEGER NOT NULL,
     ID_Abgasanlage INTEGER,
+    ID_BImSchV44_Aggregationspool INTEGER,
     NWL_min REAL,
     NWL_max REAL,
     NWL_eingestellt REAL,
@@ -1087,10 +1095,11 @@ CREATE TABLE Feuerstaette (
     "44BImSchV_Art" TEXT CHECK("44BImSchV_Art" IN ('SU', 'MD', 'GT', 'ZM', 'MO')),
     "44BImSchV_FWL_max" REAL,
     "44BImSchV_Aggregationsregel" BOOL,
-    "44BImSchV_Aggregationspool_" REAL,
     Genehmigungsbeduerftig TEXT,
     Baujahr INTEGER,
     Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
+    Zulaessige_Brennstoffart TEXT,
+    Eingesetzte_Brennstoffart TEXT,
     Errichtung DATE,
     Waermeaustauscher_Hersteller TEXT,
     Waermeaustauscher_Typ TEXT,
@@ -1124,11 +1133,13 @@ CREATE TABLE Feuerstaette (
     Ausnahmegenehmigung_Behoerde_Dokumente INTEGER,
     Austausch_Frist_Behoerde_BImSchV_Datum DATE,
     Grenzwert_Frist_Behoerde_BImSchV_Datum DATE,
+    Grenzwert_Behoerde_BImSchV REAL,
     Schreiben_Behoerde_Fristverlaengerung_BImSchV INTEGER,
     Etagenheizung_GEG24 BOOL,
     Etagenheizung_ERF_Austausch_GEG24 BOOL,
     FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum),
     FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage),
+    FOREIGN KEY (ID_BImSchV44_Aggregationspool) REFERENCES BImSchV44_Aggregationspool (ID_BImSchV44_Aggregationspool),
     FOREIGN KEY (Ausnahmegenehmigung_Behoerde_Dokumente) REFERENCES Dokument (ID_Dokument),
     FOREIGN KEY (Schreiben_Behoerde_Fristverlaengerung_BImSchV) REFERENCES Dokument (ID_Dokument)
 );
@@ -1369,7 +1380,8 @@ CREATE TABLE GEG (
     GEG24_65_EE_eingahalten BOOL,
     GEG24_Beschluss_Zentralisierung DATE,
     Unternehmererklaerung_Abrechnung_Bestaetigung BOOL,
-    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
+    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette),
+    FOREIGN KEY (Fristverlaengerung_Behoerde_Schreiben) REFERENCES Dokument (ID_Dokument)
 );
 
 CREATE TABLE Gasfeuerstaette (
@@ -1414,6 +1426,7 @@ CREATE TABLE Oelfeuerstaette (
     ID_Feuerstaette INTEGER NOT NULL,
     Bearbeitungszyklus_KUEO TEXT CHECK(Bearbeitungszyklus_KUEO IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
     Bearbeitungszyklus_BImSchV TEXT CHECK(Bearbeitungszyklus_BImSchV IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
+    Jaehrliche_Haeufigkeit_Oel INTEGER,
     Brennstoff_schwefelarm BOOL,
     Brenner_Hersteller TEXT,
     Brenner_Typ TEXT,
@@ -1493,7 +1506,7 @@ CREATE TABLE Mess_Pruefergebnis_Feststofffeuerstaette_ERF (
     ID_Mess_Pruefergebnis_Feststofffeuerstaette_ERF INTEGER PRIMARY KEY AUTOINCREMENT,
     ID_Feste_Brennstoff_Feuerstaette INTEGER NOT NULL,
     MIN TEXT,
-    Messart_1BImSchV1 TEXT,
+    Messart_1BImSchV TEXT,
     Ausfuehrungsdatum DATE,
     Bedienungsanleitung BOOL,
     Emissionswert_CO REAL,
@@ -1542,9 +1555,7 @@ CREATE TABLE Mess_Pruefergebnis_Feststofffeuerstaette_HK (
     ID_Mess_Pruefergebnis_Feststofffeuerstaette_HK INTEGER PRIMARY KEY AUTOINCREMENT,
     ID_Feste_Brennstoff_Feuerstaette INTEGER NOT NULL,
     MIN TEXT,
-    Messart_1BImSchV1 TEXT CHECK(Messart_1BImSchV1 IN ('U14_1', 'MU14_2', 'MU15_1', 'WU14_5', 'B4_8')),
-    Messart_1BImSchV2 TEXT CHECK(Messart_1BImSchV2 IN ('U14_1', 'MU14_2', 'MU15_1', 'WU14_5', 'B4_8')),
-    Messart_1BImSchV3 TEXT CHECK(Messart_1BImSchV3 IN ('U14_1', 'MU14_2', 'MU15_1', 'WU14_5', 'B4_8')),
+    Messart_1BImSchV TEXT,
     BImSchV BOOL,
     Ausfuehrungsdatum DATE,
     Bedienungsanleitung BOOL,
@@ -1603,11 +1614,9 @@ CREATE TABLE Pruefergebnis_GEG (
     Datum_Behoerde DATE,
     Ausfuehrungsdatum DATE,
     Erstelldatum DATE,
-    Frist_Neuanlage DATE,
-    Frist_Bestandsanlage DATE,
+    Frist DATE,
     Ergebnis BOOL,
-    Erlaeuterung_Neuanlage TEXT,
-    Erlaeuterung_Bestandsanlage TEXT,
+    Erlaeuterung TEXT,
     FOREIGN KEY (ID_GEG) REFERENCES GEG (ID_GEG)
 );
 

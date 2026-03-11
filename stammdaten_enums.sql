@@ -1935,4 +1935,10 @@ INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Waermep
 INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Dunstabzugsleitung');
 INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Raumluftoeffnung');
 
--- Gesamt: 122 Enum-Tabellen mit 1207 Werten
+CREATE TABLE IF NOT EXISTS Enum_ZubehoerAnlagetyp (
+    Wert TEXT PRIMARY KEY
+);
+INSERT INTO Enum_ZubehoerAnlagetyp (Wert) VALUES ('Abschnitt');
+INSERT INTO Enum_ZubehoerAnlagetyp (Wert) VALUES ('Dunstabzuganlage_Leitung');
+
+-- Gesamt: 123 Enum-Tabellen mit 1209 Werten

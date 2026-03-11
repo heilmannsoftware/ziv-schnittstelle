@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZIV Datenmodell 4.0 - ER-Diagramm</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+}
+
+/* Header bar */
+.header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 10px 20px;
+    display: flex; align-items: center; gap: 16px;
+    height: 52px;
+}
+.header h1 {
+    font-size: 16px; font-weight: 700; color: #fff;
+    white-space: nowrap;
+}
+.header .stats {
+    font-size: 12px; color: #888; white-space: nowrap;
+}
+.header .search-box {
+    flex: 0 0 260px;
+    position: relative;
+}
+.header .search-box input {
+    width: 100%; padding: 6px 12px 6px 32px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; color: #fff; font-size: 13px;
+    outline: none; font-family: inherit;
+}
+.header .search-box input:focus {
+    border-color: rgba(91,141,239,0.6);
+    background: rgba(255,255,255,0.12);
+}
+.header .search-box::before {
+    content: "\1F50D"; position: absolute; left: 10px; top: 50%;
+    transform: translateY(-50%); font-size: 13px; opacity: 0.5;
+}
+.controls {
+    display: flex; gap: 6px; margin-left: auto;
+}
+.controls button {
+    padding: 5px 12px; font-size: 12px; font-family: inherit;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px; color: #ccc; cursor: pointer;
+    transition: background 0.15s;
+}
+.controls button:hover { background: rgba(255,255,255,0.15); }
+
+/* Legend */
+.legend {
+    position: fixed; bottom: 16px; left: 16px; z-index: 100;
+    background: rgba(26, 26, 46, 0.92);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 12px 14px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    font-size: 11px;
+    transition: transform 0.2s;
+}
+.legend.collapsed {
+    transform: translateY(calc(100% - 36px));
+}
+.legend-title {
+    font-weight: 700; font-size: 12px; margin-bottom: 8px;
+    cursor: pointer; user-select: none; color: #aaa;
+}
+.legend-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 2px 0; cursor: pointer;
+}
+.legend-item:hover { opacity: 0.7; }
+.legend-dot {
+    width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0;
+}
+.legend-label { color: #bbb; }
+
+/* Tooltip */
+.tooltip {
+    position: fixed; z-index: 200; pointer-events: none;
+    background: rgba(20, 20, 40, 0.95);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 12px; max-width: 320px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    display: none;
+}
+.tooltip .tt-title {
+    font-weight: 700; font-size: 14px; margin-bottom: 6px;
+}
+.tooltip .tt-group {
+    font-size: 11px; color: #888; margin-bottom: 6px;
+}
+.tooltip .tt-cols {
+    font-size: 11px; line-height: 1.6;
+}
+.tooltip .tt-pk { color: #FFD60A; }
+.tooltip .tt-fk { color: #5B8DEF; }
+
+/* Footer */
+.footer-info {
+    position: fixed; bottom: 16px; right: 16px; z-index: 100;
+    font-size: 10px; color: #555;
+}
+
+/* SVG */
+svg { display: block; }
+
+/* Link labels */
+.link-label {
+    font-size: 9px;
+    fill: #666;
+    pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>ZIV Datenmodell 4.0</h1>
+    <span class="stats" id="statsText"></span>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Tabelle suchen..." autocomplete="off">
+    </div>
+    <div class="controls">
+        <button onclick="resetView()" title="Ansicht zuruecksetzen">Reset</button>
+        <button onclick="toggleLabels()" title="Kantenbezeichnungen ein/aus" id="labelBtn">Labels aus</button>
+        <button onclick="toggleFixed()" title="Alle Knoten fixieren/loesen" id="fixBtn">Fixieren</button>
+        <button onclick="toggleEdges()" title="Kanten hover/sichtbar umschalten" id="edgeBtn">Kanten sichtbar</button>
+    </div>
+</div>
+
+<div class="legend" id="legend">
+    <div class="legend-title" onclick="toggleLegend()">Gruppen</div>
+    <div class="legend-items" id="legendItems"></div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+<div class="footer-info">Generiert am 2026-03-11</div>
+
+<script>
+// ============================================================
+// Data
+// ============================================================
+const groups = [{"name": "Stammdaten/Verwaltung", "color": "#5B8DEF"}, {"name": "Standort", "color": "#43A047"}, {"name": "Abgasanlagen", "color": "#EF5350"}, {"name": "Lueftungsanlagen", "color": "#AB47BC"}, {"name": "Nutzung/Wohnung/Raum", "color": "#FF7043"}, {"name": "Feuerstaetten", "color": "#FFA726"}, {"name": "Messergebnisse", "color": "#26C6DA"}, {"name": "Dunstabzug", "color": "#8D6E63"}, {"name": "Verbrennungsluft", "color": "#EC407A"}, {"name": "GEG/Effizienz", "color": "#66BB6A"}, {"name": "Hoheitliche Taetigkeiten", "color": "#7E57C2"}, {"name": "Feuerstaettenbescheid", "color": "#FFCA28"}, {"name": "Abrechnung", "color": "#29B6F6"}, {"name": "Kehrbuch", "color": "#78909C"}, {"name": "Sonstiges", "color": "#BDBDBD"}];
+const nodes = [{"id": "Abschnitt", "pk": ["ID_Abschnitt"], "fk": ["ID_Anlage*"], "group": 2}, {"id": "BImSchV44_Aggregationspool", "pk": ["ID_BImSchV44_Aggregationspool"], "fk": [], "group": 5}, {"id": "Bundes_KUEO", "pk": ["ID_Bundes_KUEO"], "fk": [], "group": 12}, {"id": "Dokument", "pk": ["ID_Dokument"], "fk": ["ID_Herkunft*"], "group": 14}, {"id": "Kommunikation", "pk": ["ID_Kommunikation"], "fk": [], "group": 0}, {"id": "Landesrechtliche_Vorschrift", "pk": ["ID_Landesrechtliche_Vorschrift"], "fk": [], "group": 12}, {"id": "Mangel", "pk": ["ID_Mangel"], "fk": ["ID_Herkunft*"], "group": 13}, {"id": "Meta", "pk": [], "fk": [], "group": 0}, {"id": "Ort", "pk": ["ID_Ort"], "fk": [], "group": 1}, {"id": "Zubehoer", "pk": ["ID_Zubehoer"], "fk": ["ID_Anlage*"], "group": 2}, {"id": "Schicht", "pk": ["ID_Schicht"], "fk": ["ID_Abschnitt"], "group": 2}, {"id": "Fremdfirma", "pk": ["ID_Fremdfirma"], "fk": ["ID_Kommunikation"], "group": 0}, {"id": "Untere_Aufsichtsbehoerde", "pk": ["ID_Untere_Aufsichtbehoerde"], "fk": ["ID_Kommunikation"], "group": 0}, {"id": "Vertreter", "pk": ["ID_Vertreter"], "fk": ["ID_Kommunikation"], "group": 0}, {"id": "Strasse", "pk": ["ID_Strasse"], "fk": ["ID_Ort"], "group": 1}, {"id": "Kehrbezirk", "pk": ["ID_Kehrbezirk"], "fk": ["ID_Vertreter_11", "ID_Vertreter_11a"], "group": 0}, {"id": "Mitarbeiter", "pk": ["ID_Mitarbeiter"], "fk": ["ID_Kommunikation", "ID_Vertreter_11b"], "group": 0}, {"id": "Grundstueck", "pk": ["ID_Grundstueck"], "fk": ["ID_Kommunikation_Verwalter", "ID_Kommunikation_Eigentuemer", "ID_Strasse"], "group": 1}, {"id": "Kehrbuch", "pk": ["ID_Kehrbuch"], "fk": ["ID_Kehrbezirk"], "group": 13}, {"id": "Messgeraet", "pk": ["ID_Messgeraet"], "fk": ["ID_Kehrbezirk"], "group": 6}, {"id": "Messgeraet_44", "pk": ["ID_Messgeraet_44"], "fk": ["ID_Kehrbezirk"], "group": 6}, {"id": "Gebaeude_Gebaeudeteil", "pk": ["ID_Gebaeude_Gebaeudeteil"], "fk": ["ID_Grundstueck", "ID_Kommunikation_Mieter", "ID_Kommunikation_Verwalter", "ID_Kehrbezirk"], "group": 1}, {"id": "Messunsicherheit", "pk": ["ID_Messunsicherheit"], "fk": ["ID_Messgeraet"], "group": 6}, {"id": "Abgasanlage", "pk": ["ID_Abgasanlage"], "fk": ["ID_Gebaeude_Gebaeudeteil"], "group": 2}, {"id": "Dachskizze", "pk": ["ID_Dachskizze"], "fk": ["ID_Gebaeude_Gebaeudeteil"], "group": 14}, {"id": "Dunstabzuganlage_Leitung", "pk": ["ID_Dunstabzuganlage_Leitung"], "fk": ["ID_Gebaeude_Gebaeudeteil"], "group": 7}, {"id": "Feuerstaettenbescheid_Grunddaten", "pk": ["ID_Feuerstaettenbescheid_Grunddaten"], "fk": ["ID_Gebaeude_Gebaeudeteil", "Empfaenger"], "group": 11}, {"id": "Gebaeude_Eigentuemer", "pk": ["ID_Gebaeude_Eigentuemer"], "fk": ["ID_Gebaeude_Gebaeudeteil", "ID_Kommunikation"], "group": 1}, {"id": "Gebaeudeeigenschaft", "pk": ["ID_Gebaeudeeigenschaft"], "fk": ["ID_Gebaeude_Gebaeudeteil"], "group": 1}, {"id": "Gefaehrdungsbeurteilung", "pk": ["ID_Gefaehrdungsbeurteilung"], "fk": ["ID_Gebaeude_Gebaeudeteil"], "group": 14}, {"id": "Kehrbuch_Gebaeude", "pk": ["ID_Kehrbuch_Gebaeude"], "fk": ["ID_Kehrbuch", "ID_Gebaeude_Gebaeudeteil", "ID_Kommunikation_Verwalter", "ID_Kommunikation_Mieter"], "group": 13}, {"id": "Leistung", "pk": ["ID_Leistung"], "fk": ["ID_Gebaeude_Gebaeudeteil"], "group": 12}, {"id": "Lueftungsanlage", "pk": ["ID_Lueftungsanlage"], "fk": ["ID_Gebaeude_Gebaeudeteil"], "group": 3}, {"id": "Nutzungseinheit", "pk": ["ID_Nutzungseinheit"], "fk": ["ID_Gebaeude_Gebaeudeteil"], "group": 4}, {"id": "Raumlueftung", "pk": ["ID_Raumlueftung"], "fk": ["ID_Gebaeude_Gebaeudeteil"], "group": 3}, {"id": "Rechnung", "pk": ["ID_Rechnung"], "fk": ["ID_Gebaeude_Gebaeudeteil", "ID_Kommunikation_Rechnungsempfaenger"], "group": 12}, {"id": "Feste_Brennstoff_Ableitbedingungen", "pk": ["ID_Feste_Brennstoff_Ableitbedingungen"], "fk": ["ID_Abgasanlage", "Berechnung_VDI3781Blatt4_Dokument", "Berechnung_Par19_ABC_Dokument"], "group": 5}, {"id": "Muendung", "pk": ["ID_Muendung"], "fk": ["ID_Abgasanlage"], "group": 2}, {"id": "Reinigungsart", "pk": ["ID_Reinigungsart"], "fk": ["ID_Abgasanlage"], "group": 2}, {"id": "Dachskizze_Element", "pk": ["ID_Dachskizze_Element"], "fk": ["ID_Dachskizze"], "group": 14}, {"id": "Abschnitt_Dunstabzugsleitung", "pk": ["ID_Abschnitt_Dunstabzugsleitung"], "fk": ["ID_Dunstabzuganlage_Leitung"], "group": 7}, {"id": "Mess_Pruefergebnis_Dunstabzugsleitung", "pk": ["ID_Mess_Pruefergebnis_Dunstabzugsleitung"], "fk": ["ID_Dunstabzuganlage_Leitung", "ID_Kommunikation_Wartungsfirma"], "group": 7}, {"id": "Ventilator_Dunstabzug", "pk": ["ID_Ventilator_Dunstabzug"], "fk": ["ID_Dunstabzuganlage_Leitung"], "group": 7}, {"id": "Bescheid_Position", "pk": ["ID_Bescheid_Position"], "fk": ["ID_Feuerstaettenbescheid_Grunddaten", "ID_Anlage*"], "group": 11}, {"id": "Feuerstaettenschau", "pk": ["ID_Feuerstaettenschau"], "fk": ["ID_Gebaeude_Gebaeudeteil", "ID_Kehrbuch_Gebaeude"], "group": 10}, {"id": "Kehrbuch_Gebaeude_Eigentuemer", "pk": ["ID_Kehrbuch_Gebaeude_Eigentuemer"], "fk": ["ID_Kehrbuch_Gebaeude", "ID_Kommunikation"], "group": 13}, {"id": "Datum_Ausfuehrung_Leistung", "pk": ["ID_Datum_Ausfuehrung_Leistung"], "fk": ["ID_Leistung"], "group": 12}, {"id": "Abnahme", "pk": ["ID_Abnahme"], "fk": ["ID_Gebaeude_Gebaeudeteil", "ID_Nutzungseinheit"], "group": 10}, {"id": "Anlassbezogene_Ueberpruefung", "pk": ["ID_Anlassbezogene_Ueberpruefung"], "fk": ["ID_Gebaeude_Gebaeudeteil", "ID_Nutzungseinheit"], "group": 10}, {"id": "Aufteilung_Leistung", "pk": ["ID_Aufteilung_Leistung"], "fk": ["ID_Leistung", "ID_Nutzungseinheit"], "group": 12}, {"id": "Brennstoffversorgungsanlage", "pk": ["ID_Brennstoffversorgungsanlage"], "fk": ["ID_Nutzungseinheit"], "group": 5}, {"id": "Kehrbuch_Nutzungseinheit", "pk": ["ID_Kehrbuch_Nutzungseinheit"], "fk": ["ID_Kehrbuch_Gebaeude", "ID_Nutzungseinheit", "ID_Kommunikation_Wohnungseigentuemer", "ID_Kommunikation_Betreiber"], "group": 13}, {"id": "Nutzungseinheit_Eigentuemer", "pk": ["ID_Nutzungseinheit_Eigentuemer"], "fk": ["ID_Nutzungseinheit", "ID_Kommunikation"], "group": 4}, {"id": "Raeucheranlage", "pk": ["ID_Raeucheranlage"], "fk": ["ID_Abgasanlage", "ID_Nutzungseinheit"], "group": 5}, {"id": "Sonstige_Arbeit", "pk": ["ID_Sonstige_Arbeit"], "fk": ["ID_Nutzungseinheit"], "group": 10}, {"id": "Wohnung", "pk": ["ID_Wohnung"], "fk": ["ID_Nutzungseinheit"], "group": 4}, {"id": "Raumlueftungsleitung", "pk": ["ID_Raumlueftungsleitung"], "fk": ["ID_Raumlueftung"], "group": 3}, {"id": "Bescheid_Termin_Position", "pk": ["ID_Bescheid_Termin_Position"], "fk": ["ID_Bescheid_Position"], "group": 11}, {"id": "Kehrbuch_Anlage", "pk": ["ID_Kehrbuch_Anlage"], "fk": ["ID_Kehrbuch_Gebaeude", "ID_Bescheid_Position", "ID_Anlage*"], "group": 13}, {"id": "Kehrbuch_Feuerstaettenschau", "pk": ["ID_Kehrbuch_Feuerstaettenschau"], "fk": ["ID_Kehrbuch_Gebaeude", "ID_Feuerstaettenschau"], "group": 13}, {"id": "Pruefergebnis_Feuerstaettenschau", "pk": ["ID_Pruefergebnis_Feuerstaettenschau"], "fk": ["ID_Feuerstaettenschau", "ID_Vertreter"], "group": 10}, {"id": "Abnahme_Anlage", "pk": ["ID_Abnahme_Anlage"], "fk": ["ID_Abnahme", "ID_Anlage*"], "group": 10}, {"id": "Kehrbuch_Anlassbezogene_Ueberpruefung", "pk": ["ID_Kehrbuch_Anlassbezogene_Ueberpruefung"], "fk": ["ID_Kehrbuch_Nutzungseinheit", "ID_Anlassbezogene_Ueberpruefung"], "group": 13}, {"id": "Raum", "pk": ["ID_Raum"], "fk": ["ID_Wohnung"], "group": 4}, {"id": "Raumluftoeffnung", "pk": ["ID_Raumluftoeffnung"], "fk": ["ID_Raumlueftungsleitung"], "group": 3}, {"id": "Kehrbuch_Abnahme", "pk": ["ID_Kehrbuch_Abnahme"], "fk": ["ID_Kehrbuch_Nutzungseinheit", "ID_Kehrbuch_Anlage", "ID_Abnahme"], "group": 13}, {"id": "Kehrbuch_Taetigkeit", "pk": ["ID_Kehrbuch_Taetigkeit"], "fk": ["ID_Kehrbuch_Anlage"], "group": 13}, {"id": "Dunstabzugsanlage_Haube", "pk": ["ID_Dunstabzugsanlage_Haube"], "fk": ["ID_Abschnitt_Dunstabzugsleitung", "ID_Raum"], "group": 7}, {"id": "Feuerstaette", "pk": ["ID_Feuerstaette"], "fk": ["ID_Raum", "ID_Abgasanlage", "ID_BImSchV44_Aggregationspool", "Ausnahmegenehmigung_Behoerde_Dokumente", "Schreiben_Behoerde_Fristverlaengerung_BImSchV"], "group": 5}, {"id": "Verbrennungsluftzufuhr_Element", "pk": ["ID_Verbrennungsluftzufuhr_Element"], "fk": ["ID_Raum", "ID_Raum_Ziel"], "group": 8}, {"id": "Waermepumpe", "pk": ["ID_Waermepumpe"], "fk": ["ID_Raum"], "group": 5}, {"id": "Mess_Pruefergebnis_Raumluftoeffnung", "pk": ["ID_Mess_Pruefergebnis_Raumluftoeffnung"], "fk": ["ID_Raumluftoeffnung"], "group": 3}, {"id": "Dunstabzugsanlage_Feuerstaette", "pk": ["ID_Dunstabzugsanlage_Feuerstaette"], "fk": ["ID_Dunstabzugsanlage_Haube", "ID_Feuerstaette"], "group": 7}, {"id": "Effizienzlabel", "pk": ["ID_Effizienzlabel"], "fk": ["ID_Feuerstaette"], "group": 5}, {"id": "Feste_Brennstoff_Feuerstaette", "pk": ["ID_Feste_Brennstoff_Feuerstaette"], "fk": ["ID_Feuerstaette"], "group": 5}, {"id": "GEG", "pk": ["ID_GEG"], "fk": ["ID_Feuerstaette", "Fristverlaengerung_Behoerde_Schreiben"], "group": 9}, {"id": "Gasfeuerstaette", "pk": ["ID_Gasfeuerstaette"], "fk": ["ID_Feuerstaette"], "group": 5}, {"id": "Nachgeschalteter_Waermeaustauscher", "pk": ["ID_Nachgeschalteter_Waermeaustauscher"], "fk": ["ID_Feuerstaette"], "group": 5}, {"id": "Oelfeuerstaette", "pk": ["ID_Oelfeuerstaette"], "fk": ["ID_Feuerstaette"], "group": 5}, {"id": "Sonderfeuerstaette", "pk": ["ID_Sonderfeuerstaette"], "fk": ["ID_Feuerstaette"], "group": 5}, {"id": "Feuerst_Verbr_Element", "pk": ["ID_Feuerst_Verbr_Element"], "fk": ["ID_Feuerstaette", "ID_Verbrennungsluftzufuhr_Element"], "group": 8}, {"id": "Mess_Pruefergebnis_Waermepumpe", "pk": ["ID_Mess_Pruefergebnis_Waermepumpe"], "fk": ["ID_Waermepumpe"], "group": 6}, {"id": "Mess_Pruefergebnis_Feststofffeuerstaette_ERF", "pk": ["ID_Mess_Pruefergebnis_Feststofffeuerstaette_ERF"], "fk": ["ID_Feste_Brennstoff_Feuerstaette"], "group": 6}, {"id": "Mess_Pruefergebnis_Feststofffeuerstaette_HK", "pk": ["ID_Mess_Pruefergebnis_Feststofffeuerstaette_HK"], "fk": ["ID_Feste_Brennstoff_Feuerstaette"], "group": 6}, {"id": "Pruefergebnis_GEG", "pk": ["ID_Pruefergebnis_GEG"], "fk": ["ID_GEG"], "group": 9}, {"id": "Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette", "pk": ["ID_Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette"], "fk": ["ID_Gasfeuerstaette"], "group": 6}, {"id": "Mess_Pruefergebnis_Gasfeuerstaette", "pk": ["ID_Mess_Pruefergebnis_Gasfeuerstaette"], "fk": ["ID_Gasfeuerstaette"], "group": 6}, {"id": "Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette", "pk": ["ID_Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette"], "fk": ["ID_Oelfeuerstaette"], "group": 6}, {"id": "Mess_Pruefergebnis_Oelfeuerstaette", "pk": ["ID_Mess_Pruefergebnis_Oelfeuerstaette"], "fk": ["ID_Oelfeuerstaette"], "group": 6}, {"id": "Mess_Pruefergebnis_Sonderfeuerstaette", "pk": ["ID_Mess_Pruefergebnis_Sonderfeuerstaette"], "fk": ["ID_Sonderfeuerstaette"], "group": 6}];
+const links = [{"source": "Untere_Aufsichtsbehoerde", "target": "Kommunikation", "fk_field": "ID_Kommunikation", "kardinalitaet": "1:1", "not_null": false}, {"source": "Kehrbezirk", "target": "Vertreter", "fk_field": "ID_Vertreter_11", "kardinalitaet": "1:1", "not_null": true}, {"source": "Kehrbezirk", "target": "Vertreter", "fk_field": "ID_Vertreter_11a", "kardinalitaet": "1:1", "not_null": false}, {"source": "Mitarbeiter", "target": "Kommunikation", "fk_field": "ID_Kommunikation", "kardinalitaet": "1:1", "not_null": false}, {"source": "Mitarbeiter", "target": "Vertreter", "fk_field": "ID_Vertreter_11b", "kardinalitaet": "1:1", "not_null": false}, {"source": "Vertreter", "target": "Kommunikation", "fk_field": "ID_Kommunikation", "kardinalitaet": "1:1", "not_null": false}, {"source": "Fremdfirma", "target": "Kommunikation", "fk_field": "ID_Kommunikation", "kardinalitaet": "1:1", "not_null": false}, {"source": "Strasse", "target": "Ort", "fk_field": "ID_Ort", "kardinalitaet": "n:1", "not_null": true}, {"source": "Grundstueck", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Verwalter", "kardinalitaet": "n:1", "not_null": false}, {"source": "Grundstueck", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Eigentuemer", "kardinalitaet": "n:1", "not_null": false}, {"source": "Grundstueck", "target": "Strasse", "fk_field": "ID_Strasse", "kardinalitaet": "n:1", "not_null": true}, {"source": "Gebaeude_Gebaeudeteil", "target": "Grundstueck", "fk_field": "ID_Grundstueck", "kardinalitaet": "n:1", "not_null": true}, {"source": "Gebaeude_Gebaeudeteil", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Mieter", "kardinalitaet": "n:1", "not_null": false}, {"source": "Gebaeude_Gebaeudeteil", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Verwalter", "kardinalitaet": "n:1", "not_null": false}, {"source": "Gebaeude_Gebaeudeteil", "target": "Kehrbezirk", "fk_field": "ID_Kehrbezirk", "kardinalitaet": "n:1", "not_null": true}, {"source": "Gebaeude_Eigentuemer", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Gebaeude_Eigentuemer", "target": "Kommunikation", "fk_field": "ID_Kommunikation", "kardinalitaet": "n:1", "not_null": true}, {"source": "Gebaeudeeigenschaft", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": false}, {"source": "Abgasanlage", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Schicht", "target": "Abschnitt", "fk_field": "ID_Abschnitt", "kardinalitaet": "n:1", "not_null": true}, {"source": "Muendung", "target": "Abgasanlage", "fk_field": "ID_Abgasanlage", "kardinalitaet": "n:1", "not_null": true}, {"source": "Reinigungsart", "target": "Abgasanlage", "fk_field": "ID_Abgasanlage", "kardinalitaet": "n:1", "not_null": true}, {"source": "Lueftungsanlage", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Raumlueftung", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Raumlueftungsleitung", "target": "Raumlueftung", "fk_field": "ID_Raumlueftung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Raumluftoeffnung", "target": "Raumlueftungsleitung", "fk_field": "ID_Raumlueftungsleitung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Mess_Pruefergebnis_Raumluftoeffnung", "target": "Raumluftoeffnung", "fk_field": "ID_Raumluftoeffnung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Brennstoffversorgungsanlage", "target": "Nutzungseinheit", "fk_field": "ID_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": true}, {"source": "Dunstabzuganlage_Leitung", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Mess_Pruefergebnis_Dunstabzugsleitung", "target": "Dunstabzuganlage_Leitung", "fk_field": "ID_Dunstabzuganlage_Leitung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Mess_Pruefergebnis_Dunstabzugsleitung", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Wartungsfirma", "kardinalitaet": "n:1", "not_null": false}, {"source": "Nutzungseinheit", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Nutzungseinheit_Eigentuemer", "target": "Nutzungseinheit", "fk_field": "ID_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": true}, {"source": "Nutzungseinheit_Eigentuemer", "target": "Kommunikation", "fk_field": "ID_Kommunikation", "kardinalitaet": "n:1", "not_null": true}, {"source": "Wohnung", "target": "Nutzungseinheit", "fk_field": "ID_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": true}, {"source": "Raum", "target": "Wohnung", "fk_field": "ID_Wohnung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Feuerstaette", "target": "Raum", "fk_field": "ID_Raum", "kardinalitaet": "n:1", "not_null": true}, {"source": "Feuerstaette", "target": "Abgasanlage", "fk_field": "ID_Abgasanlage", "kardinalitaet": "n:1", "not_null": false}, {"source": "Feuerstaette", "target": "BImSchV44_Aggregationspool", "fk_field": "ID_BImSchV44_Aggregationspool", "kardinalitaet": "n:1", "not_null": false}, {"source": "Feuerstaette", "target": "Dokument", "fk_field": "Ausnahmegenehmigung_Behoerde_Dokumente", "kardinalitaet": "1:1", "not_null": false}, {"source": "Feuerstaette", "target": "Dokument", "fk_field": "Schreiben_Behoerde_Fristverlaengerung_BImSchV", "kardinalitaet": "1:1", "not_null": false}, {"source": "Gasfeuerstaette", "target": "Feuerstaette", "fk_field": "ID_Feuerstaette", "kardinalitaet": "1:1", "not_null": true}, {"source": "Mess_Pruefergebnis_Gasfeuerstaette", "target": "Gasfeuerstaette", "fk_field": "ID_Gasfeuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette", "target": "Gasfeuerstaette", "fk_field": "ID_Gasfeuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "Oelfeuerstaette", "target": "Feuerstaette", "fk_field": "ID_Feuerstaette", "kardinalitaet": "1:1", "not_null": true}, {"source": "Mess_Pruefergebnis_Oelfeuerstaette", "target": "Oelfeuerstaette", "fk_field": "ID_Oelfeuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette", "target": "Oelfeuerstaette", "fk_field": "ID_Oelfeuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "Feste_Brennstoff_Feuerstaette", "target": "Feuerstaette", "fk_field": "ID_Feuerstaette", "kardinalitaet": "1:1", "not_null": true}, {"source": "Feste_Brennstoff_Ableitbedingungen", "target": "Abgasanlage", "fk_field": "ID_Abgasanlage", "kardinalitaet": "n:1", "not_null": true}, {"source": "Feste_Brennstoff_Ableitbedingungen", "target": "Dokument", "fk_field": "Berechnung_VDI3781Blatt4_Dokument", "kardinalitaet": "n:1", "not_null": false}, {"source": "Feste_Brennstoff_Ableitbedingungen", "target": "Dokument", "fk_field": "Berechnung_Par19_ABC_Dokument", "kardinalitaet": "n:1", "not_null": false}, {"source": "Mess_Pruefergebnis_Feststofffeuerstaette_HK", "target": "Feste_Brennstoff_Feuerstaette", "fk_field": "ID_Feste_Brennstoff_Feuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "Mess_Pruefergebnis_Feststofffeuerstaette_ERF", "target": "Feste_Brennstoff_Feuerstaette", "fk_field": "ID_Feste_Brennstoff_Feuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "Sonderfeuerstaette", "target": "Feuerstaette", "fk_field": "ID_Feuerstaette", "kardinalitaet": "1:1", "not_null": true}, {"source": "Mess_Pruefergebnis_Sonderfeuerstaette", "target": "Sonderfeuerstaette", "fk_field": "ID_Sonderfeuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "Waermepumpe", "target": "Raum", "fk_field": "ID_Raum", "kardinalitaet": "n:1", "not_null": true}, {"source": "Mess_Pruefergebnis_Waermepumpe", "target": "Waermepumpe", "fk_field": "ID_Waermepumpe", "kardinalitaet": "n:1", "not_null": true}, {"source": "Messgeraet", "target": "Kehrbezirk", "fk_field": "ID_Kehrbezirk", "kardinalitaet": "n:1", "not_null": true}, {"source": "Messgeraet_44", "target": "Kehrbezirk", "fk_field": "ID_Kehrbezirk", "kardinalitaet": "n:1", "not_null": true}, {"source": "Messunsicherheit", "target": "Messgeraet", "fk_field": "ID_Messgeraet", "kardinalitaet": "n:1", "not_null": true}, {"source": "GEG", "target": "Feuerstaette", "fk_field": "ID_Feuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "GEG", "target": "Dokument", "fk_field": "Fristverlaengerung_Behoerde_Schreiben", "kardinalitaet": "n:1", "not_null": false}, {"source": "Pruefergebnis_GEG", "target": "GEG", "fk_field": "ID_GEG", "kardinalitaet": "n:1", "not_null": true}, {"source": "Effizienzlabel", "target": "Feuerstaette", "fk_field": "ID_Feuerstaette", "kardinalitaet": "1:1", "not_null": true}, {"source": "Nachgeschalteter_Waermeaustauscher", "target": "Feuerstaette", "fk_field": "ID_Feuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "Verbrennungsluftzufuhr_Element", "target": "Raum", "fk_field": "ID_Raum", "kardinalitaet": "n:1", "not_null": true}, {"source": "Verbrennungsluftzufuhr_Element", "target": "Raum", "fk_field": "ID_Raum_Ziel", "kardinalitaet": "n:1", "not_null": false}, {"source": "Feuerst_Verbr_Element", "target": "Feuerstaette", "fk_field": "ID_Feuerstaette", "kardinalitaet": "n:1", "not_null": true}, {"source": "Feuerst_Verbr_Element", "target": "Verbrennungsluftzufuhr_Element", "fk_field": "ID_Verbrennungsluftzufuhr_Element", "kardinalitaet": "n:1", "not_null": true}, {"source": "Raeucheranlage", "target": "Abgasanlage", "fk_field": "ID_Abgasanlage", "kardinalitaet": "n:1", "not_null": false}, {"source": "Raeucheranlage", "target": "Nutzungseinheit", "fk_field": "ID_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": false}, {"source": "Abnahme", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Abnahme", "target": "Nutzungseinheit", "fk_field": "ID_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": false}, {"source": "Abnahme_Anlage", "target": "Abnahme", "fk_field": "ID_Abnahme", "kardinalitaet": "n:1", "not_null": true}, {"source": "Anlassbezogene_Ueberpruefung", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Anlassbezogene_Ueberpruefung", "target": "Nutzungseinheit", "fk_field": "ID_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": false}, {"source": "Sonstige_Arbeit", "target": "Nutzungseinheit", "fk_field": "ID_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": false}, {"source": "Dunstabzugsanlage_Haube", "target": "Abschnitt_Dunstabzugsleitung", "fk_field": "ID_Abschnitt_Dunstabzugsleitung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Dunstabzugsanlage_Haube", "target": "Raum", "fk_field": "ID_Raum", "kardinalitaet": "n:1", "not_null": true}, {"source": "Dunstabzugsanlage_Feuerstaette", "target": "Dunstabzugsanlage_Haube", "fk_field": "ID_Dunstabzugsanlage_Haube", "kardinalitaet": "n:1", "not_null": true}, {"source": "Dunstabzugsanlage_Feuerstaette", "target": "Feuerstaette", "fk_field": "ID_Feuerstaette", "kardinalitaet": "n:1", "not_null": false}, {"source": "Abschnitt_Dunstabzugsleitung", "target": "Dunstabzuganlage_Leitung", "fk_field": "ID_Dunstabzuganlage_Leitung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Ventilator_Dunstabzug", "target": "Dunstabzuganlage_Leitung", "fk_field": "ID_Dunstabzuganlage_Leitung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Kehrbuch_Gebaeude", "fk_field": "ID_Kehrbuch_Gebaeude", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Bescheid_Position", "fk_field": "ID_Bescheid_Position", "kardinalitaet": "n:1", "not_null": false}, {"source": "Kehrbuch_Taetigkeit", "target": "Kehrbuch_Anlage", "fk_field": "ID_Kehrbuch_Anlage", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Abnahme", "target": "Kehrbuch_Nutzungseinheit", "fk_field": "ID_Kehrbuch_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Abnahme", "target": "Kehrbuch_Anlage", "fk_field": "ID_Kehrbuch_Anlage", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Abnahme", "target": "Abnahme", "fk_field": "ID_Abnahme", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Anlassbezogene_Ueberpruefung", "target": "Kehrbuch_Nutzungseinheit", "fk_field": "ID_Kehrbuch_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Anlassbezogene_Ueberpruefung", "target": "Anlassbezogene_Ueberpruefung", "fk_field": "ID_Anlassbezogene_Ueberpruefung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Feuerstaettenschau", "target": "Kehrbuch_Gebaeude", "fk_field": "ID_Kehrbuch_Gebaeude", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Feuerstaettenschau", "target": "Feuerstaettenschau", "fk_field": "ID_Feuerstaettenschau", "kardinalitaet": "n:1", "not_null": true}, {"source": "Feuerstaettenschau", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Feuerstaettenschau", "target": "Kehrbuch_Gebaeude", "fk_field": "ID_Kehrbuch_Gebaeude", "kardinalitaet": "n:1", "not_null": false}, {"source": "Pruefergebnis_Feuerstaettenschau", "target": "Feuerstaettenschau", "fk_field": "ID_Feuerstaettenschau", "kardinalitaet": "n:1", "not_null": true}, {"source": "Pruefergebnis_Feuerstaettenschau", "target": "Vertreter", "fk_field": "ID_Vertreter", "kardinalitaet": "n:1", "not_null": false}, {"source": "Feuerstaettenbescheid_Grunddaten", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Feuerstaettenbescheid_Grunddaten", "target": "Kommunikation", "fk_field": "Empfaenger", "kardinalitaet": "n:1", "not_null": false}, {"source": "Bescheid_Position", "target": "Feuerstaettenbescheid_Grunddaten", "fk_field": "ID_Feuerstaettenbescheid_Grunddaten", "kardinalitaet": "n:1", "not_null": true}, {"source": "Bescheid_Termin_Position", "target": "Bescheid_Position", "fk_field": "ID_Bescheid_Position", "kardinalitaet": "n:1", "not_null": true}, {"source": "Leistung", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Aufteilung_Leistung", "target": "Leistung", "fk_field": "ID_Leistung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Aufteilung_Leistung", "target": "Nutzungseinheit", "fk_field": "ID_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": true}, {"source": "Datum_Ausfuehrung_Leistung", "target": "Leistung", "fk_field": "ID_Leistung", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch", "target": "Kehrbezirk", "fk_field": "ID_Kehrbezirk", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Gebaeude", "target": "Kehrbuch", "fk_field": "ID_Kehrbuch", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Gebaeude", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Gebaeude", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Verwalter", "kardinalitaet": "n:1", "not_null": false}, {"source": "Kehrbuch_Gebaeude", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Mieter", "kardinalitaet": "n:1", "not_null": false}, {"source": "Kehrbuch_Gebaeude_Eigentuemer", "target": "Kehrbuch_Gebaeude", "fk_field": "ID_Kehrbuch_Gebaeude", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Gebaeude_Eigentuemer", "target": "Kommunikation", "fk_field": "ID_Kommunikation", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Nutzungseinheit", "target": "Kehrbuch_Gebaeude", "fk_field": "ID_Kehrbuch_Gebaeude", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Nutzungseinheit", "target": "Nutzungseinheit", "fk_field": "ID_Nutzungseinheit", "kardinalitaet": "n:1", "not_null": true}, {"source": "Kehrbuch_Nutzungseinheit", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Wohnungseigentuemer", "kardinalitaet": "n:1", "not_null": false}, {"source": "Kehrbuch_Nutzungseinheit", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Betreiber", "kardinalitaet": "n:1", "not_null": false}, {"source": "Rechnung", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Rechnung", "target": "Kommunikation", "fk_field": "ID_Kommunikation_Rechnungsempfaenger", "kardinalitaet": "n:1", "not_null": true}, {"source": "Dachskizze", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": false}, {"source": "Dachskizze_Element", "target": "Dachskizze", "fk_field": "ID_Dachskizze", "kardinalitaet": "n:1", "not_null": false}, {"source": "Gefaehrdungsbeurteilung", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Gebaeude_Gebaeudeteil", "kardinalitaet": "n:1", "not_null": true}, {"source": "Abschnitt", "target": "Abgasanlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Abschnitt", "target": "Feuerstaette", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Gebaeude_Gebaeudeteil", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Nutzungseinheit", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Feuerstaettenbescheid_Grunddaten", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Abnahme", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Anlassbezogene_Ueberpruefung", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Pruefergebnis_Feuerstaettenschau", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Pruefergebnis_GEG", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Mess_Pruefergebnis_Gasfeuerstaette", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Mess_Pruefergebnis_Oelfeuerstaette", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Mess_Pruefergebnis_Feststofffeuerstaette_HK", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Mess_Pruefergebnis_Feststofffeuerstaette_ERF", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Mess_Pruefergebnis_Sonderfeuerstaette", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Mess_Pruefergebnis_Waermepumpe", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Mess_Pruefergebnis_Dunstabzugsleitung", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Dokument", "target": "Mess_Pruefergebnis_Raumluftoeffnung", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Mangel", "target": "Kehrbuch_Taetigkeit", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Mangel", "target": "Kehrbuch_Abnahme", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Mangel", "target": "Kehrbuch_Feuerstaettenschau", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Mangel", "target": "Kehrbuch_Anlassbezogene_Ueberpruefung", "fk_field": "ID_Herkunft (Herkunftstyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Zubehoer", "target": "Abschnitt", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Zubehoer", "target": "Dunstabzuganlage_Leitung", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Bescheid_Position", "target": "Abgasanlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Bescheid_Position", "target": "Feuerstaette", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Bescheid_Position", "target": "Raumluftoeffnung", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Bescheid_Position", "target": "Dunstabzuganlage_Leitung", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Bescheid_Position", "target": "Lueftungsanlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Bescheid_Position", "target": "Raumlueftung", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Bescheid_Position", "target": "Raeucheranlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Bescheid_Position", "target": "Brennstoffversorgungsanlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Abgasanlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Feuerstaette", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Raumluftoeffnung", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Dunstabzuganlage_Leitung", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Lueftungsanlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Raumlueftung", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Raeucheranlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Kehrbuch_Anlage", "target": "Brennstoffversorgungsanlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Abnahme_Anlage", "target": "Abgasanlage", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}, {"source": "Abnahme_Anlage", "target": "Feuerstaette", "fk_field": "ID_Anlage (Anlagetyp)", "kardinalitaet": "n:1", "poly": true, "not_null": true}];
+
+// ============================================================
+// State
+// ============================================================
+let showLabels = false;
+let allFixed = false;
+let highlightedNode = null;
+let searchTerm = '';
+let edgesMode = 'hover'; // 'hover' or 'visible'
+
+// Stats
+document.getElementById('statsText').textContent =
+    nodes.length + ' Tabellen \u00B7 ' + links.length + ' Relationen';
+
+// Group name lookup
+const groupName = {};
+groups.forEach((g, i) => groupName[i] = g.name);
+
+// ============================================================
+// SVG setup
+// ============================================================
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+const svg = d3.select('body').append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+// Zoom
+const g = svg.append('g');
+const zoom = d3.zoom()
+    .scaleExtent([0.1, 4])
+    .on('zoom', (event) => g.attr('transform', event.transform));
+svg.call(zoom);
+
+// Crow's Foot markers
+const defs = svg.append('defs');
+
+// "One" marker: vertical bar |
+function addOneMarker(id, color) {
+    const m = defs.append('marker')
+        .attr('id', id)
+        .attr('viewBox', '0 -6 4 12')
+        .attr('refX', 2)
+        .attr('refY', 0)
+        .attr('markerWidth', 4)
+        .attr('markerHeight', 12)
+        .attr('orient', 'auto');
+    m.append('line')
+        .attr('x1', 2).attr('y1', -5).attr('x2', 2).attr('y2', 5)
+        .attr('stroke', color).attr('stroke-width', 1.5);
+}
+
+// "Many" marker: crow's foot >|
+function addManyMarker(id, color) {
+    const m = defs.append('marker')
+        .attr('id', id)
+        .attr('viewBox', '0 -8 12 16')
+        .attr('refX', 10)
+        .attr('refY', 0)
+        .attr('markerWidth', 10)
+        .attr('markerHeight', 14)
+        .attr('orient', 'auto');
+    m.append('line')
+        .attr('x1', 0).attr('y1', -6).attr('x2', 10).attr('y2', 0)
+        .attr('stroke', color).attr('stroke-width', 1.5);
+    m.append('line')
+        .attr('x1', 0).attr('y1', 6).attr('x2', 10).attr('y2', 0)
+        .attr('stroke', color).attr('stroke-width', 1.5);
+    m.append('line')
+        .attr('x1', 10).attr('y1', -6).attr('x2', 10).attr('y2', 6)
+        .attr('stroke', color).attr('stroke-width', 1.5);
+}
+
+// Normal markers (muted)
+addOneMarker('marker-one', '#555');
+addManyMarker('marker-many', '#555');
+// Colored highlight markers per cardinality type
+addOneMarker('marker-one-blue', '#5B8DEF');
+addManyMarker('marker-many-blue', '#5B8DEF');
+addOneMarker('marker-one-orange', '#FF7043');
+addOneMarker('marker-one-green', '#4CAF50');
+addManyMarker('marker-many-green', '#4CAF50');
+
+// ============================================================
+// Force simulation
+// ============================================================
+const simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id).distance(140).strength(0.4))
+    .force('charge', d3.forceManyBody().strength(-600).distanceMax(600))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(60))
+    .force('x', d3.forceX(width / 2).strength(0.03))
+    .force('y', d3.forceY(height / 2).strength(0.03));
+
+// ============================================================
+// Draw links
+// ============================================================
+// Edge color by type
+function edgeColor(d) {
+    if (d.poly) return '#4CAF50';
+    return d.kardinalitaet === '1:1' ? '#FF7043' : '#5B8DEF';
+}
+
+// Marker assignment helpers
+function markerStart(d, highlight) {
+    if (d.kardinalitaet === 'n:1') {
+        if (highlight) return d.poly ? 'url(#marker-many-green)' : 'url(#marker-many-blue)';
+        return 'url(#marker-many)';
+    }
+    // 1:1
+    if (highlight) return d.poly ? 'url(#marker-one-green)' : 'url(#marker-one-orange)';
+    return 'url(#marker-one)';
+}
+function markerEnd(d, highlight) {
+    if (highlight) {
+        if (d.poly) return 'url(#marker-one-green)';
+        return d.kardinalitaet === '1:1' ? 'url(#marker-one-orange)' : 'url(#marker-one-blue)';
+    }
+    return 'url(#marker-one)';
+}
+
+const linkGroup = g.append('g').attr('class', 'links');
+const link = linkGroup.selectAll('line')
+    .data(links)
+    .join('line')
+    .attr('stroke', d => edgeColor(d))
+    .attr('stroke-width', 0.5)
+    .attr('stroke-dasharray', d => d.poly ? '6,3' : null)
+    .attr('opacity', 0.08)
+    .attr('marker-start', d => markerStart(d, false))
+    .attr('marker-end', d => markerEnd(d, false));
+
+const linkLabel = linkGroup.selectAll('text')
+    .data(links)
+    .join('text')
+    .attr('class', 'link-label')
+    .text(d => d.fk_field)
+    .attr('display', 'none');
+
+// ============================================================
+// Draw nodes
+// ============================================================
+const nodeGroup = g.append('g').attr('class', 'nodes');
+const node = nodeGroup.selectAll('g')
+    .data(nodes)
+    .join('g')
+    .attr('class', 'node')
+    .call(d3.drag()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended));
+
+// Node background rect
+node.append('rect')
+    .attr('rx', 6)
+    .attr('ry', 6)
+    .attr('stroke', d => groups[d.group]?.color || '#888')
+    .attr('stroke-width', 2)
+    .attr('fill', d => {
+        const c = groups[d.group]?.color || '#888';
+        return c + '18';
+    });
+
+// Table name
+node.append('text')
+    .attr('class', 'node-title')
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#fff')
+    .attr('font-size', '11px')
+    .attr('font-weight', '700')
+    .text(d => d.id);
+
+// Key columns (PK + FK)
+node.each(function(d) {
+    const el = d3.select(this);
+    const keyCols = [];
+    d.pk.forEach(c => keyCols.push({ name: c, type: 'pk' }));
+    d.fk.forEach(c => keyCols.push({ name: c, type: 'fk' }));
+
+    keyCols.forEach((col, i) => {
+        el.append('text')
+            .attr('class', 'node-col')
+            .attr('text-anchor', 'start')
+            .attr('fill', col.type === 'pk' ? '#FFD60A' : '#5B8DEF')
+            .attr('font-size', '9px')
+            .text((col.type === 'pk' ? 'PK ' : 'FK ') + col.name);
+    });
+});
+
+// Size rects to content
+node.each(function(d) {
+    const el = d3.select(this);
+    const texts = el.selectAll('text');
+    let maxW = 0;
+    texts.each(function() {
+        const w = this.getComputedTextLength();
+        if (w > maxW) maxW = w;
+    });
+
+    const keyCols = d.pk.length + d.fk.length;
+    const headerH = 20;
+    const colH = keyCols * 14;
+    const padding = 12;
+    const totalH = headerH + colH + 8;
+    const totalW = maxW + padding * 2;
+
+    d._w = totalW;
+    d._h = totalH;
+
+    el.select('rect')
+        .attr('x', -totalW / 2)
+        .attr('y', -headerH - 2)
+        .attr('width', totalW)
+        .attr('height', totalH);
+
+    // Reposition key column texts
+    let yOff = 14;
+    el.selectAll('.node-col').each(function(_, i) {
+        d3.select(this)
+            .attr('x', -totalW / 2 + 8)
+            .attr('y', yOff);
+        yOff += 14;
+    });
+});
+
+// ============================================================
+// Hover & Click interactions
+// ============================================================
+const tooltip = document.getElementById('tooltip');
+
+node.on('mouseover', function(event, d) {
+    // Show tooltip
+    const pkList = d.pk.map(c => '<span class="tt-pk">PK ' + c + '</span>').join('<br>');
+    const fkList = d.fk.map(c => '<span class="tt-fk">FK ' + c + '</span>').join('<br>');
+    const cols = [pkList, fkList].filter(x => x).join('<br>');
+    tooltip.innerHTML =
+        '<div class="tt-title">' + d.id + '</div>' +
+        '<div class="tt-group" style="color:' + (groups[d.group]?.color || '#888') + '">' +
+        (groupName[d.group] || 'Sonstige') + '</div>' +
+        '<div class="tt-cols">' + cols + '</div>';
+    tooltip.style.display = 'block';
+    updateTooltipPos(event);
+    // Highlight connected edges on hover (if no node is click-locked)
+    if (!highlightedNode) {
+        highlightNode(d.id);
+    }
+})
+.on('mousemove', function(event) {
+    updateTooltipPos(event);
+})
+.on('mouseout', function() {
+    tooltip.style.display = 'none';
+    // Remove highlight if no node is click-locked
+    if (!highlightedNode) {
+        clearHighlight();
+    }
+})
+.on('click', function(event, d) {
+    event.stopPropagation();
+    if (highlightedNode === d.id) {
+        highlightedNode = null;
+        clearHighlight();
+    } else {
+        highlightedNode = d.id;
+        highlightNode(d.id);
+    }
+});
+
+svg.on('click', function() {
+    highlightedNode = null;
+    clearHighlight();
+});
+
+function updateTooltipPos(event) {
+    const x = event.clientX + 14;
+    const y = event.clientY + 14;
+    const tw = tooltip.offsetWidth;
+    const th = tooltip.offsetHeight;
+    tooltip.style.left = (x + tw > window.innerWidth ? event.clientX - tw - 10 : x) + 'px';
+    tooltip.style.top = (y + th > window.innerHeight ? event.clientY - th - 10 : y) + 'px';
+}
+
+// Connected set for a node
+function getConnected(nodeId) {
+    const connected = new Set([nodeId]);
+    const connectedLinks = new Set();
+    links.forEach((l, i) => {
+        const sid = typeof l.source === 'object' ? l.source.id : l.source;
+        const tid = typeof l.target === 'object' ? l.target.id : l.target;
+        if (sid === nodeId || tid === nodeId) {
+            connected.add(sid);
+            connected.add(tid);
+            connectedLinks.add(i);
+        }
+    });
+    return { connected, connectedLinks };
+}
+
+function highlightNode(nodeId) {
+    const { connected, connectedLinks } = getConnected(nodeId);
+
+    node.select('rect')
+        .attr('opacity', d => connected.has(d.id) ? 1 : 0.12);
+    node.selectAll('text')
+        .attr('opacity', d => connected.has(d.id) ? 1 : 0.12);
+
+    link
+        .attr('stroke', (d, i) => connectedLinks.has(i) ? edgeColor(d) : '#222')
+        .attr('stroke-width', (d, i) => {
+            if (!connectedLinks.has(i)) return 0.3;
+            return d.not_null ? 2.5 : 1.5;
+        })
+        .attr('opacity', (d, i) => connectedLinks.has(i) ? 1 : 0.03)
+        .attr('stroke-dasharray', (d, i) => d.poly ? '6,3' : null)
+        .attr('marker-start', (d, i) => markerStart(d, connectedLinks.has(i)))
+        .attr('marker-end', (d, i) => markerEnd(d, connectedLinks.has(i)));
+
+    linkLabel
+        .attr('fill', (d, i) => connectedLinks.has(i) ? '#aaa' : '#444')
+        .attr('opacity', (d, i) => connectedLinks.has(i) ? 1 : 0.1);
+}
+
+function clearHighlight() {
+    node.select('rect').attr('opacity', 1);
+    node.selectAll('text').attr('opacity', 1);
+    const baseOpacity = edgesMode === 'visible' ? 0.6 : 0.08;
+    const baseWidth = edgesMode === 'visible' ? (d => d.not_null ? 2.0 : 1.0) : (() => 0.5);
+    link
+        .attr('stroke', d => edgeColor(d))
+        .attr('stroke-width', (d) => typeof baseWidth === 'function' ? baseWidth(d) : baseWidth)
+        .attr('stroke-dasharray', d => d.poly ? '6,3' : null)
+        .attr('opacity', baseOpacity)
+        .attr('marker-start', d => markerStart(d, edgesMode === 'visible'))
+        .attr('marker-end', d => markerEnd(d, edgesMode === 'visible'));
+    linkLabel
+        .attr('fill', '#666')
+        .attr('opacity', edgesMode === 'visible' ? 1 : 0.08);
+}
+
+// ============================================================
+// Search
+// ============================================================
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', function() {
+    searchTerm = this.value.toLowerCase();
+    if (!searchTerm) {
+        highlightedNode = null;
+        clearHighlight();
+        return;
+    }
+
+    const matched = new Set();
+    nodes.forEach(n => {
+        if (n.id.toLowerCase().includes(searchTerm)) matched.add(n.id);
+    });
+
+    if (matched.size === 0) {
+        node.select('rect').attr('opacity', 0.15);
+        node.selectAll('text').attr('opacity', 0.15);
+        link.attr('opacity', 0.05);
+        linkLabel.attr('opacity', 0.05);
+        return;
+    }
+
+    // Also include directly connected
+    const expanded = new Set(matched);
+    links.forEach(l => {
+        const sid = typeof l.source === 'object' ? l.source.id : l.source;
+        const tid = typeof l.target === 'object' ? l.target.id : l.target;
+        if (matched.has(sid)) expanded.add(tid);
+        if (matched.has(tid)) expanded.add(sid);
+    });
+
+    node.select('rect')
+        .attr('opacity', d => matched.has(d.id) ? 1 : expanded.has(d.id) ? 0.5 : 0.1);
+    node.selectAll('text')
+        .attr('opacity', d => matched.has(d.id) ? 1 : expanded.has(d.id) ? 0.5 : 0.1);
+
+    link.attr('opacity', (d) => {
+        const sid = typeof d.source === 'object' ? d.source.id : d.source;
+        const tid = typeof d.target === 'object' ? d.target.id : d.target;
+        if (matched.has(sid) || matched.has(tid)) return 1;
+        return 0.05;
+    });
+    linkLabel.attr('opacity', (d) => {
+        const sid = typeof d.source === 'object' ? d.source.id : d.source;
+        const tid = typeof d.target === 'object' ? d.target.id : d.target;
+        if (matched.has(sid) || matched.has(tid)) return 1;
+        return 0.05;
+    });
+});
+
+// ============================================================
+// Legend
+// ============================================================
+const legendItems = document.getElementById('legendItems');
+groups.forEach((g, i) => {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = '<div class="legend-dot" style="background:' + g.color + '"></div>' +
+        '<span class="legend-label">' + g.name + '</span>';
+    item.onclick = () => {
+        // Filter by group
+        searchInput.value = '';
+        searchTerm = '';
+        const groupNodes = new Set();
+        nodes.forEach(n => { if (n.group === i) groupNodes.add(n.id); });
+
+        if (groupNodes.size === 0) return;
+
+        // Also include connected
+        const expanded = new Set(groupNodes);
+        links.forEach(l => {
+            const sid = typeof l.source === 'object' ? l.source.id : l.source;
+            const tid = typeof l.target === 'object' ? l.target.id : l.target;
+            if (groupNodes.has(sid)) expanded.add(tid);
+            if (groupNodes.has(tid)) expanded.add(sid);
+        });
+
+        node.select('rect')
+            .attr('opacity', d => groupNodes.has(d.id) ? 1 : expanded.has(d.id) ? 0.4 : 0.08);
+        node.selectAll('text')
+            .attr('opacity', d => groupNodes.has(d.id) ? 1 : expanded.has(d.id) ? 0.4 : 0.08);
+        link.attr('opacity', d => {
+            const sid = typeof d.source === 'object' ? d.source.id : d.source;
+            const tid = typeof d.target === 'object' ? d.target.id : d.target;
+            if (groupNodes.has(sid) || groupNodes.has(tid)) return 1;
+            return 0.03;
+        });
+        linkLabel.attr('opacity', d => {
+            const sid = typeof d.source === 'object' ? d.source.id : d.source;
+            const tid = typeof d.target === 'object' ? d.target.id : d.target;
+            if (groupNodes.has(sid) || groupNodes.has(tid)) return 1;
+            return 0.03;
+        });
+
+        highlightedNode = '__group__';
+    };
+    legendItems.appendChild(item);
+});
+
+function toggleLegend() {
+    document.getElementById('legend').classList.toggle('collapsed');
+}
+
+// ============================================================
+// Controls
+// ============================================================
+function resetView() {
+    svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+    highlightedNode = null;
+    searchInput.value = '';
+    searchTerm = '';
+    clearHighlight();
+    // Unfix all nodes
+    nodes.forEach(n => { n.fx = null; n.fy = null; });
+    allFixed = false;
+    document.getElementById('fixBtn').textContent = 'Fixieren';
+    simulation.alpha(0.3).restart();
+}
+
+function toggleLabels() {
+    showLabels = !showLabels;
+    linkLabel.attr('display', showLabels ? null : 'none');
+    document.getElementById('labelBtn').textContent = showLabels ? 'Labels ein' : 'Labels aus';
+}
+
+function toggleFixed() {
+    allFixed = !allFixed;
+    if (allFixed) {
+        nodes.forEach(n => { n.fx = n.x; n.fy = n.y; });
+        document.getElementById('fixBtn').textContent = 'Loesen';
+    } else {
+        nodes.forEach(n => { n.fx = null; n.fy = null; });
+        document.getElementById('fixBtn').textContent = 'Fixieren';
+        simulation.alpha(0.3).restart();
+    }
+}
+
+function toggleEdges() {
+    edgesMode = edgesMode === 'hover' ? 'visible' : 'hover';
+    document.getElementById('edgeBtn').textContent =
+        edgesMode === 'hover' ? 'Kanten sichtbar' : 'Kanten hover';
+    if (!highlightedNode) {
+        clearHighlight();
+    }
+}
+
+// ============================================================
+// Drag behavior
+// ============================================================
+function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+}
+
+function dragged(event, d) {
+    d.fx = event.x;
+    d.fy = event.y;
+}
+
+function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    if (!allFixed) {
+        d.fx = null;
+        d.fy = null;
+    }
+}
+
+// ============================================================
+// Tick
+// ============================================================
+simulation.on('tick', () => {
+    link
+        .attr('x1', d => d.source.x)
+        .attr('y1', d => d.source.y)
+        .attr('x2', d => d.target.x)
+        .attr('y2', d => d.target.y);
+
+    linkLabel
+        .attr('x', d => (d.source.x + d.target.x) / 2)
+        .attr('y', d => (d.source.y + d.target.y) / 2 - 4);
+
+    node.attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
+});
+
+// Initial zoom to fit after layout stabilizes
+setTimeout(() => {
+    const bounds = g.node().getBBox();
+    if (bounds.width === 0 || bounds.height === 0) return;
+    const pad = 60;
+    const scaleX = (width - pad * 2) / bounds.width;
+    const scaleY = (height - pad * 2) / bounds.height;
+    const scale = Math.min(scaleX, scaleY, 1.2);
+    const cx = bounds.x + bounds.width / 2;
+    const cy = bounds.y + bounds.height / 2;
+    const tx = width / 2 - cx * scale;
+    const ty = height / 2 - cy * scale;
+    svg.transition().duration(800).call(
+        zoom.transform,
+        d3.zoomIdentity.translate(tx, ty).scale(scale)
+    );
+}, 2500);
+
+// Keyboard shortcut: Escape to reset
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        searchInput.value = '';
+        searchTerm = '';
+        highlightedNode = null;
+        clearHighlight();
+        searchInput.blur();
+    }
+});
+</script>
+</body>
+</html>
