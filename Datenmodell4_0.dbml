@@ -14,14 +14,12 @@ Table Untere_Aufsichtsbehoerde {
 
 Table Kehrbezirk {
   ID_Kehrbezirk int [pk, increment, unique]
-  // Name text [note: 'Kurze Beschreibung des Kehrbezirks.']
   Kennung_QM text [not null, note: '§ 19_K |Bundeseinheitliche eindeutige Nummer des Kehrbezirkes nach dem QM/UM-Verfahren (L.XX-I.XX-K.XX-B.XXX).']
   Kennung_Land text [note: '§ 19_K |Länderspezifische Kehrbezirkskennung.']
   Kennung_BAFA text [note: '§ 19_B |Dem Kehrbezirk zugeteilte Identifikationsnummer zur Abrechnung der geklebten Energieetiketten.']
   Kennung_BAFA_Aufteilung text [note: '§ 19_B |Egänzungsnummer bei Aufteilung eines Kehrbezirkes. Nur erforderlich für die Erhebung (ZStat).']
   Guetesiegel_BSF text [note: 'NEIN |Gütesigelnummer für bBSF (steht für hoheitliche Schornsteinfegerarbeiten) Beispiel: BSF 1234567']
   Guetesiegel_SFB text [note: 'NEIN |Gütesiegelnummer für Schornsteinfegerbetrieb (steht für sog. freie Schornsteinfegerarbeiten im Wettbewerb) Beispiel: SFB 1234567']
-  // Angaben zum bBSF
   bBSF_Vorname text [note: '§ 19_K |Vorname bBSFs']
   bBSF_Name text [not null, note: '§ 19_K |Nachname bBSFs']
   bBSF_Strasse text [note: '§ 19_K |Straße bBSFs']
@@ -47,7 +45,6 @@ Table Kehrbezirk {
   Innung _Innung [not null, note: '§ 19_K |Innungszugehörigkeit']
   Obere_Aufsichtsbehoerde _Obere_Aufsichtsbehoerde [note: '§ 19_K | Obere Aufsichtsbehörde']
   Bundesland _Bundesland [note: '§ 19_K | Bundesland des Kehrbezirks']
-  //Betriebsanweisung_Gefaehrdungsbeurteilung_allgemein text [note: '']
 }
 
 Table Mitarbeiter {
@@ -64,7 +61,6 @@ Table Vertreter {
   Name text [not null, note: '§ 19_K |Nachname Vertreter']
   Ernannt_am date [not null, note: '§ 19_K |Tag der Ernennung des Vertreter']
   Ernannt_bis date [not null, note: '§ 19_K |Endtag der Ernennung des Vertreter']
-  // Stellung wird nicht mehr benötigt weil durch die Relation klar ist welche Rolle er hat
   ID_Kommunikation int [ref: - Kommunikation.ID_Kommunikation, note: '§ 19_K | Kommunikation Vertreter']
 }
 
@@ -144,21 +140,7 @@ Table Gebaeude_Gebaeudeteil {
   ID_Gebaeude_Gebaeudeteil int [pk, increment, unique, note: 'Sollte der Arbeitsreihenfolge / Sortierfolge entsprechen']
   Hausnummer text [note: '§ 19_K | Hausnummer']
   PLZ text [note: '§ 19_K | Postleitzahl']
-
-
   UST_frei bool [note: 'QS | Merkmal, ob bei der Rechnungsstellung eine Umsatzsteuer anfällt, z.B. für Arbeiten im Amerikanische Konsulat oder Freihafen (Hamburg), ist UST frei.']
-
-
-  // ToDo
-  // Feuerstaettenschau_letzte text
-  // Feuerstaettenschau_vorletzte text
-  // Feuerstaettenschau_Ergebnis_letzte text
-  // Feuerstaettenschau_Ergebnis_vorletzte text
-  // Feuerstaettenschau_Plantermin text
-  // Feuerstaettenschau_fruehstens text
-  // Feuerstaettenschau_Bemerkung_letzte text
-  // Feuerstaettenschau_Bemerkung_vorletzte text
-
   Geschosszahl int [note: 'QS | Gesamtanzahl der Geschosse für das Gebäude']
   Wirtschaftseinheit text [note: 'QS | Nummer der Wirtschaftseinheit']
   Zusammengelegte_Arbeit bool [note: 'QS | Merkmal, das Arbeiten zusammen ausgeführt werden.']
@@ -233,7 +215,6 @@ Table Abgasanlage {
   Waermdurchlasswiderstand float [note: '§ 19_B | Abmessungen und Wärmedurchlasswiderstand (AW)']
   Bauart_18160 _AbgasanlageBauart18160 [note: '§ 19_B | Merkmal für die Kennzeichnung der Abgasanlage. z.B. Bauart_18160 = 3 und Abgasanlagen_art = 11 -> Systemschornstein.']
   Benutzungsintensitaet _Benutzungsintensitaet [note: '§ 19_B | Kennzeichen für die Intensität der Benutzung der Abgasanlage. | Siehe Kennzeichnungstabelle 4.1']
-  // Nummer_AnlageFeuerstaettenbescheid_Abgasanlage int [note: '§ 19_K | Verweis auf ID Bescheid_Position']
   ID_Gebaeude_Gebaeudeteil int [not null, ref: > Gebaeude_Gebaeudeteil.ID_Gebaeude_Gebaeudeteil, note: '§ 19_K | Gebäude']
 }
 
@@ -275,9 +256,6 @@ Table Abschnitt {
   Feuerwiderstandsklasse _Feuerwiderstandsklasse18160 [note: '§ 19_B | Feuerwiderstandsklasse (Lzz) | Siehe Kennzeichnungstabelle 2.1.7']
   Waermedurchlasswiderstand float [note: '§ 19_B | Abmessungen und Wärmedurchlasswiderstand (AW)']
   Material _Material [note: '§ 19_B | Materialangabe des Abschnittes einer Abgasanlage. | Siehe Kennzeichnungstabelle Blatt 2.1.4']  
-  // TODO
-  // Muendet_Feuerstaette int [note: '§ 19_B | Muendet in Feuerstaette mit der Feuerstaettennummer.']
-  // Muendet_Raeucheranlage int [note: '§ 19_B | Muendet in Rauecheranlage mit der Rauecheranlagennummer.']
   Anlagetyp _AbschnittAnlagetyp [not null, note: '§ 19_K | Typ der zugeordneten Anlage (bestimmt Zieltabelle von ID_Anlage)']
   ID_Anlage int [not null, note: '§ 19_K | ID der zugeordneten Anlage (Zieltabelle ergibt sich aus Anlagetyp)']
 }
@@ -323,12 +301,9 @@ Table Reinigungsart {
 Table Lueftungsanlage {
   ID_Lueftungsanlage int [pk, increment, unique]
   Art _LueftungBaulicheAnlage [note: '§ 19_B | Beschreibung der Lüftungsanlage. | 14 <= Lüftungsanlagen_Art <= 23 Siehe Kennzeichnungstabelle 2.3.1']
-  // TODO Seelbach - 2.1.3 gibt es nicht - Vermutlich ist damit _ZuluftversorgungLueftungsanlagen gemeint
   Zuluftversorgung _ZuluftversorgungLueftungsanlagen [note: '§ 19_B | Beschreibung Zuluftversorung der Lüftungsanlage. | Siehe Kennzeichnungstabelle 2.1.3']
   Gueltig_von date [note: '§ 19_B | Datum, ab dem die Lüftungsanlage Gültigkeit besitzt.']
   Gueltig_bis date [note: '§ 19_B | Datum, bis wann die Lüftungsanlage Gültigkeit besitzt.']
-  // TODO
-  // Nummer_Anlage_Feuerstaettenbescheid_Lueftungsanlage int [note: '§ 19_B | Verweis auf ID Bescheid_Position']
   ID_Gebaeude_Gebaeudeteil int [not null, ref: > Gebaeude_Gebaeudeteil.ID_Gebaeude_Gebaeudeteil, note: '§ 19_K | Gebäude']
 }
 
@@ -336,19 +311,16 @@ Table Raumlueftung {
   ID_Raumlueftung int [pk, increment, unique]
   Art _LueftungBaulicheAnlage [note: '§ 19_B | Beschreibung der Raumlüftung. | Siehe Kennzeichnungstabelle 2.3.1']
   Errichtung date [note: '§ 19_B | Errichtungsdatum der Raumlüftung. (Stichwort: vor 01.08.1990)']
-  // Nummer_Anlage_Feuerstaettenbescheid_Raumlueftung int [note: '§ 19_B | Verweis auf ID Bescheid_Position']
   ID_Gebaeude_Gebaeudeteil int [not null, ref: > Gebaeude_Gebaeudeteil.ID_Gebaeude_Gebaeudeteil, note: '§ 19_K | Gebäude']
 }
 
 Table Raumlueftungsleitung {
   ID_Raumlueftungsleitung int [pk, increment, unique]
-
   Hauptschacht bool [note: '§ 19_B | Kennzeichen, das Raumlüftungsleitung ein Hauptschacht ist.']
   Nebenschacht bool [note: '§ 19_B | Kennzeichen, das Raumlüftungsleitung ein Nebenschacht ist.']
   Laenge_Hoehe float [note: '§ 19_B | Längen bzw. Höhenangaben der Raumlüftungsleitung in Meter.']
   Anzahl_Geschosse int [note: '§ 19_B | Anzahl der Geschosse durch die die Raumlüftungsleitung führt.']
   Betriebsart _RaumlueftungsleitungBetriebsart [note: '§ 19_B | Angabe, wie die Raumlüftungsleitung arbeitet.']
-  // Nummer_Anlage_Feuerstaettenbescheid_Raumlueftungsleitung int [note: '§ 19_B | Verweis auf ID Bescheid_Position']
   Luefter_Muendung bool [note: '§ 19_B | Merkmal, ob an der Mündung der Raumlüftungsleitung sich ein Lüfter befindet.']
   ID_Raumlueftung int [not null, ref: > Raumlueftung.ID_Raumlueftung, note: '§ 19_B | Raumlüftung']
 }
@@ -359,10 +331,8 @@ Table Raumluftoeffnung {
   Luefter bool [note: '§ 19_B | Kennzeichen, das Raumluftöffnung einen Lüfter besitzt.']
   Ueberstroemoeffnung bool [note: '§ 19_B | Kennzeichen, das Raumluftöffnung eine UEberströmöffnung benötigt.']
   Bemerkung text [note: '§ 19_B | Freitext zu Bemerkung der Raumluftöffnung.']
-  // Nummer_Anlage_Feuerstaettenbescheid_Raumlueftungsoeffnung int [note: '§ 19_B | Verweis auf ID Bescheid_Position']
   Sollvolumenstrom float [note: '§ 19_B | Sollvolumenstrom in m3/h']
   ID_Raumlueftungsleitung int [not null, ref: > Raumlueftungsleitung.ID_Raumlueftungsleitung, note: '§ 19_B | Raumlüftungsleitung']
-  // TODO
 }
 
 Table Mess_Pruefergebnis_Raumluftoeffnung {
@@ -432,29 +402,19 @@ Table Brennstoffversorgungsanlage {
 Table Dunstabzuganlage_Leitung {
   ID_Dunstabzuganlage_Leitung int [pk, increment, unique]
   ID_Gebaeude_Gebaeudeteil int [not null, ref: > Gebaeude_Gebaeudeteil.ID_Gebaeude_Gebaeudeteil, note: '§ 19_B | Dunstabzugsleitung eines Gebaeude/Gebaeudeteils']
-
   Anzahl_Geschoss int [note: '§ 19_B | Gesamte Anzahl der Geschosse über die sich die Dunstabzugsleitung erstreckt.']
   Anzahl_Muendung int [note: '§ 19_B | Anzahl der Mündungen']
   Anzahl_Muendung_ohne_Ventilator int [note: '§ 19_B | Anzahl der Mündungen die keinen Ventilator besitzen.']
   Anzahl_Muendung_mit_Ventilator int [note: '§ 19_B | Anzahl der Mündungen die einen Ventilator besitzen.']
-
   Kehrpflicht_Dunstanlage bool [note: '§ 19_K | Merkmal, ob die Anlage der Kehrpflicht nach KÜO unterliegt.']
   Ueberpruefungspflicht_Dunstanlage bool [note: '§ 19_K | Merkmal, ob die Anlage der Überprüfungspflicht nach KÜO unterliegt.']
-
   Laenge float [note: '§ 19_B | Gesamtlänge der Dunstabzugsleitung in Metern.']
   Differenzdruckschalter bool [note: '§ 19_B | Merkmal, ob Anlage einen Differenzdruckschalter besitzt.']
   Hoehe_ueber_Dach float [note: '§ 19_B | Höhe über Dach der Dunstabzugleitung in Metern.']
-  // TODO Geräte Kategorie ist komisch weil an der Leitung hängen ja mehrere Geräte
   Geraete_Kategorie _Feuerstaettenart [note: '§ 19_B | Geräte Kategorie | Siehe Kennzeichnungstabelle 2.2.1']
   Brennstoff _BrennstoffBImSchV [note: '§ 19_B | Eingesetzter Brennstoff der Gerate | Siehe Kennzeichnungstabelle 2.2.2.1']
   Leistung float [note: '§ 19_B | Leistung in kW']
-  // TODO Mängel sollte extra sein
-  Sonstige_Maengel text [note: '§ 19_K | Freitext bis 100 Zeichen']
-  Maengel_Frist date [note: '§ 19_K | Enddatum der Mängelfrist']
   Bemerkung text [note: 'QS | Freitext']
-  // TODO Bei Zubehör kann es mehrere geben. Das geht als Feld so nicht!
-  Zubehoer _ZubehoerLueftungsanlagen [note: 'QS | Siehe Kennzeichnungstabelle 3.3 | Siehe Kennzeichnungstabelle 3.3']
-//  Nummer_Anlage_Feuerstaettenbescheid_Dunstabzugsleitung int [note: '§ 19_K | Verweis auf ID Bescheid_Position']
 }
 
 Table Mess_Pruefergebnis_Dunstabzugsleitung {
@@ -477,7 +437,6 @@ Table Mess_Pruefergebnis_Dunstabzugsleitung {
   Feuerloescher_Groesse float [note: '§ 19_B | Größe des Feuerlöschers']
   Feuerloescher_Groesse_Einheit _FeuerloescherGroesseEinheit [note: '§ 19_B | Einheit für die Größe des Feuerlöschers']
   Feuerloescher_Loeschmittel _FeuerloescherLoeschmittel [note: '§ 19_B | Löschmittel des Feuerlöschers']
-  // TODO Löschanlage war nur Text. Habe diese jetzt als Bool gesetzt sollte aber überdacht werden ob wir diese als ENUM Spezifizieren oder als Bool lassen. Ggf. TODO Seelbach
   Loeschanlage bool [note: '§ 19_B | ']
 }
 
@@ -485,8 +444,6 @@ Table Nutzungseinheit {
   ID_Nutzungseinheit int [pk, increment, unique]
   ID_Gebaeude_Gebaeudeteil int [not null, ref: > Gebaeude_Gebaeudeteil.ID_Gebaeude_Gebaeudeteil, note: '§ 19_B | Eine Nutzungseinheit ist in einem Gebaeude/Gebaeudeteil']
   UST_frei bool [note: 'QS | Merkmal, ob bei der Rechnungsstellung eine Umsatzsteuer anfällt, z.B. für Arbeiten im Amerikanische Konsulat oder Freihafen (Hamburg), ist UST frei.']
-  // TODO Feuerstättenschau sollte in die eigene Struktur Feurstättenschau. Hier aber speziell für die Nutzungseinheit. Sollte nochmals überdacht werden
-  // Feuerstaettenschau date [note: '§ 19_K | Datum der letzten Feuerstaettenschau.']
   Feuerstaettenschau_Begehung_noetig bool [note: '§ 19_K | Nutzungseinheit muss zur Feuerstättenschau begangen werden.']
   Unbeheizter_Raum bool [note: '§ 19_B | Nutzungseinheit besitzt unbeheizte Räume mit unzureichender Dämmung von Wärmeverteilungsleitungen und Armaturen (GEG)']
   Besitzverh_geaendert_zum date [note: '§ 19_B | Datum, an dem die Nutzungseinheit verkauft wurde. Stichwort: Gebäudeenergiegesetz (GEG) Beratung nach 1. BImSchV']
@@ -510,7 +467,6 @@ Table Wohnung {
   Geschoss _Etage [note: '§ 19_K | Geschossangabe der Wohnung. | Siehe Kennzeichnungstabelle 3.1.2']
   Lage1 _Lage1 [note: '§ 19_B | Erste Beschreibung der Lage im Geschoss.']
   Lage2 _Lage2 [note: '§ 19_B | Zweite Beschreibung der Lage im Geschoss bzgl. der ersten Beschreibung.']
-  // TODO Seelbach - In Hamburg gibt es nur die Lage3 Bezeichnung daher sollte das auch § 19_B werden
   Lage3 int [note: 'QS | Lage im Geschoss für freie Nummerierung, z.B. bei Laubengängen oder Hamburg']
   Geschoss_Freitext text [note: 'QS | Textuelle Geschossangabe, wenn keine Angaben zu Lage1 und Lage2 gemacht wurden.']
   Unbenutzt bool [note: '§ 19_B | Merkmal, das Wohnung unbenutzt bzw. leer steht.']
@@ -525,7 +481,6 @@ Table Raum {
   Raumart _Raum [note: '§ 19_B | Beschreibung des Aufstellraumes hinsichtlich der Nutzung | Siehe Kennzeichnungstabelle 3.1.4']
   Raumart_Zusatz _RaumZusatz [note: 'QS | Zusatzkennzeichnung für die Raumart. | Siehe Kennzeichnungstabelle 3.1.4.1']
   Mechanische_Entlueftung _RaumMechanischeEntlueftung [note: '§ 19_B | Merkmal, ob dem Raum mechanisch Luft entzogen wird.']
-  
 }
 
 Table Feuerstaette {
@@ -539,15 +494,11 @@ Table Feuerstaette {
   44BImSchV_Art _ZusatzkennzeichnungFeuerstaettenkategorie44BImschV [note: '§ 19_B | Kennzeichnung der Art der Feuerungsanlage nach der 44. BImSchV. | Siehe Kennzeichnungstabelle 2.2.1.7']
   44BImSchV_FWL_max float [note: '§ 19_B | Maximale Feuerungswärmeleistung in kW nach Typenschild. Stichwort: Anzugeben bei einer Feuerstätte nach 44. BImSchV']
   44BImSchV_Aggregationsregel bool [note: '§ 19_B | Eine oder mehrere Feuerstätten unterliegen der Aggregationsregel der 44. BImSchV']
-  // TODO der Pool muss ausgelagert werden
-  44BImSchV_Aggregationspool_ float [note: '§ 19_B | Feld zur Sammlung der Feuerstätten IDs.']
-  // TODO Das sollte eher ausgelagert werden oder wir brauchen 2 Felder. Ein Textfeld und ein Enum Feld wo genau spezifiziert wird was der Text enhält
   Genehmigungsbeduerftig text [note: '§ 19_B | Dokumnetation, ob die Anlage möglicherweise immissionschutzrechtlich genehmigungsbedürftig ist oder nicht!']
   Baujahr int [note: '§ 19_K | Baujahr der Feuerstätte']
   Brennstoff _BrennstoffBImSchV [note: '§ 19_K | Brennstoff der Feuerstätte | Siehe Kennzeichnungstabelle 2.2.2.1']
-  // TODO Zulässig und Eingesetzte Brennstoffe ist eine Liste und muss somit ausgelagert werden
-  // Zulaessige_Brennstoffart _BrennstoffBImSchV [note: '§ 19_B | Zulaessige Brennstoffe der Feuerstaette | Siehe Kennzeichnungstabelle 2.2.2.1 Es koennen mehrere Brennstoffe fuer eine Feuerstaette geeignet sein jedoch bei einer Messung nur ein Brennstoff verwendet werden. Diese werden durch Semikolon getrennt.']
-  // Eingesetzte_Brennstoffart _BrennstoffBImSchV [note: '§ 19_B | Beschreibung der Brennstoffe die vorgehalten werden. Für jeden eingesetzten Brennstoffe wird ein Messergebnis angelegt. | Siehe Kennzeichnungstabelle 2.2.2.1 Es koennen mehrere Brennstoffe fuer eine Feuerstaette vorgehalten werden. Teilmenge von Zulaessige_Brennstoffart. Diese werden durch Semikolon getrennt.']
+  Zulaessige_Brennstoffart text [note: '§ 19_B | Zulaessige Brennstoffe der Feuerstaette Komma - getrennte Werte aus dem Enum _MessungArt1BImSchVFeststoff | Siehe Kennzeichnungstabelle 2.2.2.1 Es koennen mehrere Brennstoffe fuer eine Feuerstaette geeignet sein jedoch bei einer Messung nur ein Brennstoff verwendet werden.']
+  Eingesetzte_Brennstoffart text [note: '§ 19_B | Beschreibung der Brennstoffe die vorgehalten werden. Für jeden eingesetzten Brennstoffe wird ein Messergebnis angelegt. - Komma getrennte Werte aus dem Enum _MessungArt1BImSchVFeststoff | Siehe Kennzeichnungstabelle 2.2.2.1 Es koennen mehrere Brennstoffe fuer eine Feuerstaette vorgehalten werden. Teilmenge von Zulaessige_Brennstoffart.']
   Errichtung date [note: '§ 19_K | Errichtungsdatum der Feuerstätte']
   Waermeaustauscher_Hersteller text [note: '§ 19_B | Herstellername des Wärmeaustauschers.']
   Waermeaustauscher_Typ text [note: '§ 19_B | Wärmeaustauscher Typ.']
@@ -559,7 +510,6 @@ Table Feuerstaette {
   Art _Feuerstaettenart [note: '§ 19_K | Art des Wärmeerzeugers. Beispiel für Feuerstätten mit Sonderabgasverlustgrenzwerten: Wurstkessel, Backofen, Großküchen, Luftprozessanlagen, ... | Siehe Kennzeichnungstabelle 2.2.1']
   Art_der_Anlage _ArtDerAnlageBImschV [note: '§ 19_K | Anlagenbeschreibung der Anlage (ehemals Anlagenart nach 1.BImSchV) | Siehe Kennzeichnungstabelle 2.2.5']
   Feuerstaetten_Text text [note: 'QS | Textuelle Beschreibung der Feuerstätte']
-  // Brenner sollte ggf. die spezifischen Feuerstätten ausgelagert werden. Nicht alle Feuerstätten haben einen Brenner
   Brenner_HerstellerNr text [note: '§ 19_B | Herstellernummer des Brenners.']
   Brenner_Art _Brennerart [note: '§ 19_B | Angabe über die Betriebsweise der Feuerstätte.']
   Verriegelung bool [note: '§ 19_B | Merkmal, ob die Feuerstätte gegenüber anderen Feuerstätten verriegelt ist. Synonym: Vorrangschaltung']
@@ -577,13 +527,12 @@ Table Feuerstaette {
   TRGI _TRGI [note: '§ 19_B | TRGI Kennzeichen. Beispiel für Kaminofen: FB21 | Siehe Kennzeichnungstabelle 2.2.3']
   TRGI_Zusatz _TRGIZusatz [note: '§ 19_B | Zusätzliche Kennzeichnung der Feuerstätte. | Siehe Kennzeichnungstabelle 2.2.4']
   Benutzungsintensitaet _Benutzungsintensitaet [note: '§ 19_K | Kennzeichen für die Intensität der Benutzung der Feuerstätte. | Siehe Kennzeichnungstabelle 4.1']
-  // Nummer_Anlage-Feuerstaettenbescheid_Feuerstaette int [note: '§ 19_K | Verweis auf ID Bescheid_Position']
   Feuerstaettenstatus _Feuerstaettenstatus [note: '§ 19_K | Beschreibt den Status der Feuerstätte ']
   Ausnahmegenehmigung_Behoerde bool [note: '§ 19_B | Es liegt eine schriftliche Ausnahmegenehmigung der zuständigen Behörde vor.']
   Ausnahmegenehmigung_Behoerde_Dokumente int [ref: - Dokument.ID_Dokument, note: '§ 19_B | Verweis auf entsprechendes PDF-Dokument']
   Austausch_Frist_Behoerde_BImSchV_Datum date [note: '§ 19_K | Behördlich festgesetzte Außerbetriebnahme der Feuersättte. Anmerkung: Abweichend von den Vorgaben der 1. BImSchV']
-  // TODO hier fehlt der Grenzwert selbst von der Behörde
   Grenzwert_Frist_Behoerde_BImSchV_Datum date [note: '§ 19_K | Behördlich festgesetzter Grenzwert der Feuersättte. Anmerkung: Abweichend von den Vorgaben der 1. BImSchV']
+  Grenzwert_Behoerde_BImSchV float [note: '§ 19_K | Behördlich festgesetzter Grenzwert der Feuersättte. Anmerkung: Abweichend von den Vorgaben der 1. BImSchV']
   Schreiben_Behoerde_Fristverlaengerung_BImSchV int [ref: - Dokument.ID_Dokument, note: '§ 19_K | Verweis auf PDF-Dokument – Schreiben der Behoerde hinsichtlich Fristverlaengerung']
   Etagenheizung_GEG24 bool [note: '§ 19_B | Merkmal, ob die Feuerstätte eine Etagenheizung ist.']
   Etagenheizung_ERF_Austausch_GEG24 bool [note: '§ 19_B | Merkmal, ob die ERF mit fossilen Brennstoffen betrieben wird und nach der Wärmeplanung ausgestauscht wurde.']
@@ -602,8 +551,6 @@ Table Gasfeuerstaette {
   Ueber_Durchgangshoehe bool [note: 'QS | Merkmal, ob Feuerstätte über Durchgangshöhe liegt.']
   Bearbeitungszyklus_KUEO _Bearbeitungszyklus [note: '§ 19_K | Zyklus nach KUEO | Siehe Kennzeichnungstabelle 4.2']
   Bearbeitungszyklus_BImSchV _Bearbeitungszyklus [note: '§ 19_K | Zyklus nach 1. BImSchV | Siehe Kennzeichnungstabelle 4.2']
-  // TODO macht diese Angabe Sinn?
-  // Jaehrliche_Haeufigkeit int [note: '§ 19_K | Anzahl der jaehrlichen Ueberpruefung der Feuerstaette. Abhaengig vom Bearbeitungszyklus, Bearbeitungszyklus = 1.']
   Bemerkung text [note: 'QS | Bemerkung zur Feuerstätte.']
   gueltig_von date [note: '§ 19_B | Datum, ab wann die Feuerstätte Gültigkeit besitzt. Stichwort: Erhebung (Statistische Auswertbarkeit)']
   gueltig_bis date [note: '§ 19_B | Datum bis wann die Feuerstätte Gültigkeit besitzt. Stichwort: Erhebung (Statistische Auswertbarkeit)']
@@ -703,6 +650,7 @@ Table Oelfeuerstaette {
   ID_Feuerstaette int [not null, ref: - Feuerstaette.ID_Feuerstaette, note: '§ 19_B | Spezialisierung von Feuerstaette fuer Oel']
   Bearbeitungszyklus_KUEO _Bearbeitungszyklus [note: '§ 19_K | Zyklus nach KUEO | Siehe Kennzeichnungstabelle 4.2']
   Bearbeitungszyklus_BImSchV _Bearbeitungszyklus [note: '§ 19_K | Zyklus nach 1. BImSchV | Siehe Kennzeichnungstabelle 4.2']
+  Jaehrliche_Haeufigkeit_Oel int [note: '§ 19_K | Anzahl der jaehrlichen Ueberpruefung der Feuerstaette. Abhaengig vom Bearbeitungszyklus, Bearbeitungszyklus = 1.']
   Brennstoff_schwefelarm bool [note: '§ 19_K | Merkmal, ob verwendete Brennstoff schwefelarm ist.']
   Brenner_Hersteller text [note: '§ 19_B | Herstellername des Brenners.']
   Brenner_Typ text [note: '§ 19_B | Brenner Typ.']
@@ -713,8 +661,6 @@ Table Oelfeuerstaette {
   Brenner_Leistung_max float [note: '§ 19_B | Leistung max. des Brenners in kW.']
   Brenner_Leistung_mess float [note: '§ 19_B | Leistung des Brenners in kW bei Messung.']
   Ueber_Durchgangshoehe bool [note: 'QS | Merkmal, ob Feuerstätte über Durchgangshöhe liegt.']
-  // TODO macht diese Angabe Sinn?
-  // Jaehrliche_Haeufigkeit_Oel int [note: '§ 19_K | Anzahl der jaehrlichen Ueberpruefung der Feuerstaette. Abhaengig vom Bearbeitungszyklus, Bearbeitungszyklus = 1.']
   Bemerkung text [note: 'QS | Bemerkung zur Feuerstätte.']
   gueltig_von date [note: '§ 19_B | Datum ab wann die Feuerstätte Gültigkeit besitzt. Stichwort: Erhebung (Statistische Auswertbarkeit)']
   gueltig_bis date [note: '§ 19_B | Datum bis wann die Feuerstätte Gültigkeit besitzt. Stichwort: Erhebung (Statistische Auswertbarkeit)']
@@ -727,7 +673,6 @@ Table Mess_Pruefergebnis_Oelfeuerstaette {
   ID_Mess_Pruefergebnis_Oelfeuerstaette int [pk, increment, unique]
   ID_Oelfeuerstaette int [not null, ref: > Oelfeuerstaette.ID_Oelfeuerstaette, note: '§ 19_B | Messergebnisse gehoeren zu einer Oelfeuerstaette']
   MIN text [note: '§ 19_K | MIN-Nummer(n) der verwendeten Messgeräte zum Zeitpunkt der Messung. Diese müssen unveränderlich im Messergebnis gespeichert werden. Die MIN wird aus der ID_Messgerät entnommen.']
-  // Jaehrliche_Haeufigkeit int [note: '§ 19_K | Anzahl der jaehrlichen Ueberpruefung der Abgaswege einer Feuerstaette. Abhaengig vom Bearbeitungszyklus, Bearbeitungszyklus = 1.']
   NWL_Messung float [note: '§ 19_K | Nennwärmeleistung bei der Messung']
   Sondergrenzwert_Abgasverlust_Prozess float [note: '§ 19_B | Abgasverlust-Sondergrenzwert für Prozessfeuerstätten in %, z.B. Backöfen besitzen Sondergrenzwerte.']
   Sondergrenzwert_Abgasverlust_Behoerde float [note: '§ 19_B | Abgasverlust-Sondergrenzwert für Feuerstätten in % die von der Behörde festgelegt wurden.']
@@ -754,8 +699,6 @@ Table Mess_Pruefergebnis_Oelfeuerstaette {
   Verbrennungslufttemperatur int [note: '§ 19_K MGH | Verbrennungslufttemperatur der Messung in °C.']
   Abgastemperatur int [note: '§ 19_K MGH | Abgastemperatur der Messung in °C.']
   Waermetraegertemperatur float [note: '§ 19_B MGH | Wärmeträgertemperatur der Messung in °C.']
-  // TODO inzwischen nicht mehr nötig - hat nur einen Value Sauerstof
-  // Sauerstoff_BImSchV int [note: '§ 19_B MGH | Messung Sauerstoff bei der BImSchV-Messung.']
   Sauerstoff_Volumengehalt float [note: '§ 19_K MGH | Sauerstoffgehalt (O2) in Volumen %']
   Sauerstoff_Ringspalt float [note: '§ 19_B MGH | Verringerung des Sauerstoffgehaltes im Ringspalt in %.']
   Lufttemperatur_Ringspalt float [note: '§ 19_B MGH | Lufttemperatur im Ringspalt in °C']
@@ -834,13 +777,10 @@ Table Feste_Brennstoff_Feuerstaette {
   Feuerstaetten_Art_Zusatzkennzeichnung_1 _ZusatzkennzeichnungFeuerstaettenkategorieFeststoffWassertasche [note: '§ 19_B | Zusatzkennzeichnung 1 zur Feuerstättenkategorie (wasserführend für feste Brennstoffe) | Es kann nur eine Zusatzkennzeichnung für eine Feuerstätte verwendet werden. Siehe Kennzeichnungstabelle 2.2.1.1']
   Feuerstaetten_Art_Zusatzkennzeichnung_3 _ZusatzkennzeichnungFeuerstaettenkategorieFeststoffFeuerungsart [note: '§ 19_B | Zusatzkennzeichnung 3 zur Feuerstättenkategorie (Feuerungsart für feste Brennstoffe) | Es kann nur eine Zusatzkennzeichnung für eine Feuerstätte verwendet werden. Siehe Kennzeichnungstabelle 2.2.1.3']
   Feuerstaetten_Art_Zusatzkennzeichnung_5 _ZusatzkennzeichnungFeuerstaettenkategorieFeststoffAbbrand [note: '§ 19_B | Zusatzkennzeichnung 5 zur Feuerstättenkategorie (Art des Abbrandes für feste Brennstoffe) | Es kann nur eine Zusatzkennzeichnung für eine Feuerstätte verwendet werden. Siehe Kennzeichnungstabelle 2.2.1.5']
-  // TODO Zusatzkennzeichnung 6 gibt es in Kennzeichnungstabelle nicht
-  // Feuerstaetten_Art_Zusatzkennzeichnung_6 int [note: 'QS | Zusatzkennzeichnung 6 zur Feuerstättenkategorie (Feuerstätten, Dunstabzugsanlagen, Lüftungsanlagen, Abgasanlagen etc.) | Es kann nur eine Zusatzkennzeichnung fuer eine Feuerstaette verwendet werden. Siehe Kennzeichnungstabelle 2.2.1.6']
   CE_DIN_EN text [note: '§ 19_B | Verwendbarkeitsnachweis']
   DOPNummer text [note: '§ 19_B | Nummer der DOP']
   Beschickungsart _ZusatzkennzeichnungFeuerstaettenkategorieFeststoffBeschickung [note: '§ 19_B | Zusatzkennzeichnung 4 zur Feuerstättenkategorie (Beschickungsart für feste Brennstoffe) | Es kann nur eine Zusatzkennzeichnung für eine Feuerstätte verwendet werden. Siehe Kennzeichnungstabelle 2.2.1.4']
   Zusatzwaermespeicher bool [note: '§ 19_B | Zusatzwärmespeicher gemäss § 5 Abs.4 Synonym: Pufferspeicher.']
-  // Brennstoff_Text text [note: 'QS | Textuelle Beschreibung der Brennstoffart.']
   Sonstiges_Brennstoff text [note: 'QS | Sonstige Angaben zum Brennstoff, z.B. Sorte, Körnung']
   Ist_Wirkungsgrad float [note: 'QS | Wirkungsgrad nach Angabe des Herstellers']
   Ist_CO float [note: 'QS | CO-Wert nach Angabe des Herstellers']
@@ -890,9 +830,8 @@ Table Feste_Brennstoff_Ableitbedingungen {
   Abstand_Muendung_Dach float [note: '§ 19_B | Horizontaler Abstand der Mündung zum Dach in Meter']
   Abstand_Mueuendung_Lueftung float [note: '§ 19_B | Horizontaler Abstand der Mündung zu Lüftungsöffnung in Meter']
   Berechnung_VDI3781Blatt4 bool [note: '§ 19_B | Merkmal, ob die Ableitbedingungen nach der VDI 3781 Blatt 4 berechnet worden sind.']
-  // TODO Referenz auf Dokumente 
-  // Berechnung_VDI3781Blatt4_Verweis_Dokument int [note: 'QS | Verweis auf PDF-Dokument']
-  // Berechnung_Par19_ABC_Verweis_Dokument int [note: 'QS | Verweis auf PDF-Dokument']
+  Berechnung_VDI3781Blatt4_Dokument int [note: 'QS | Verweis auf PDF-Dokument']
+  Berechnung_Par19_ABC_Dokument int [note: 'QS | Verweis auf PDF-Dokument']
   Firstnah_angeordnet bool [note: 'QS | Merkmal, ob der Schornstein nach § 19 der 1. BImSchV firstnah angeordnet ist oder nicht!']
   Horizontaler_Abstand_First_Schornstein float [note: 'QS | Siehe § 19 Abs. 1 Nr. 1']
   Horizontaler_Abstand_Schornstein_Traufe float [note: 'QS | Siehe § 19 Abs. 1 Nr. 1']
@@ -907,10 +846,7 @@ Table Mess_Pruefergebnis_Feststofffeuerstaette_HK {
   ID_Mess_Pruefergebnis_Feststofffeuerstaette_HK int [pk, increment, unique]
   ID_Feste_Brennstoff_Feuerstaette int [not null, ref: > Feste_Brennstoff_Feuerstaette.ID_Feste_Brennstoff_Feuerstaette, note: '§ 19_B | HK-Messergebnisse gehoeren zu Feststofffeuerstaette']
   MIN text [note: '§ 19_B | MIN-Nummer(n) der verwendeten Messgeräte zum Zeitpunkt der Messung. Diese müssen unveränderlich im Messergebnis gespeichert werden. Die MIN wird aus der ID_Messgerät entnommen.']
-  // TODO Es gibt bei Feststoff eine Kombination von den Messarten - Habe jetzt einfach 3 Felder (es gibt maximal 3 Kombinationen) erschaffen was aber eher unschön ist 
-  Messart_1BImSchV1 _MessungArt1BImSchVFeststoff [note: '§ 19_B | Art der Messung nach 1. BImSchV für feste Brenstoffe. Erläuterung: Die Nr. 5 kann auch in Kombination mit den Nr. 1 bis 4 durchgeführt werden. Die Nr. 1 und 2 können zusammen durchgeführt werden. Trennzeichen: Semikolon z. B. 1;2 oder 1;2;5']
-  Messart_1BImSchV2 _MessungArt1BImSchVFeststoff [note: '§ 19_B | Art der Messung nach 1. BImSchV für feste Brenstoffe. Erläuterung: Die Nr. 5 kann auch in Kombination mit den Nr. 1 bis 4 durchgeführt werden. Die Nr. 1 und 2 können zusammen durchgeführt werden. Trennzeichen: Semikolon z. B. 1;2 oder 1;2;5']
-  Messart_1BImSchV3 _MessungArt1BImSchVFeststoff [note: '§ 19_B | Art der Messung nach 1. BImSchV für feste Brenstoffe. Erläuterung: Die Nr. 5 kann auch in Kombination mit den Nr. 1 bis 4 durchgeführt werden. Die Nr. 1 und 2 können zusammen durchgeführt werden. Trennzeichen: Semikolon z. B. 1;2 oder 1;2;5']
+  Messart_1BImSchV text [note: '§ 19_B | Art der Messung nach 1. BImSchV für feste Brenstoffe. Komma getrennte Werte aus dem Enum _MessungArt1BImSchVFeststoff']
   BImSchV bool [note: '§ 19_K | Kennzeichen, ob Messung hinsichtlich BImSchV erfolgte.']
   Ausfuehrungsdatum date [note: '§ 19_K MGH | Datum der Arbeitsausführung.']
   Bedienungsanleitung bool [note: 'QS | Bedienungsanleitung vorhanden']
@@ -966,15 +902,13 @@ Table Mess_Pruefergebnis_Feststofffeuerstaette_ERF {
   ID_Mess_Pruefergebnis_Feststofffeuerstaette_ERF int [pk, increment, unique]
   ID_Feste_Brennstoff_Feuerstaette int [not null, ref: > Feste_Brennstoff_Feuerstaette.ID_Feste_Brennstoff_Feuerstaette, note: '§ 19_B | ERF-Messergebnisse gehoeren zu Feststofffeuerstaette']
   MIN text [note: '§ 19_B | MIN-Nummer(n) der verwendeten Messgeräte zum Zeitpunkt der Messung. Diese müssen unveränderlich im Messergebnis gespeichert werden. Die MIN wird aus der ID_Messgerät entnommen.']
-  // TODO Es gibt bei Feststoff eine Kombination von den Messarten - Habe jetzt einfach 3 Felder (es gibt maximal 3 Kombinationen) erschaffen was aber eher unschön ist 
-  Messart_1BImSchV1 text [note: '§ 19_B | Art der Messung nach 1. BImSchV für feste Brenstoffe. Komma getrennte Werte aus dem Enum _MessungArt1BImSchVFeststoff | Trigger']
+  Messart_1BImSchV text [note: '§ 19_B | Art der Messung nach 1. BImSchV für feste Brenstoffe. Komma getrennte Werte aus dem Enum  _MessungArt1BImSchVFeststoff']
   Ausfuehrungsdatum date [note: '§ 19_K MGH | Datum der Arbeitsausführung.']
   Bedienungsanleitung bool [note: 'QS | Bedienungsanleitung vorhanden']
   Emissionswert_CO float [note: '§ 19_K | Prüfstandsemissionswert in g/m3 für CO']
   Emissionswert_Staub float [note: '§ 19_K | Prüfstandsemissionswert in g/m3 für Staub']
   Emissionswert_Mindestwirkungsgrad float [note: '§ 19_K | Prüfstand-Mindestwirkungsgrad in %']
-  // TODO Es gibt mehrere Brennstoffe 
-  Eingesetzte_Brennstoffe text [note: '§ 19_K | Eingesetzte Brennstoffe der Feuerstätte. Komma getrennte Werte aus dem Enum _BrennstoffBImSchV | Trigger']
+  Eingesetzte_Brennstoffe text [note: '§ 19_K | Eingesetzte Brennstoffe der Feuerstätte. Komma getrennte Werte aus dem Enum _BrennstoffBImSchV']
   Feuchte_gemessen bool [note: '§ 19_K | Merkmal, ob die Feuchtemessung durchgeführt wurde.']
   Feuchte1 int [note: '§ 19_B | Feuchtegehalt Messung 1']
   Feuchte2 int [note: '§ 19_B | Feuchtegehalt Messung 2']
@@ -991,8 +925,6 @@ Table Mess_Pruefergebnis_Feststofffeuerstaette_ERF {
   Ergebnis_Begruendung text [note: '§ 19_B | Begründung, warum das Ergebnis nicht der Verordnung entspricht.']
   Maengel_Frist date [note: '§ 19_K | Frist bis zur Mäneglbehebung']
   Beratung_Datum date [note: '§ 19_B | Datum der Beratungsdurchführung']
-  // TODO Ausfuehrungsdatum ist genau das Datum dafür
-  // Durchfuehrungsdatum date [note: '§ 19_K | Datum der Durchfuehrung der Pruefung bzw. Beratung']
   Beratung_Datum_Bescheinigung date [note: '§ 19_K | Ausstellungsdatum des Beratungsprotokolls']
   Beratung_Bedienung_BImSchV bool [note: '§ 19_K | Sachgerechte Bedienung der Feuerungsanlage wurde durchgeführt']
   Beratung_Lagerung_BImSchV bool [note: '§ 19_K | Ordnungsgemäße Lagerung des Brennstoffes wurde durchgeführt']
@@ -1009,9 +941,6 @@ Table Mess_Pruefergebnis_Feststofffeuerstaette_ERF {
   Messunsicherheit_Staub float [note: 'QS | Messunsicheit Staubgehalt nach Anlage 2 Nr. 2.3 in g/m³']
   Messwert_13_CO float [note: 'QS MGH | Messwert Kohlenmonoxidgehalt bezogen auf 13% Sauerstoff nach Anlage 2 Nr. 2.2']
   Messwert_13_Staub float [note: 'QS MGH | Messwert Staubgehalt bezogen auf 13% Sauerstoff nach Anlage 2 Nr. 2.2']
-  // TODO Doppelt siehe Messunsicherheit
-  // Messwert_Unsicher_CO float [note: 'QS | Messwert Kohlenmonoxid abzueglich Messunsicheit in g/m³']
-  // Messwert_Unsicher_Staub float [note: 'QS | Messwert Staubgehalt abzueglich Messunsicherit in g/m³']
   Messwert_8_CO float [note: 'QS MGH | Messwert Kohlenmonoxidgehalt bezogen auf 8 % Sauerstoff']
   Messwert_8_Staub float [note: 'QS MGH | Messwert Staubgehalt bezogen auf 8% sauerstoff']
   Erstelldatum date [note: '§ 19_B | Datum der Erstellung des Ergebnisprotokolls.']
@@ -1139,8 +1068,6 @@ Table Messgeraet {
   MIN text [note: 'QS MGH | Messgeräte-Identifikationsnummern (MIN) des Messgerätes']
   Datum_Pruefung date [note: 'QS MGH | Datum der letzten Prüfung des Messgerätes']
   Pruefstelle _PruefstelleMessgeraete [note: 'QS MGH | Benannte Prüfstelle']
-  // TODO
-  // Ausfuehrender text [note: 'QS MGH | Verweis auf ID Fremdfirma']
   Typ _MessgeraeteTyp [note: 'QS MGH | Typ des Messgeräts']
 }
 
@@ -1150,7 +1077,6 @@ Table Messgeraet_44 {
   MIN text [note: 'QS MGH | Messgeräte-Identifikationsnummern (MIN) des Messgerätes']
   Datum_Pruefung date [note: 'QS MGH | Datum der letzten Prüfung des Messgerätes']
   Pruefstelle _PruefstelleMessgeraete [note: 'QS MGH | Benannte Prüfstelle']
-  // Ausfuehrender text [note: 'QS MGH | Verweis auf ID Fremdfirma']
   Typ _MessgeraeteTyp [note: 'QS MGH | Typ des Messgeräts']
   Messunsicherheit_CO int [note: 'QS MGH | CO-Messunsicherheit in % des Messgeräteherstellers.']
   Messunsicherheit_NOX int [note: 'QS MGH | NOX-Messunsicherheit in % des Messgeräteherstellers.']
@@ -1182,7 +1108,6 @@ Table GEG {
   Verschlechterungsverbot_FU_Neu bool [note: '§ 19_B | Fachunternehmererklärung über die Einhaltung des Verschlechterungsverbotes bei Neuanlage liegt vor.']
   Pruefung_Landesrecht bool [note: '§ 19_B | GEG-Prüfung ist nicht notwendig. Achtung: Auslegung erfolgt nach Landesrecht!']
   Fristverlaengerung_Behoerde date [note: '§ 19_B | Festgelegtes Datum der Behörde hinsichtlich Nachrüstverpflichtung der Feuerungsanlage']
-  // TODO Referenz auf PDF Dokumente
   Fristverlaengerung_Behoerde_Schreiben int [note: '§ 19_B | Verweis auf PDF-Dokument – Schreiben der Behörde hinsichtlich Fristverlängerung']
   Brennstoff_marktueblich bool [note: '§ 19_B | Merkmal, ob ein marktüblicher Brennstoff verwendet wird.']
   Regeleinrichtung bool [note: '§ 19_B | Merkmal, ob eine Regeleinrichtung vorhanden in Abhängigkeit der Außentemperatur oder einer anderen geeignten Führungsgröße und der Zeit ist.']
@@ -1234,9 +1159,7 @@ Table GEG {
   GEG24_Nachweis_Hallenheizung_Endenergieverbrauch_65EE_Differenzanteil bool [note: '§ 19_B | Nachweis Differnezanteil bei Hallenheizung (25 und 40 %).']
   GEG24_Pruefung_Rohrleitungsdaemmung_ohne_Hinweis bool [note: '§ 19_B | Abfrage für die Prüfung von Rohrleitungen die bisher noch nicht nach GEG geprüft wurden. Wegfall der wiederkehrenden Prüfung gemäß KÜO.']
   GEG24_Pruefung_Regelung_ohne_Hinweis bool [note: '§ 19_B | Abfrage für die Prüfung von Regelungen die bisher noch nicht nach GEG geprüft wurden. Wegfall der wiederkehrenden Prüfung gemäß KÜO.']
-  // TODO Freitext?
   GEG24_Bescheinigungstexte_Abnahme text [note: '§ 19_B | Siehe Kennzeichnungstabelle 3.1.1.9']
-  // TODO Freitext?
   GEG24_Bescheinigungstexte_Feuerstaettenschau text [note: '§ 19_B | Siehe Kennzeichnungstabelle 3.1.1.10']
   GEG24_65_EE_eingahalten bool [note: '§ 19_B | Prüfung Austauschverpflichtung Bestandskessel']
   GEG24_Beschluss_Zentralisierung date [note: '§ 19_B | Datum, Beschluss Zentralisierung.']
@@ -1249,13 +1172,9 @@ Table Pruefergebnis_GEG {
   Datum_Behoerde date [note: '§ 19_B | Datum an dem das Ergebnisprotokoll an die Behörde ging.']
   Ausfuehrungsdatum date [note: '§ 19_B | Datum der GEG-Überprüfung']
   Erstelldatum date [note: '§ 19_B | Datum an dem das Ergebnisprotokoll an den Eigentümer ging.']
-  // TODO Eigentlich reicht hier ein Feld für Frist ob Neu oder Bestand
-  Frist_Neuanlage date [note: '§ 19_B | Frist zur Mängelbeheung bei Neuanlagen']
-  Frist_Bestandsanlage date [note: '§ 19_B | Frist zur Mängelbeheung bei Bestandsanlagen']
+  Frist date [note: '§ 19_B | Frist zur Mängelbeheung']
   Ergebnis bool [note: '§ 19_B | Ergebnis der Prüfung nach GEG. J = entspricht dem GEG N = entspricht nicht dem GEG']
-  // TODO Eigentlich reicht hier ein Feld für Erläuterung ob Neu oder Bestand
-  Erlaeuterung_Neuanlage text [note: '§ 19_B | Erläuterung zu den vorgefundenen Hinweisen bei Neuanlagen.']
-  Erlaeuterung_Bestandsanlage text [note: '§ 19_B | Erläuterung zu den vorgefundenen Hinweisen bei Bestandsanlagen.']
+  Erlaeuterung text [note: '§ 19_B | Erläuterung zu den vorgefundenen Hinweisen']
 }
 
 Table Effizienzlabel {
@@ -1315,17 +1234,13 @@ Table Raeucheranlage {
   benoetigte_Zeit int [note: 'QS | Zeitaufwand für Reinigung der Räucheranlage, in min.']
   Nutzung _Nutzung [note: '§ 19_B | Nutzungstyp der Räucheranlage']
   Ausbrennen bool [note: 'QS | Merkmal, das Räucheranlage ausgebrannt wird.']
-  // Nummer_Anlage_Feuerstaettenbescheid_Rauecheranlage int [note: '§ 19_B | Verweis auf ID Bescheid_Position']
 }
 
 Table Abnahme {
   ID_Abnahme int [pk, increment, unique]
   ID_Gebaeude_Gebaeudeteil int [not null, ref: > Gebaeude_Gebaeudeteil.ID_Gebaeude_Gebaeudeteil, note: '§ 19_B | Abnahme bezieht sich auf ein Gebaeude/Gebaeudeteil']
   ID_Nutzungseinheit int [ref: > Nutzungseinheit.ID_Nutzungseinheit, note: '§ 19_K | Optionaler Verweis auf die Nutzungseinheit, in der die Abnahme stattfindet.']
-
-  // TODO Verweis auf Mängel fehlt
-  // TODO hierzu müssen wir einen Enum definieren
-  Typ int [note: '§ 19_K | Art der Abnahme. | Listendefinition_LIVs']
+  Typ text [note: '§ 19_K | Art der Abnahme. | Listendefinition_LIVs']
   Berechnungstyp _Berechnungstyp [note: 'QS | Berechnungstyp nach der eine Abnahme berechnet wird.']
   Berechnungswert float [note: 'QS | Berechnungswert in Abhängigkeit des Berechnungstyps.']
   Ergebnis_ok bool [note: '§ 19_K | Ergebnis der Abnahmetätigkeit.']
@@ -1418,7 +1333,6 @@ Table Dunstabzugsanlage_Feuerstaette {
   Bearbeitungszyklus _Bearbeitungszyklus [note: '§ 19_B | Zyklus der FeuerstättenÜberprüfung. | Siehe Kennzeichnungstabelle 4.2']
   Jaehrliche_Haeufigkeit int [note: '§ 19_B | Anzahl der jährlichen Überprüfung der Feuerstätte. Abhängig vom Bearbeitungszyklus']
   Bemerkung text [note: 'QS | Bemerkung zur Feuerstätte.']
-  // qA_Einstufung int [note: '§ 19_B | Fuer die Einstufung zu Grunde gelegter Abgasverlust (Abgasverlust minus Messunsicherheit)']
   gueltig_von date [note: '§ 19_B | Datum, ab wann die Feuerstätte Gültigkeit besitzt. Stichwort: Erhebung (Statistische Auswertbarkeit)']
   gueltig_bis date [note: '§ 19_B | Datum bis wann die Feuerstätte Gültigkeit besitzt. Stichwort: Erhebung (Statistische Auswertbarkeit)']
   Warmwasser_Leistung_min float [note: 'QS | Leistung min. der Warmwasseranlage in kW. (GEG)']
@@ -1431,8 +1345,6 @@ Table Abschnitt_Dunstabzugsleitung {
   ID_Abschnitt_Dunstabzugsleitung int [pk, increment, unique]
   ID_Dunstabzuganlage_Leitung int [not null, ref: > Dunstabzuganlage_Leitung.ID_Dunstabzuganlage_Leitung, note: '§ 19_B | Abschnitt gehoert zur Dunstabzugsleitung']
   Sortiernummer int [note: '§ 19_B | Reihenfolge des Abschnitts innerhalb der Dunstabzugsleitung.']
-
-
   Brennstoff_Arten _BrennstoffKombination [note: '§ 19_K | benutzte Brennstoffe | Siehe Kennzeichnungstabelle Blatt 2.2.2']
   Laenge_waagerecht float [note: '§ 19_B | Waagerechte Länge des Abschnittes in Meter. Synonym: Meter']
   Laenge_senkrecht float [note: '§ 19_B | Senkrechte Länge des Abschnittes in Meter.']
@@ -1460,8 +1372,6 @@ Table Abschnitt_Dunstabzugsleitung {
   Zeit float [note: 'QS | Zeitaufwand für die Reinigung des Abschnitts, z.B. asbesthaltige Abschnitte.']
   Abdecken bool [note: 'QS | Merkmal, ob ein Abschnitt abgedeckt werden muss.']
   ZIV_Kennzeichen text [note: 'QS | Abgeleitet aus Kennzeichnung Schicht.']
-  // TODO Denke das brauchen wir nicht
-  // Nummer text [note: '§ 19_B | Nummer der Abgasanlage oder Lueftungsanlage (NR)']
   Temperaturklasse _Temperaturklasse18160 [note: '§ 19_B | Temperaturklasse (Taaa) | Siehe Kennzeichnungstabelle 2.1.3.1']
   Druckklasse _Druckklasse18160 [note: '§ 19_B | Gasdichtheitsklasse (Nx/Px/Hx) / Druckklasse | Siehe Kennzeichnungstabelle 2.1.3.2']
   Kondensatbestaendigkeitsklasse _Kondensatbestaendigkeitsklasse18160 [note: '§ 19_B | Kondensatbeständigkeitsklasse (D/W) | Siehe Kennzeichnungstabelle 2.1.3.3']
@@ -1470,7 +1380,6 @@ Table Abschnitt_Dunstabzugsleitung {
   Abstand_brennbare_Baustoffe float [note: '§ 19_B | Abstand zu brennbaren Baustoffen. (xx)']
   Feuerwiderstandsklasse _Feuerwiderstandsklasse18160 [note: '§ 19_B | Feuerwiderstandsklasse (Lzz) | Siehe Kennzeichnungstabelle 2.1.7']
   Waermedurchlasswiderstand float [note: '§ 19_B | Abmessungen und Wärmedurchlasswiderstand (AW)']
-  // Muendet_Dunstabzughaube int [note: '§ 19_B | Muendet in Dunstabzughaube mit der Dunstabzugshaubennummer.']
   Kondensatablauf bool [note: 'QS | Merkmal, ob ein Kondensatablauf vorhanden ist.']
   Verbindungsst_brandschutztechnisch_ausr bool [note: '§ 19_B | Merkmal, ob Verbindungsstück brandschutztechnisch ausreichend ist. Quelle: Dunstabzugsanlage']
   Verbindungsst_baulich_ausr bool [note: '§ 19_B | Merkmal, ob Verbindungsstück bauchlich ausreichend ist. Quelle: Dunstabzugsanlage']
@@ -1638,8 +1547,6 @@ Table Pruefergebnis_Feuerstaettenschau {
 Table Feuerstaettenbescheid_Grunddaten {
   ID_Feuerstaettenbescheid_Grunddaten int [pk, increment, unique]
   ID_Gebaeude_Gebaeudeteil int [not null, ref: > Gebaeude_Gebaeudeteil.ID_Gebaeude_Gebaeudeteil, note: '§ 19_B | Feuerstaettenbescheid bezieht sich auf ein Gebaeude/Gebaeudeteil']
-  // TODO Müssen alte FSBs wirklich als solche markiert werden?
-  // Vorletzter bool [note: '§ 19_K | Angabe, ob der Feuerstaettenbscheid der vorletzte Feuerstaettenbescheid ist.']
   Ausstellungsdatum date [note: '§ 19_K | Ausstellungsdatum des Feuerstättenbescheides']
   Nummer text [note: '§ 19_K | Eindeutige Nummer des Feuerstättenbescheids. Ein Gebäude kann einen oder mehrere Feuerstättenbescheide besitzen.']
   Naechste_FS int [note: '§ 19_K wenn ausgefüllt und an Kunden mitgeteilt. | Jahr der nächsten Feuerstättenschau']
@@ -1664,9 +1571,6 @@ Table Bescheid_Termin_Position {
   ID_Bescheid_Position int [not null, ref: > Bescheid_Position.ID_Bescheid_Position, note: '§ 19_B | Termin bezieht sich auf eine Position des Feuerstättenbescheids']
   Start_Zeitraum date [note: '§ 19_K | Alle aufgelisteten Startzeitpunkte für die Zeiträume im Feuerstättenbescheid.']
   Ende_Zeitraum date [note: '§ 19_K | Alle aufgelisteten Endzeitpunkte für die Zeiträume im Feuerstättenbescheid.']
-  // TODO Ausführug und Behörde gehört eigentlich ins Kehrbuch und nicht in den FSB
-  // Ausfuehrung date [note: '§ 19_K | Datum der Ausfuehrung der Arbeiten']
-  // Weiterleitung_Behoerde date [note: '§ 19_K | Datum der Weiterleitung an die zustaendige Behoerde']
 }
 
 Table Leistung {
