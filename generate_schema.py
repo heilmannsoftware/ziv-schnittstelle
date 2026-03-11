@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Generate schema.sql from Datenmodell4_0.dbml and relationen_zuordnung.csv
+Generate schema.sql from Datenmodell4_0.dbml
 """
 
+import os
 import re
-import csv
 import sys
 from collections import defaultdict, deque
 
-DBML_FILE = r"C:\Users\aheilmann\claude_projects\ZIV\Datenmodell4_0.dbml"
-CSV_FILE = r"C:\Users\aheilmann\claude_projects\ZIV\relationen_zuordnung.csv"
-OUTPUT_FILE = r"C:\Users\aheilmann\claude_projects\ZIV\schema.sql"
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DBML_FILE = os.path.join(_BASE_DIR, "Datenmodell4_0.dbml")
+OUTPUT_FILE = os.path.join(_BASE_DIR, "schema.sql")
 
 # ============================================================
 # 1) Parse Enums from DBML
@@ -19,7 +19,7 @@ OUTPUT_FILE = r"C:\Users\aheilmann\claude_projects\ZIV\schema.sql"
 def parse_enums(dbml_text):
     """Parse all Enum definitions and return dict: enum_name -> [values]"""
     enums = {}
-    pattern = re.compile(r'Enum\s+(\S+)\s*\{(.*?)\n\}', re.DOTALL)
+    pattern = re.compile(r'^Enum\s+(\S+)\s*\{(.*?)\n\}', re.DOTALL | re.MULTILINE)
     for m in pattern.finditer(dbml_text):
         enum_name = m.group(1)
         body = m.group(2)
@@ -134,36 +134,6 @@ def parse_tables(dbml_text):
 
     return tables
 
-# ============================================================
-# 3) Parse FK relations from CSV
-# ============================================================
-def parse_fk_relations(csv_file):
-    relations = []
-    with open(csv_file, 'r', encoding='utf-8-sig') as f:
-        reader = csv.reader(f, delimiter=';')
-        header = next(reader)
-        for row in reader:
-            if len(row) < 7:
-                continue
-            nr = row[0].strip()
-            child = row[1].strip()
-            fk_field = row[2].strip()
-            parent = row[3].strip()
-            not_null_str = row[5].strip().lower() if len(row) > 5 else ''
-            status = row[6].strip() if len(row) > 6 else ''
-
-            if not nr or not child or status not in ('EXISTIERT', 'NEU'):
-                continue
-
-            relations.append({
-                'child': child,
-                'fk_field': fk_field,
-                'parent': parent,
-                'not_null': not_null_str == 'ja',
-                'status': status,
-            })
-
-    return relations
 
 # ============================================================
 # Helper: quote identifiers that need it
@@ -210,9 +180,9 @@ def map_type(type_raw):
         'int': 'INTEGER',
         'float': 'REAL',
         'text': 'TEXT',
-        'bool': 'INTEGER',
-        'date': 'TEXT',
-        'datetime': 'TEXT',
+        'bool': 'BOOL',
+        'date': 'DATE',
+        'datetime': 'DATETIME',
         'blob': 'BLOB',
     }
     return type_map.get(type_lower, 'TEXT')
@@ -261,18 +231,23 @@ def parse_refs_from_dbml(dbml_text):
             continue
 
         if current_table and 'ref:' in stripped:
-            ref_match = re.search(r'ref:\s*[->]\s*(\S+)\.(\S+)', stripped)
+            ref_match = re.search(r'ref:\s*([->])\s*(\S+)\.(\S+)', stripped)
             if ref_match:
-                parent_table = ref_match.group(1)
-                parent_col = ref_match.group(2)
+                ref_type = ref_match.group(1)
+                parent_table = ref_match.group(2)
+                parent_col = ref_match.group(3).rstrip(',')
                 col_match = re.match(r'(\S+)\s+', stripped)
                 if col_match:
                     col_name = col_match.group(1)
+                    is_not_null = 'not null' in stripped.lower()
+                    kardinalitaet = '1:1' if ref_type == '-' else 'n:1'
                     refs.append({
                         'child': current_table,
                         'fk_field': col_name,
                         'parent': parent_table,
                         'parent_col': parent_col,
+                        'not_null': is_not_null,
+                        'kardinalitaet': kardinalitaet,
                     })
 
     return refs
@@ -329,44 +304,21 @@ def main():
 
     enums = parse_enums(dbml_text)
     tables = parse_tables(dbml_text)
-    csv_relations = parse_fk_relations(CSV_FILE)
     dbml_refs = parse_refs_from_dbml(dbml_text)
 
     print(f"Parsed {len(enums)} enums")
     print(f"Parsed {len(tables)} tables")
-    print(f"Parsed {len(csv_relations)} CSV relations")
     print(f"Parsed {len(dbml_refs)} DBML refs")
 
-    # Add NEU columns to tables
-    for rel in csv_relations:
-        if rel['status'] == 'NEU':
-            table_name = rel['child']
-            if table_name in tables:
-                existing_cols = [c['name'] for c in tables[table_name]]
-                if rel['fk_field'] not in existing_cols:
-                    tables[table_name].append({
-                        'name': rel['fk_field'],
-                        'type_raw': 'int',
-                        'pk': False,
-                        'not_null': rel['not_null'],
-                        'unique': False,
-                        'default': None,
-                        'enum_type': None,
-                    })
-
-    # Build combined relations for dependency graph
-    all_relations = list(csv_relations)
-    csv_child_fields = set((r['child'], r['fk_field']) for r in csv_relations)
+    # Build relations from DBML refs
+    all_relations = []
     for ref in dbml_refs:
-        key = (ref['child'], ref['fk_field'])
-        if key not in csv_child_fields:
-            all_relations.append({
-                'child': ref['child'],
-                'fk_field': ref['fk_field'],
-                'parent': ref['parent'],
-                'not_null': False,
-                'status': 'EXISTIERT',
-            })
+        all_relations.append({
+            'child': ref['child'],
+            'fk_field': ref['fk_field'],
+            'parent': ref['parent'],
+            'not_null': ref['not_null'],
+        })
 
     # Topological sort
     sorted_tables = topological_sort(list(tables.keys()), all_relations)
@@ -379,12 +331,6 @@ def main():
     fk_lookup = {}
     for rel in all_relations:
         fk_lookup[(rel['child'], rel['fk_field'])] = rel['parent']
-
-    # Also add DBML refs to fk_lookup
-    for ref in dbml_refs:
-        key = (ref['child'], ref['fk_field'])
-        if key not in fk_lookup:
-            fk_lookup[key] = ref['parent']
 
     def get_pk_col(parent_table):
         if parent_table in tables:
@@ -427,16 +373,8 @@ def main():
 
             parts.append("    " + qcol + " " + sqlite_type)
 
-            # NOT NULL - check CSV override first
-            csv_not_null = None
-            for rel in csv_relations:
-                if rel['child'] == table_name and rel['fk_field'] == col_name:
-                    csv_not_null = rel['not_null']
-                    break
-
-            if csv_not_null is True:
-                parts.append("NOT NULL")
-            elif csv_not_null is None and col['not_null']:
+            # NOT NULL
+            if col['not_null']:
                 parts.append("NOT NULL")
 
             # DEFAULT

@@ -3,8 +3,6 @@
 """Generate HTML documentation for ZIV Datenmodell 4.0"""
 
 import re
-import csv
-import io
 import html as html_mod
 
 # ============================================================
@@ -126,35 +124,59 @@ def parse_enums(path):
     return enums
 
 # ============================================================
-# 3. Parse relationen_zuordnung.csv
+# 3. Parse relations from DBML refs
 # ============================================================
-def parse_relations(path):
+def parse_relations_from_dbml(path):
     with open(path, 'r', encoding='utf-8') as f:
         content = f.read()
 
     relations = []
+    current_table = None
+    nr = 0
+
     for line in content.split('\n'):
-        line = line.strip()
-        if not line or line.startswith(';===') or line.startswith('Nr;'):
+        stripped = line.strip()
+        if stripped.startswith('//'):
             continue
-        parts = line.split(';')
-        if len(parts) < 8:
+
+        table_match = re.match(r'^Table\s+(\w+)\s*\{', stripped)
+        if table_match:
+            current_table = table_match.group(1)
             continue
-        nr = parts[0].strip()
-        if not nr or not any(c.isdigit() for c in nr):
+
+        if stripped == '}':
+            current_table = None
             continue
-        # Extract leading digits for sorting (handles '84a', '85b' etc.)
-        nr_digits = ''.join(c for c in nr if c.isdigit())
-        relations.append({
-            'nr': int(nr_digits),
-            'kind_tabelle': parts[1].strip(),
-            'fk_feld': parts[2].strip(),
-            'eltern_tabelle': parts[3].strip(),
-            'kardinalitaet': parts[4].strip(),
-            'not_null': parts[5].strip(),
-            'status': parts[6].strip(),
-            'kommentar': parts[7].strip() if len(parts) > 7 else ''
-        })
+
+        if current_table and 'ref:' in stripped:
+            ref_match = re.search(r'ref:\s*([->])\s*(\w+)\.(\w+)', stripped)
+            if ref_match:
+                ref_type = ref_match.group(1)
+                parent_table = ref_match.group(2)
+                col_match = re.match(r'(\w+)\s+', stripped)
+                if col_match:
+                    nr += 1
+                    col_name = col_match.group(1)
+                    kardinalitaet = '1:1' if ref_type == '-' else 'n:1'
+                    # Extract note for kommentar
+                    note_match = re.search(r"note:\s*'([^']*)'", stripped)
+                    kommentar = ''
+                    if note_match:
+                        note_text = note_match.group(1)
+                        if '|' in note_text:
+                            kommentar = note_text.split('|', 1)[1].strip()
+                        else:
+                            kommentar = note_text
+                    relations.append({
+                        'nr': nr,
+                        'kind_tabelle': current_table,
+                        'fk_feld': col_name,
+                        'eltern_tabelle': parent_table,
+                        'kardinalitaet': kardinalitaet,
+                        'not_null': 'ja' if 'not null' in stripped.lower() else 'nein',
+                        'status': 'EXISTIERT',
+                        'kommentar': kommentar
+                    })
 
     return relations
 
@@ -1022,7 +1044,7 @@ document.addEventListener('DOMContentLoaded', function() {
 # ============================================================
 if __name__ == '__main__':
     import os
-    base = r'C:\Users\aheilmann\claude_projects\ZIV'
+    base = os.path.dirname(os.path.abspath(__file__))
 
     print("Parsing schema.sql...")
     tables = parse_schema(os.path.join(base, 'schema.sql'))
@@ -1032,8 +1054,8 @@ if __name__ == '__main__':
     enums = parse_enums(os.path.join(base, 'stammdaten_enums.sql'))
     print(f"  Found {len(enums)} enums")
 
-    print("Parsing relationen_zuordnung.csv...")
-    relations = parse_relations(os.path.join(base, 'relationen_zuordnung.csv'))
+    print("Parsing DBML for relations...")
+    relations = parse_relations_from_dbml(os.path.join(base, 'Datenmodell4_0.dbml'))
     print(f"  Found {len(relations)} relations")
 
     print("Parsing Datenmodell4_0.dbml for notes...")

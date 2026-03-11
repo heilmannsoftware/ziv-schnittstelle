@@ -1,5 +1,13 @@
 PRAGMA foreign_keys = ON;
 
+CREATE TABLE Belegungsplan (
+    ID_Belegungsplan INTEGER PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE TABLE Bericht (
+    ID_Bericht INTEGER PRIMARY KEY AUTOINCREMENT
+);
+
 CREATE TABLE Bundes_KUEO (
     ID_Bundes_KUEO INTEGER PRIMARY KEY AUTOINCREMENT,
     Gebuehrentext TEXT,
@@ -71,7 +79,7 @@ CREATE TABLE Landesrechtliche_Vorschriften (
 );
 
 CREATE TABLE Meta (
-    Abgabe TEXT NOT NULL DEFAULT 'now()',
+    Abgabe DATETIME NOT NULL DEFAULT 'now()',
     Version_Modell REAL NOT NULL DEFAULT 4.0,
     Software TEXT NOT NULL,
     Software_Version TEXT NOT NULL,
@@ -94,7 +102,7 @@ CREATE TABLE Fremdfirma (
 CREATE TABLE Untere_Aufsichtsbehoerde (
     ID_Untere_Aufsichtbehoerde INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT,
-    ID_Kommunikation INTEGER NOT NULL,
+    ID_Kommunikation INTEGER,
     FOREIGN KEY (ID_Kommunikation) REFERENCES Kommunikation (ID_Kommunikation)
 );
 
@@ -112,7 +120,7 @@ CREATE TABLE Strasse (
     ID_Strasse INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT,
     Strassencode TEXT,
-    ID_Ort TEXT NOT NULL,
+    ID_Ort INTEGER NOT NULL,
     FOREIGN KEY (ID_Ort) REFERENCES Ort (ID_Ort)
 );
 
@@ -169,42 +177,41 @@ CREATE TABLE Grundstueck (
     Gemeindung TEXT,
     Baublocknummer TEXT,
     Blocknummer TEXT,
-    Regionalschluessel TEXT,
     ID_Kommunikation_Verwalter INTEGER,
+    ID_Kommunikation_Eigentuemer INTEGER,
     ID_Strasse INTEGER NOT NULL,
     FOREIGN KEY (ID_Kommunikation_Verwalter) REFERENCES Kommunikation (ID_Kommunikation),
+    FOREIGN KEY (ID_Kommunikation_Eigentuemer) REFERENCES Kommunikation (ID_Kommunikation),
     FOREIGN KEY (ID_Strasse) REFERENCES Strasse (ID_Strasse)
 );
 
-CREATE TABLE Grundstueck_Eigentuemer (
-    ID_Grundstueck_Eigentuemer INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Grundstueck INTEGER NOT NULL,
-    ID_Kommunikation INTEGER NOT NULL,
-    Anteil TEXT,
-    Sprecher BOOL,
-    FOREIGN KEY (ID_Grundstueck) REFERENCES Grundstueck (ID_Grundstueck),
-    FOREIGN KEY (ID_Kommunikation) REFERENCES Kommunikation (ID_Kommunikation)
+CREATE TABLE Kehrbuch (
+    ID_Kehrbuch INTEGER PRIMARY KEY AUTOINCREMENT,
+    Kehrbuch_Start DATE NOT NULL,
+    Kehrbuch_Ende DATE NOT NULL,
+    ID_Kehrbezirk INTEGER NOT NULL,
+    FOREIGN KEY (ID_Kehrbezirk) REFERENCES Kehrbezirk (ID_Kehrbezirk)
 );
 
 CREATE TABLE Messgeraet (
     ID_Messgeraet INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbezirk INTEGER NOT NULL,
     MIN TEXT,
     Datum_Pruefung DATE,
     Pruefstelle TEXT CHECK(Pruefstelle IN ('BW1', 'BW2', 'BW3', 'BW4', 'BY1', 'BY2', 'BY3', 'BY4', 'BY5', 'BY6', 'BY7', 'BE1', 'BB1', 'HB1', 'HH1', 'HE1', 'HE2', 'HE3', 'MV1', 'NI1', 'NI2', 'NI2_BS', 'NI2_LUE', 'NI2_OL', 'NI2_OSN', 'NI2_OST', 'NI2_STD', 'NI2_SUE', 'NI3', 'NW1', 'NW2', 'NW3', 'NW4', 'NW5', 'NW6', 'RP1', 'RP2', 'RP3', 'SL1', 'SN1', 'SN2', 'ST1', 'ST2', 'SH1', 'TH1')),
     Typ TEXT CHECK(Typ IN ('AV', 'CO', 'SM', 'RZ', 'SG')),
-    ID_Kehrbezirk INTEGER NOT NULL,
     FOREIGN KEY (ID_Kehrbezirk) REFERENCES Kehrbezirk (ID_Kehrbezirk)
 );
 
 CREATE TABLE Messgeraet_44 (
     ID_Messgeraet_44 INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbezirk INTEGER NOT NULL,
     MIN TEXT,
     Datum_Pruefung DATE,
     Pruefstelle TEXT CHECK(Pruefstelle IN ('BW1', 'BW2', 'BW3', 'BW4', 'BY1', 'BY2', 'BY3', 'BY4', 'BY5', 'BY6', 'BY7', 'BE1', 'BB1', 'HB1', 'HH1', 'HE1', 'HE2', 'HE3', 'MV1', 'NI1', 'NI2', 'NI2_BS', 'NI2_LUE', 'NI2_OL', 'NI2_OSN', 'NI2_OST', 'NI2_STD', 'NI2_SUE', 'NI3', 'NW1', 'NW2', 'NW3', 'NW4', 'NW5', 'NW6', 'RP1', 'RP2', 'RP3', 'SL1', 'SN1', 'SN2', 'ST1', 'ST2', 'SH1', 'TH1')),
     Typ TEXT CHECK(Typ IN ('AV', 'CO', 'SM', 'RZ', 'SG')),
     Messunsicherheit_CO INTEGER,
     Messunsicherheit_NOX INTEGER,
-    ID_Kehrbezirk INTEGER NOT NULL,
     FOREIGN KEY (ID_Kehrbezirk) REFERENCES Kehrbezirk (ID_Kehrbezirk)
 );
 
@@ -220,7 +227,7 @@ CREATE TABLE Gebaeude_Gebaeudeteil (
     Besitzverhaeltnis_geaendert DATE,
     GEG BOOL,
     Baujahr DATE,
-    Verbrauchssektor_Energie INTEGER,
+    Verbrauchssektor TEXT CHECK(Verbrauchssektor IN ('WG', 'GH', 'IN', 'GOE', 'GT', 'BW')),
     Gebaeude_ident TEXT,
     GEG24_Gebauede_Status TEXT CHECK(GEG24_Gebauede_Status IN ('B', 'N', 'NN')),
     GEG24_Waermeplanung_vorhanden BOOL,
@@ -228,6 +235,7 @@ CREATE TABLE Gebaeude_Gebaeudeteil (
     GEG24_Kommune_gross BOOL,
     GEG24_Gebaeudeart TEXT CHECK(GEG24_Gebaeudeart IN ('WGB2', 'WGG2', 'NWG', 'HALG4', 'HALB4')),
     GEG24_Etagenheizung_erste_ausgetauscht DATE,
+    Betriebsanweisung_Gefaehrdungsbeurteilung_Objektbezogen TEXT,
     ID_Grundstueck INTEGER NOT NULL,
     ID_Kommunikation_Mieter INTEGER,
     ID_Kommunikation_Verwalter INTEGER,
@@ -238,18 +246,9 @@ CREATE TABLE Gebaeude_Gebaeudeteil (
     FOREIGN KEY (ID_Kehrbezirk) REFERENCES Kehrbezirk (ID_Kehrbezirk)
 );
 
-CREATE TABLE Gebaeude_Eigentuemer (
-    ID_Gebaeude_Eigentuemer INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    ID_Kommunikation INTEGER NOT NULL,
-    Anteil TEXT,
-    Sprecher BOOL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil),
-    FOREIGN KEY (ID_Kommunikation) REFERENCES Kommunikation (ID_Kommunikation)
-);
-
 CREATE TABLE Messunsicherheit (
     ID_Messunsicherheit INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Messgeraet INTEGER NOT NULL,
     Russ INTEGER,
     Abgasverlust INTEGER,
     CO_Gehalt_Oel_und_gasfoermige_Brennstoffe INTEGER,
@@ -259,7 +258,6 @@ CREATE TABLE Messunsicherheit (
     CO_Gehalt_Feste_Brennstoffe_neues_Verfahren_A INTEGER,
     Staub_Gehalt_Feste_Brennstoffe_neues_Verfahren_P INTEGER,
     Feuchtegehalt INTEGER,
-    ID_Messgeraet INTEGER NOT NULL,
     FOREIGN KEY (ID_Messgeraet) REFERENCES Messgeraet (ID_Messgeraet)
 );
 
@@ -306,18 +304,19 @@ CREATE TABLE Abgasanlage (
 
 CREATE TABLE Abnahme (
     ID_Abnahme INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
     Typ INTEGER,
     Berechnungstyp TEXT CHECK(Berechnungstyp IN ('MIN', 'AW', 'EUR')),
     Berechnungswert REAL,
     Ergebnis_ok BOOL,
     Datum DATE,
     Bescheinigungsbezeichnung TEXT,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
     FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
 );
 
 CREATE TABLE Anlassbezogene_Ueberpruefung (
     ID_Anlassbezogene_Ueberpruefung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
     Berechnungstyp TEXT CHECK(Berechnungstyp IN ('MIN', 'AW', 'EUR')),
     Berechnungswert REAL,
     Ergebnis_ok BOOL,
@@ -325,24 +324,392 @@ CREATE TABLE Anlassbezogene_Ueberpruefung (
     Grund TEXT,
     Begruendet BOOL,
     Bescheinigungsbezeichnung TEXT,
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+);
+
+CREATE TABLE Dachskizze (
+    ID_Dachskizze INTEGER PRIMARY KEY AUTOINCREMENT,
+    Bezeichnung TEXT,
+    Bemerkung TEXT,
+    ID_Gebaeude_Gebaeudeteil INTEGER,
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+);
+
+CREATE TABLE Dunstabzuganlage_Leitung (
+    ID_Dunstabzuganlage_Leitung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
+    Anzahl_Geschoss INTEGER,
+    Anzahl_Muendung INTEGER,
+    Anzahl_Muendung_ohne_Ventilator INTEGER,
+    Anzahl_Muendung_mit_Ventilator INTEGER,
+    Kehrpflicht_Dunstanlage BOOL,
+    Ueberpruefungspflicht_Dunstanlage BOOL,
+    Laenge REAL,
+    Differenzdruckschalter BOOL,
+    Hoehe_ueber_Dach REAL,
+    Geraete_Kategorie TEXT CHECK(Geraete_Kategorie IN ('BA', 'BH', 'BO', 'DW', 'FC', 'GK', 'GO', 'HD', 'HE', 'HK', 'HO', 'KE', 'KH', 'KK', 'KO', 'KW', 'LE', 'LT', 'OK', 'RA', 'RD', 'RF', 'RH', 'RT', 'SD', 'SF', 'SG', 'SH', 'SO', 'UW', 'VM', 'VW', 'WA', 'WK', 'WL', 'WM', 'WP', 'WT', 'NO', 'PO', 'BP', 'EA', 'FT', 'GY', 'KB', 'KV', 'SI', 'WB', 'WO', 'SP', 'DE', 'KG', 'HG', 'GF', 'LP', 'KP', 'NR', 'FW', 'BB', 'SA', 'HT', 'GN', 'HB')),
+    Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
+    Leistung REAL,
+    Sonstige_Maengel TEXT,
+    Maengel_Frist DATE,
+    Bemerkung TEXT,
+    Zubehoer TEXT CHECK(Zubehoer IN ('AA', 'AK', 'AM', 'AV', 'BK', 'BS', 'DH', 'DK', 'DM', 'FA', 'FE', 'KA', 'LF', 'NE', 'NK', 'NM', 'NV', 'ROE', 'RV', 'SL', 'TB', 'VA', 'VV', 'ZD', 'ZG', 'ZW', 'BF', 'BV', 'FM', 'FV', 'UV')),
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+);
+
+CREATE TABLE Feuerstaettenbescheid_Grunddaten (
+    ID_Feuerstaettenbescheid_Grunddaten INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
+    Ausstellungsdatum DATE,
+    Nummer TEXT,
+    Naechste_FS INTEGER,
+    Zusatz TEXT,
+    Art TEXT CHECK(Art IN ('KB', 'FS', 'AE', 'BA')),
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+);
+
+CREATE TABLE Gebaeude_Eigentuemer (
+    ID_Gebaeude_Eigentuemer INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
+    ID_Kommunikation INTEGER NOT NULL,
+    Sprecher BOOL,
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil),
+    FOREIGN KEY (ID_Kommunikation) REFERENCES Kommunikation (ID_Kommunikation)
+);
+
+CREATE TABLE Gebaeudeeigenschaft (
+    ID_Gebaeudeeigenschaft INTEGER PRIMARY KEY AUTOINCREMENT,
+    Eigenschaft TEXT CHECK(Eigenschaft IN ('ELBH', 'NEUB', 'ROHB', 'LEER', 'KERN', 'KVT', 'FHAF', 'LGRD', 'NFW_MIT', 'NFW_OHN', 'BHTT', 'INSL')),
+    Kommentar TEXT,
+    Funktion TEXT CHECK(Funktion IN ('AN', 'EH', 'GA', 'HA', 'LR', 'MH', 'WI', 'OG', 'GR', 'UB', 'SB', 'GW', 'MZ', 'KI', 'BN', 'BG', 'BT', 'VU', 'ZH')),
+    ID_Gebaeude_Gebaeudeteil INTEGER,
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+);
+
+CREATE TABLE Gefaehrdungsbeurteilung (
+    ID_Gefaehrdungsbeurteilung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
+    Durchfuehrung_QS DATE,
+    Durchfuehrung_Betriebsanweisung_objektbezogen DATE,
+    Durchfuehrung_Betriebsanweisung_nicht_objektbezogen DATE,
+    Standflaeche TEXT CHECK(Standflaeche IN ('A', 'B', 'C', 'D', 'E')),
+    Verkehrsweg TEXT CHECK(Verkehrsweg IN ('FT', 'BT', 'AL', 'AD_A', 'UD_B', 'UD_C', 'RO_D', 'BA_E')),
+    Pruefpunkte TEXT CHECK(Pruefpunkte IN ('BEL', 'LW_OK', 'LW_RS', 'LW_HG', 'SH_OK', 'BEF_OK', 'BES_OK', 'TST_OK', 'BP_OK', 'SB_OK', 'TB_OK', 'AL_USE', 'AL_TRBS', 'AL_FIT', 'AL_SEC', 'DSO_OK', 'LDS_OK', 'SS_OK', 'GEL_OK', 'SF_OK', 'SS_REQ', 'LRP_OK', 'RETT', 'PSGA', 'VW', 'RB', 'AP', 'URO')),
+    Pruefpunkte_Sammlung TEXT CHECK(Pruefpunkte_Sammlung IN ('NA', 'WORK', 'OK', 'NOK')),
+    Gefaehrdungseinschaetzung_Verkehrsweg_Standflaeche TEXT CHECK(Gefaehrdungseinschaetzung_Verkehrsweg_Standflaeche IN ('SGR', 'GR', 'AKZ', 'GRZ', 'IRZ')),
+    Standflaeche_A_Freitext_1 TEXT,
+    Standflaeche_A_Freitext_2 TEXT,
+    Standflaeche_A_Freitext_3 TEXT,
+    Standflaeche_A_Freitext_4 TEXT,
+    Standflaeche_A_Freitext_5 TEXT,
+    Standflaeche_A_Freitext_6 TEXT,
+    Standflaeche_A_Freitext_7 TEXT,
+    Standflaeche_A_Freitext_8 TEXT,
+    Standflaeche_B_Freitext_1 TEXT,
+    Standflaeche_B_Freitext_2 TEXT,
+    Standflaeche_B_Freitext_3 TEXT,
+    Standflaeche_B_Freitext_4 TEXT,
+    Standflaeche_B_Freitext_5 TEXT,
+    Standflaeche_B_Freitext_6 TEXT,
+    Standflaeche_B_Freitext_7 TEXT,
+    Standflaeche_B_Freitext_8 TEXT,
+    Standflaeche_C_Freitext_1 TEXT,
+    Standflaeche_C_Freitext_2 TEXT,
+    Standflaeche_C_Freitext_3 TEXT,
+    Standflaeche_C_Freitext_4 TEXT,
+    Standflaeche_C_Freitext_5 TEXT,
+    Standflaeche_C_Freitext_6 TEXT,
+    Standflaeche_C_Freitext_7 TEXT,
+    Standflaeche_C_Freitext_8 TEXT,
+    Standflaeche_D_Freitext_1 TEXT,
+    Standflaeche_D_Freitext_2 TEXT,
+    Standflaeche_D_Freitext_3 TEXT,
+    Standflaeche_D_Freitext_4 TEXT,
+    Standflaeche_D_Freitext_5 TEXT,
+    Standflaeche_D_Freitext_6 TEXT,
+    Standflaeche_D_Freitext_7 TEXT,
+    Standflaeche_D_Freitext_8 TEXT,
+    Standflaeche_E_Freitext_1 TEXT,
+    Standflaeche_E_Freitext_2 TEXT,
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+);
+
+CREATE TABLE Kehrbuch_Gebaeude (
+    ID_Kehrbuch_Gebaeude INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbuch INTEGER NOT NULL,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
+    ID_Kommunikation_Verwalter INTEGER,
+    ID_Kommunikation_Mieter INTEGER,
+    Kommentar TEXT,
+    FOREIGN KEY (ID_Kehrbuch) REFERENCES Kehrbuch (ID_Kehrbuch),
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil),
+    FOREIGN KEY (ID_Kommunikation_Verwalter) REFERENCES Kommunikation (ID_Kommunikation),
+    FOREIGN KEY (ID_Kommunikation_Mieter) REFERENCES Kommunikation (ID_Kommunikation)
+);
+
+CREATE TABLE Leistung (
+    ID_Leistung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
+    Kuerzel TEXT,
+    Beschreibung TEXT,
+    Anzahl REAL,
+    Einheit REAL,
+    gueltig_von DATE,
+    gueltig_bis DATE,
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+);
+
+CREATE TABLE Lueftungsanlage (
+    ID_Lueftungsanlage INTEGER PRIMARY KEY AUTOINCREMENT,
+    Art TEXT CHECK(Art IN ('E1', 'E2', 'V1', 'V2', 'V3', 'V4', 'S1', 'S2', 'E3', 'E4', 'Z1', 'Z2', 'Z3', 'AE', 'AG', 'AO', 'AP', 'AW', 'FK', 'HL', 'HS', 'NS', 'SC')),
+    Zuluftversorgung TEXT CHECK(Zuluftversorgung IN ('NOE', 'ZK', 'ZS', 'ZOE')),
+    Gueltig_von DATE,
+    Gueltig_bis DATE,
     ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
     FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
 );
 
-CREATE TABLE Belegungsplan (
-    ID_Belegungsplan INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE Nutzungseinheit (
+    ID_Nutzungseinheit INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
+    UST_frei BOOL,
+    Feuerstaettenschau_Begehung_noetig BOOL,
+    Unbeheizter_Raum BOOL,
+    Besitzverh_geaendert_zum DATE,
+    Sondereigentum BOOL,
+    Haustyp_TRGI TEXT CHECK(Haustyp_TRGI IN ('HT1', 'HT2', 'HT3', 'HT4', 'HT5', 'HT6', 'HT7', 'N50')),
+    Haustyp_N50 REAL,
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+);
+
+CREATE TABLE Raumlueftung (
+    ID_Raumlueftung INTEGER PRIMARY KEY AUTOINCREMENT,
+    Art TEXT CHECK(Art IN ('E1', 'E2', 'V1', 'V2', 'V3', 'V4', 'S1', 'S2', 'E3', 'E4', 'Z1', 'Z2', 'Z3', 'AE', 'AG', 'AO', 'AP', 'AW', 'FK', 'HL', 'HS', 'NS', 'SC')),
+    Errichtung DATE,
     ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
     FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
 );
 
-CREATE TABLE Bericht (
-    ID_Bericht INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE Rechnung (
+    ID_Rechnung INTEGER PRIMARY KEY AUTOINCREMENT,
     ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+    ID_Kommunikation_Rechnungsempfaenger INTEGER NOT NULL,
+    Rechnungsdatum DATE,
+    Betrag_netto REAL,
+    Betrag_brutto REAL,
+    Mahngebuehr REAL,
+    Forderungssumme REAL,
+    USt_Satz REAL,
+    Datum_Eingang DATE,
+    Mahnung1 DATE,
+    Mahnung2 DATE,
+    Mahnung3 DATE,
+    Einzug DATE,
+    Rechnungsnummer TEXT,
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil),
+    FOREIGN KEY (ID_Kommunikation_Rechnungsempfaenger) REFERENCES Kommunikation (ID_Kommunikation)
+);
+
+CREATE TABLE Feste_Brennstoff_Ableitbedingungen (
+    ID_Feste_Brennstoff_Ableitbedingungen INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Abgasanlage INTEGER NOT NULL,
+    Ableitbedingung_Dach_bis20 BOOL,
+    Schornsteinhoehe_Dach REAL,
+    Schornsteinhoehe_First REAL,
+    Schornsteinhoehe_Lueftung REAL,
+    Abstand_Muendung_Dach REAL,
+    Abstand_Mueuendung_Lueftung REAL,
+    Berechnung_VDI3781Blatt4 BOOL,
+    Firstnah_angeordnet BOOL,
+    Horizontaler_Abstand_First_Schornstein REAL,
+    Horizontaler_Abstand_Schornstein_Traufe REAL,
+    Vertikaler_Abstand_First_Muendung REAL,
+    Firstueberragung_40cm BOOL,
+    Dachneigung REAL,
+    Hoehe_ueber_Flachdach REAL,
+    Dachtiefe REAL,
+    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
+);
+
+CREATE TABLE Muendung (
+    ID_Muendung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Abgasanlage INTEGER NOT NULL,
+    Verkehrsbereich BOOL,
+    CO_Messung BOOL,
+    Aufsatz TEXT CHECK(Aufsatz IN ('MS', 'DR', 'VE')),
+    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
+);
+
+CREATE TABLE Reinigungsart (
+    ID_Reinigungsart INTEGER PRIMARY KEY AUTOINCREMENT,
+    Reinigungsart TEXT CHECK(Reinigungsart IN ('A', 'B', 'C', 'D', 'E')),
+    Stossbesen REAL,
+    Haspel REAL,
+    Leiter REAL,
+    Reinigungsoeffnung TEXT CHECK(Reinigungsoeffnung IN ('K9', 'K8', 'K7', 'K6', 'K5', 'K4', 'K3', 'K2', 'K1', 'EG', 'OG1', 'OG2', 'OG3', 'OG4', 'OG5', 'OG6', 'OG7', 'OG8', 'OG9', 'OG10', 'OG11', 'OG12', 'OG13', 'OG14', 'OG15', 'OG16', 'OG17', 'OG18', 'OG19', 'OG20', 'OG21', 'OG22', 'OG23', 'OG24', 'OG25', 'OG26', 'OG27', 'OG28', 'OG29', 'OG30', 'OG31', 'OG32', 'OG33', 'OG34', 'OG35', 'OG36', 'OG37', 'OG38', 'OG39', 'OG40', 'OG41', 'OG42', 'OG43', 'OG44', 'OG45', 'OG46', 'OG47', 'OG48', 'OG49', 'OG50', 'OG51', 'OG52', 'OG53', 'OG54', 'OG55', 'OG56', 'OG57', 'OG58', 'OG59', 'OG60', 'OG61', 'OG62', 'OG63', 'OG64', 'OG65', 'OG66', 'OG67', 'OG68', 'OG69', 'OG70', 'OG71', 'OG72', 'OG73', 'OG74', 'OG75', 'OG76', 'OG77', 'OG78', 'OG79', 'OG80', 'OG81', 'OG82', 'OG83', 'OG84', 'OG85', 'OG86', 'OG87', 'OG88', 'OG89', 'OG90', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'UE1', 'UE2', 'UE3', 'UE4', 'UE5', 'UE6', 'UE7', 'UE8', 'UE9')),
+    ID_Abgasanlage INTEGER NOT NULL,
+    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
+);
+
+CREATE TABLE Dachskizze_Element (
+    ID_Dachskizze_Element INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Dachskizze INTEGER,
+    Dachskizzen_Objekt TEXT CHECK(Dachskizzen_Objekt IN ('LI', 'AS', 'LS', 'LE', 'HE', 'AG', 'AC', 'GL', 'TF', 'SB', 'HA', 'RV')),
+    Position_X_Start REAL,
+    Position_X_Ende REAL,
+    Position_Y_Start REAL,
+    Position_Y_Ende REAL,
+    Objektbeschreibung TEXT,
+    Bemerkung TEXT,
+    Standflaeche TEXT CHECK(Standflaeche IN ('A', 'B', 'C', 'D', 'E')),
+    FOREIGN KEY (ID_Dachskizze) REFERENCES Dachskizze (ID_Dachskizze)
+);
+
+CREATE TABLE Abschnitt_Dunstabzugsleitung (
+    ID_Abschnitt_Dunstabzugsleitung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Dunstabzuganlage_Leitung INTEGER NOT NULL,
+    Sortiernummer INTEGER,
+    Brennstoff_Arten TEXT CHECK(Brennstoff_Arten IN ('F', 'O', 'G', 'FO', 'FG', 'OG', 'FOG', 'S', 'FS', 'OS', 'GS', 'FOS', 'FGS', 'OGS', 'FOGS', 'N', 'T')),
+    Laenge_waagerecht REAL,
+    Laenge_senkrecht REAL,
+    Leitung_auf_Gebaeude BOOL,
+    Leitung_im_Gebaeude BOOL,
+    Aussenwand BOOL,
+    Material TEXT CHECK(Material IN ('AF', 'AU', 'AZ', 'BE', 'DF', 'DT', 'DS', 'EF', 'ES', 'FZ', 'FK', 'GI', 'GL', 'KF', 'KS', 'MW', 'SE', 'SK', 'ST')),
+    Abstand_brennbare_Teile INTEGER,
+    Brandschutztechnische_Anforderungen BOOL,
+    Pruefoeffnungen INTEGER,
+    Errichtung DATE,
+    Querschnittsform TEXT CHECK(Querschnittsform IN ('RD', 'RE', 'OV')),
+    QuerschnittWert1 REAL,
+    QuerschnittWert2 REAL,
+    Boegen_30 INTEGER,
+    Boegen_45 INTEGER,
+    Boegen_60 INTEGER,
+    Boegen_90 INTEGER,
+    Eintrittswinkel INTEGER,
+    Art TEXT CHECK(Art IN ('AB', 'AI', 'AL', 'AT', 'AX', 'LA', 'LU', 'LS', 'SC', 'SM', 'SN', 'SR', 'VS', 'ZR', 'AQ', 'LG', 'SX', 'LB', 'MK', 'HT')),
+    Nutzung TEXT CHECK(Nutzung IN ('G', 'H')),
+    Ueber_Durchgangshoehe BOOL,
+    Anzahl_Daemmung INTEGER,
+    Schalldaempfer BOOL,
+    Zeit REAL,
+    Abdecken BOOL,
+    ZIV_Kennzeichen TEXT,
+    Temperaturklasse TEXT CHECK(Temperaturklasse IN ('T080', 'T100', 'T120', 'T140', 'T160', 'T200', 'T250', 'T300', 'T400', 'T450', 'T600')),
+    Druckklasse TEXT CHECK(Druckklasse IN ('N1', 'N2', 'P1', 'P2', 'M1', 'M2', 'H1', 'H2', 'D0')),
+    Kondensatbestaendigkeitsklasse TEXT CHECK(Kondensatbestaendigkeitsklasse IN ('W', 'D')),
+    Korrosionswiderstandsklasse TEXT CHECK(Korrosionswiderstandsklasse IN ('K1', 'K2', 'K3')),
+    Russbrandbestaendigkeitsklasse TEXT CHECK(Russbrandbestaendigkeitsklasse IN ('O', 'G')),
+    Abstand_brennbare_Baustoffe REAL,
+    Feuerwiderstandsklasse TEXT CHECK(Feuerwiderstandsklasse IN ('L00', 'L30', 'L60', 'L90', 'L120', 'L30A', 'L90A')),
+    Waermedurchlasswiderstand REAL,
+    Kondensatablauf BOOL,
+    Verbindungsst_brandschutztechnisch_ausr BOOL,
+    Verbindungsst_baulich_ausr BOOL,
+    Schacht_brandschutztechnisch_ausr BOOL,
+    Schacht_baulich_ausr BOOL,
+    Brandschutzklappe BOOL,
+    Brandschutzklappe_Hersteller TEXT,
+    Brandschutzklappe_Ergaenzung TEXT,
+    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung)
+);
+
+CREATE TABLE Mess_Pruefergebnisse_Dunstabzugsleitung (
+    ID_Mess_Pruefergebnisse_Dunstabzugsleitung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Dunstabzuganlage_Leitung INTEGER NOT NULL,
+    Nummer INTEGER,
+    Datum DATE,
+    Dunstabzugshauben BOOL,
+    Aerosolfilter BOOL,
+    Waagerechte_Dunstleitung BOOL,
+    Senkrechte_Dunstleitung BOOL,
+    Ventilator BOOL,
+    Bemerkung TEXT,
+    Reinigungdurchfuehrung TEXT CHECK(Reinigungdurchfuehrung IN ('BT', 'FF', 'WF', 'AB', 'CH')),
+    Wartungsvertrag BOOL,
+    Feuerloescher_Brandklasse TEXT CHECK(Feuerloescher_Brandklasse IN ('A', 'B', 'C', 'D', 'F')),
+    Feuerloescher_Groesse REAL,
+    Feuerloescher_Groesse_Einheit TEXT CHECK(Feuerloescher_Groesse_Einheit IN ('L', 'KG')),
+    Feuerloescher_Loeschmittel TEXT CHECK(Feuerloescher_Loeschmittel IN ('W', 'S', 'P', 'CO2', 'FET')),
+    Loeschanlage BOOL,
+    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung)
+);
+
+CREATE TABLE Ventilator_Dunstabzug (
+    ID_Ventilator_Dunstabzug INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Dunstabzuganlage_Leitung INTEGER NOT NULL,
+    Geschoss TEXT CHECK(Geschoss IN ('K9', 'K8', 'K7', 'K6', 'K5', 'K4', 'K3', 'K2', 'K1', 'EG', 'OG1', 'OG2', 'OG3', 'OG4', 'OG5', 'OG6', 'OG7', 'OG8', 'OG9', 'OG10', 'OG11', 'OG12', 'OG13', 'OG14', 'OG15', 'OG16', 'OG17', 'OG18', 'OG19', 'OG20', 'OG21', 'OG22', 'OG23', 'OG24', 'OG25', 'OG26', 'OG27', 'OG28', 'OG29', 'OG30', 'OG31', 'OG32', 'OG33', 'OG34', 'OG35', 'OG36', 'OG37', 'OG38', 'OG39', 'OG40', 'OG41', 'OG42', 'OG43', 'OG44', 'OG45', 'OG46', 'OG47', 'OG48', 'OG49', 'OG50', 'OG51', 'OG52', 'OG53', 'OG54', 'OG55', 'OG56', 'OG57', 'OG58', 'OG59', 'OG60', 'OG61', 'OG62', 'OG63', 'OG64', 'OG65', 'OG66', 'OG67', 'OG68', 'OG69', 'OG70', 'OG71', 'OG72', 'OG73', 'OG74', 'OG75', 'OG76', 'OG77', 'OG78', 'OG79', 'OG80', 'OG81', 'OG82', 'OG83', 'OG84', 'OG85', 'OG86', 'OG87', 'OG88', 'OG89', 'OG90', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'UE1', 'UE2', 'UE3', 'UE4', 'UE5', 'UE6', 'UE7', 'UE8', 'UE9')),
+    Raum TEXT CHECK(Raum IN ('AR', 'BL', 'BR', 'BUE', 'BZ', 'DB', 'EZ', 'FL', 'GA', 'GZ', 'HA', 'HP', 'HR', 'HW', 'JZ', 'KR', 'KUE', 'LR', 'SZ', 'TR', 'VR', 'WC', 'WG', 'WUE', 'WZ', 'VO', 'SU', 'ER', 'IF', 'TH')),
+    Motor_im_Luftstrom BOOL,
+    Ueberdruck BOOL,
+    Ein_Ausbau BOOL,
+    Dachgeschoss BOOL,
+    Fabrikat TEXT,
+    Leistung REAL,
+    Art TEXT CHECK(Art IN ('AX', 'RA')),
+    Ummantelung BOOL,
+    Installation TEXT,
+    Schalter_ok BOOL,
+    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung)
+);
+
+CREATE TABLE Bescheid_Positionen (
+    ID_Bescheid_Positionen INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaettenbescheid_Grunddaten INTEGER NOT NULL,
+    Positionsnummer INTEGER,
+    Art_Standort_Anlage TEXT,
+    Verweis_Anlage TEXT,
+    Rechtsgrundlage TEXT,
+    FOREIGN KEY (ID_Feuerstaettenbescheid_Grunddaten) REFERENCES Feuerstaettenbescheid_Grunddaten (ID_Feuerstaettenbescheid_Grunddaten)
+);
+
+CREATE TABLE Feuerstaettenschau (
+    ID_Feuerstaettenschau INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
+    Datum DATE,
+    Feuerstaettenschau_ok BOOL,
+    Verzeichnis_Nr INTEGER,
+    ID_Kehrbuch_Gebaeude INTEGER,
+    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil),
+    FOREIGN KEY (ID_Kehrbuch_Gebaeude) REFERENCES Kehrbuch_Gebaeude (ID_Kehrbuch_Gebaeude)
+);
+
+CREATE TABLE Kehrbuch_Gebaeude_Eigentuemer (
+    ID_Kehrbuch_Gebaeude_Eigentuemer INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbuch_Gebaeude INTEGER NOT NULL,
+    ID_Kommunikation INTEGER NOT NULL,
+    Sprecher BOOL,
+    FOREIGN KEY (ID_Kehrbuch_Gebaeude) REFERENCES Kehrbuch_Gebaeude (ID_Kehrbuch_Gebaeude),
+    FOREIGN KEY (ID_Kommunikation) REFERENCES Kommunikation (ID_Kommunikation)
+);
+
+CREATE TABLE Datum_Ausfuehrung_Leistung (
+    ID_Datum_Ausfuehrung_Leistung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Leistung INTEGER NOT NULL,
+    Ausfuehrung DATE,
+    Ausfuehrender TEXT CHECK(Ausfuehrender IN ('BB', 'GE', 'HI', 'AU', 'FF')),
+    FOREIGN KEY (ID_Leistung) REFERENCES Leistung (ID_Leistung)
+);
+
+CREATE TABLE Zubehoer (
+    ID_Zubehoer INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Lueftungsanlage INTEGER NOT NULL,
+    Zubehoer TEXT CHECK(Zubehoer IN ('AA', 'AK', 'AM', 'AV', 'BK', 'BS', 'DH', 'DK', 'DM', 'FA', 'FE', 'KA', 'LF', 'NE', 'NK', 'NM', 'NV', 'ROE', 'RV', 'SL', 'TB', 'VA', 'VV', 'ZD', 'ZG', 'ZW', 'BF', 'BV', 'FM', 'FV', 'UV')),
+    FOREIGN KEY (ID_Lueftungsanlage) REFERENCES Lueftungsanlage (ID_Lueftungsanlage)
+);
+
+CREATE TABLE Aufteilung_Leistung (
+    ID_Aufteilung_Leistung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Leistung INTEGER NOT NULL,
+    ID_Nutzungseinheit INTEGER NOT NULL,
+    FOREIGN KEY (ID_Leistung) REFERENCES Leistung (ID_Leistung),
+    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit)
 );
 
 CREATE TABLE Brennstoffversorgungsanlage (
     ID_Brennstoffversorgungsanlage INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Nutzungseinheit INTEGER NOT NULL,
     Brennstofflagermenge BOOL,
     Lagerraum_Waende_F90 BOOL,
     Lagerraum_Tueren BOOL,
@@ -389,30 +756,328 @@ CREATE TABLE Brennstoffversorgungsanlage (
     Methan_Hohlraumaustritt INTEGER,
     Gasleitung_Zustand TEXT CHECK(Gasleitung_Zustand IN ('IO', 'UE', 'NIO')),
     Bemerkung TEXT,
-    ID_Nutzungseinheit INTEGER NOT NULL,
     FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit)
 );
 
-CREATE TABLE Dachskizze (
-    ID_Dachskizze INTEGER PRIMARY KEY AUTOINCREMENT,
-    Bezeichnung TEXT,
-    Bemerkung TEXT,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
+CREATE TABLE Kehrbuch_Nutzungseinheit (
+    ID_Kehrbuch_Nutzungseinheit INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbuch_Gebaeude INTEGER NOT NULL,
+    ID_Nutzungseinheit INTEGER NOT NULL,
+    ID_Kommunikation_Wohnungseigentuemer INTEGER,
+    ID_Kommunikation_Betreiber INTEGER,
+    FOREIGN KEY (ID_Kehrbuch_Gebaeude) REFERENCES Kehrbuch_Gebaeude (ID_Kehrbuch_Gebaeude),
+    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit),
+    FOREIGN KEY (ID_Kommunikation_Wohnungseigentuemer) REFERENCES Kommunikation (ID_Kommunikation),
+    FOREIGN KEY (ID_Kommunikation_Betreiber) REFERENCES Kommunikation (ID_Kommunikation)
 );
 
-CREATE TABLE Dachskizze_Element (
-    ID_Dachskizze_Element INTEGER PRIMARY KEY AUTOINCREMENT,
-    Dachskizzen_Objekt TEXT CHECK(Dachskizzen_Objekt IN ('LI', 'AS', 'LS', 'LE', 'HE', 'AG', 'AC', 'GL', 'TF', 'SB', 'HA', 'RV')),
-    Position_X_Start REAL,
-    Position_X_Ende REAL,
-    Position_Y_Start REAL,
-    Position_Y_Ende REAL,
-    Objektbeschreibung TEXT,
+CREATE TABLE Nutzungseinheit_Eigentuemer (
+    ID_Nutzungseinheit_Eigentuemer INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Nutzungseinheit INTEGER NOT NULL,
+    ID_Kommunikation INTEGER NOT NULL,
+    Sprecher BOOL,
+    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit),
+    FOREIGN KEY (ID_Kommunikation) REFERENCES Kommunikation (ID_Kommunikation)
+);
+
+CREATE TABLE Raeucheranlage (
+    ID_Raeucheranlage INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Abgasanlage INTEGER,
+    ID_Nutzungseinheit INTEGER,
+    Art TEXT CHECK(Art IN ('ROF', 'RSC', 'KRA', 'HRA', 'DAR', 'TRK', 'RFG', 'RST', 'TLA', 'ABW', 'RTU', 'SWB', 'RKM', 'VGL', 'RZE', 'FRA')),
+    Quadratmeter REAL,
+    Jaehrliche_Haeufigkeit INTEGER,
+    Anzahl_Raeucherwagen INTEGER,
+    benoetigte_Zeit INTEGER,
+    Nutzung TEXT CHECK(Nutzung IN ('G', 'H')),
+    Ausbrennen BOOL,
+    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage),
+    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit)
+);
+
+CREATE TABLE Sonstige_Arbeit (
+    ID_Sonstige_Arbeit INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Nutzungseinheit INTEGER,
+    Typ TEXT CHECK(Typ IN ('PF', 'GP', 'NG')),
+    Art INTEGER,
+    Berechnungstyp TEXT CHECK(Berechnungstyp IN ('MIN', 'AW', 'EUR')),
+    Berechnungswert REAL,
+    Bearbeitungszyklus TEXT CHECK(Bearbeitungszyklus IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
+    jaehrliche_Haeufigkeit INTEGER,
+    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit)
+);
+
+CREATE TABLE Wohnung (
+    ID_Wohnung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Nutzungseinheit INTEGER NOT NULL,
+    Mieter_Vorname TEXT,
+    Mieter_Nachname TEXT,
+    Geschoss TEXT CHECK(Geschoss IN ('K9', 'K8', 'K7', 'K6', 'K5', 'K4', 'K3', 'K2', 'K1', 'EG', 'OG1', 'OG2', 'OG3', 'OG4', 'OG5', 'OG6', 'OG7', 'OG8', 'OG9', 'OG10', 'OG11', 'OG12', 'OG13', 'OG14', 'OG15', 'OG16', 'OG17', 'OG18', 'OG19', 'OG20', 'OG21', 'OG22', 'OG23', 'OG24', 'OG25', 'OG26', 'OG27', 'OG28', 'OG29', 'OG30', 'OG31', 'OG32', 'OG33', 'OG34', 'OG35', 'OG36', 'OG37', 'OG38', 'OG39', 'OG40', 'OG41', 'OG42', 'OG43', 'OG44', 'OG45', 'OG46', 'OG47', 'OG48', 'OG49', 'OG50', 'OG51', 'OG52', 'OG53', 'OG54', 'OG55', 'OG56', 'OG57', 'OG58', 'OG59', 'OG60', 'OG61', 'OG62', 'OG63', 'OG64', 'OG65', 'OG66', 'OG67', 'OG68', 'OG69', 'OG70', 'OG71', 'OG72', 'OG73', 'OG74', 'OG75', 'OG76', 'OG77', 'OG78', 'OG79', 'OG80', 'OG81', 'OG82', 'OG83', 'OG84', 'OG85', 'OG86', 'OG87', 'OG88', 'OG89', 'OG90', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'UE1', 'UE2', 'UE3', 'UE4', 'UE5', 'UE6', 'UE7', 'UE8', 'UE9')),
+    Lage1 TEXT CHECK(Lage1 IN ('R', 'L', 'M', 'WR', 'WL', 'HBR', 'HBL')),
+    Lage2 TEXT CHECK(Lage2 IN ('V', 'H', 'WV', 'WH')),
+    Lage3 INTEGER,
+    Geschoss_Freitext TEXT,
+    Unbenutzt BOOL,
+    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit)
+);
+
+CREATE TABLE Raumlueftungsleitung (
+    ID_Raumlueftungsleitung INTEGER PRIMARY KEY AUTOINCREMENT,
+    Hauptschacht BOOL,
+    Nebenschacht BOOL,
+    Laenge_Hoehe REAL,
+    Anzahl_Geschosse INTEGER,
+    Betriebsart TEXT CHECK(Betriebsart IN ('UD', 'UED')),
+    Luefter_Muendung BOOL,
+    ID_Raumlueftung INTEGER NOT NULL,
+    FOREIGN KEY (ID_Raumlueftung) REFERENCES Raumlueftung (ID_Raumlueftung)
+);
+
+CREATE TABLE Bescheid_Termine_Positionen (
+    ID_Bescheid_Termine_Positionen INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaettenbescheid_Grunddaten INTEGER NOT NULL,
+    ID_Bescheid_Positionen INTEGER,
+    Start_Zeitraum DATE,
+    Ende_Zeitraum DATE,
+    FOREIGN KEY (ID_Feuerstaettenbescheid_Grunddaten) REFERENCES Feuerstaettenbescheid_Grunddaten (ID_Feuerstaettenbescheid_Grunddaten),
+    FOREIGN KEY (ID_Bescheid_Positionen) REFERENCES Bescheid_Positionen (ID_Bescheid_Positionen)
+);
+
+CREATE TABLE Pruefergebnisse_Feuerstaettenschau (
+    ID_Pruefergebnisse_Feuerstaettenschau INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaettenschau INTEGER NOT NULL,
+    Ausfuehrungsdatum DATE,
+    Anzahl_Senkrechte INTEGER,
+    Anzahl_Waagerechte INTEGER,
+    Anzahl_Feuerstaetten INTEGER,
+    Anzahl_Verbrennungsluftversorgung INTEGER,
+    Anzahl_Dunstabzugsanlagen INTEGER,
+    Anzahl_Belueftungsanlagen INTEGER,
+    Freifeld_Anzahl INTEGER,
+    Freifeld_Beschreibung TEXT,
+    Maengel BOOL,
+    Freifeld_Maengel TEXT,
+    Maengel_ohne_Gefahr BOOL,
+    Maengelfrist DATE,
+    Maengelpruefung_erforderlich BOOL,
     Bemerkung TEXT,
-    Standflaeche TEXT CHECK(Standflaeche IN ('A', 'B', 'C', 'D', 'E')),
-    ID_Dachskizze INTEGER NOT NULL,
-    FOREIGN KEY (ID_Dachskizze) REFERENCES Dachskizze (ID_Dachskizze)
+    Datum_Bescheinigung DATE,
+    ID_Vertreter INTEGER,
+    FOREIGN KEY (ID_Feuerstaettenschau) REFERENCES Feuerstaettenschau (ID_Feuerstaettenschau),
+    FOREIGN KEY (ID_Vertreter) REFERENCES Vertreter (ID_Vertreter)
+);
+
+CREATE TABLE Kehrbuch_Anlassbezogene_Ueberpruefung (
+    ID_Kehrbuch_Anlassbezogene_Ueberpruefung INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbuch_Nutzungseinheit INTEGER NOT NULL,
+    ID_Anlassbezogene_Ueberpruefung INTEGER NOT NULL,
+    FOREIGN KEY (ID_Kehrbuch_Nutzungseinheit) REFERENCES Kehrbuch_Nutzungseinheit (ID_Kehrbuch_Nutzungseinheit),
+    FOREIGN KEY (ID_Anlassbezogene_Ueberpruefung) REFERENCES Anlassbezogene_Ueberpruefung (ID_Anlassbezogene_Ueberpruefung)
+);
+
+CREATE TABLE Raum (
+    ID_Raum INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Wohnung INTEGER NOT NULL,
+    Beschreibung TEXT,
+    Beschreibung_Ergaenzung TEXT,
+    Raumgroesse REAL,
+    Raumart TEXT CHECK(Raumart IN ('AR', 'BL', 'BR', 'BUE', 'BZ', 'DB', 'EZ', 'FL', 'GA', 'GZ', 'HA', 'HP', 'HR', 'HW', 'JZ', 'KR', 'KUE', 'LR', 'SZ', 'TR', 'VR', 'WC', 'WG', 'WUE', 'WZ', 'VO', 'SU', 'ER', 'IF', 'TH')),
+    Raumart_Zusatz TEXT CHECK(Raumart_Zusatz IN ('MF', 'OF')),
+    Mechanische_Entlueftung TEXT CHECK(Mechanische_Entlueftung IN ('J', 'JV', 'N')),
+    FOREIGN KEY (ID_Wohnung) REFERENCES Wohnung (ID_Wohnung)
+);
+
+CREATE TABLE Raumluftoeffnung (
+    ID_Raumluftoeffnung INTEGER PRIMARY KEY AUTOINCREMENT,
+    "Filter" BOOL,
+    Luefter BOOL,
+    Ueberstroemoeffnung BOOL,
+    Bemerkung TEXT,
+    Sollvolumenstrom REAL,
+    ID_Raumlueftungsleitung INTEGER NOT NULL,
+    FOREIGN KEY (ID_Raumlueftungsleitung) REFERENCES Raumlueftungsleitung (ID_Raumlueftungsleitung)
+);
+
+CREATE TABLE Dunstabzugsanlage_Haube (
+    ID_Dunstabzugsanlage_Haube INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Dunstabzuganlage_Leitung INTEGER NOT NULL,
+    ID_Raum INTEGER NOT NULL,
+    Bauform TEXT CHECK(Bauform IN ('SO', 'DE', 'MI', 'WA', 'GR', 'MA', 'IN', 'LG', 'LD', 'GS', 'LO', 'LR')),
+    Nutzung TEXT CHECK(Nutzung IN ('H', 'G', 'U')),
+    Berechnungstyp TEXT CHECK(Berechnungstyp IN ('MIN', 'AW', 'EUR')),
+    Berechnungswert REAL,
+    Geschoss TEXT CHECK(Geschoss IN ('K9', 'K8', 'K7', 'K6', 'K5', 'K4', 'K3', 'K2', 'K1', 'EG', 'OG1', 'OG2', 'OG3', 'OG4', 'OG5', 'OG6', 'OG7', 'OG8', 'OG9', 'OG10', 'OG11', 'OG12', 'OG13', 'OG14', 'OG15', 'OG16', 'OG17', 'OG18', 'OG19', 'OG20', 'OG21', 'OG22', 'OG23', 'OG24', 'OG25', 'OG26', 'OG27', 'OG28', 'OG29', 'OG30', 'OG31', 'OG32', 'OG33', 'OG34', 'OG35', 'OG36', 'OG37', 'OG38', 'OG39', 'OG40', 'OG41', 'OG42', 'OG43', 'OG44', 'OG45', 'OG46', 'OG47', 'OG48', 'OG49', 'OG50', 'OG51', 'OG52', 'OG53', 'OG54', 'OG55', 'OG56', 'OG57', 'OG58', 'OG59', 'OG60', 'OG61', 'OG62', 'OG63', 'OG64', 'OG65', 'OG66', 'OG67', 'OG68', 'OG69', 'OG70', 'OG71', 'OG72', 'OG73', 'OG74', 'OG75', 'OG76', 'OG77', 'OG78', 'OG79', 'OG80', 'OG81', 'OG82', 'OG83', 'OG84', 'OG85', 'OG86', 'OG87', 'OG88', 'OG89', 'OG90', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'UE1', 'UE2', 'UE3', 'UE4', 'UE5', 'UE6', 'UE7', 'UE8', 'UE9')),
+    Raum TEXT CHECK(Raum IN ('AR', 'BL', 'BR', 'BUE', 'BZ', 'DB', 'EZ', 'FL', 'GA', 'GZ', 'HA', 'HP', 'HR', 'HW', 'JZ', 'KR', 'KUE', 'LR', 'SZ', 'TR', 'VR', 'WC', 'WG', 'WUE', 'WZ', 'VO', 'SU', 'ER', 'IF', 'TH')),
+    Lage1 TEXT CHECK(Lage1 IN ('R', 'L', 'M', 'WR', 'WL', 'HBR', 'HBL')),
+    Lage2 TEXT CHECK(Lage2 IN ('V', 'H', 'WV', 'WH')),
+    Bauart TEXT CHECK(Bauart IN ('DA', 'DD', 'DU', 'DL', 'FK', 'SC', 'AO', 'LG', 'DC', 'MB', 'WN')),
+    Bearbeitungszyklus TEXT CHECK(Bearbeitungszyklus IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
+    jaehrliche_Haeufigkeit INTEGER,
+    Kondensatablauf BOOL,
+    Hoehe_Haube_Feuerst REAL,
+    Abluftvolumenstrom INTEGER,
+    Abgasfuehrung BOOL,
+    Hersteller TEXT,
+    Fabrikat TEXT,
+    Abluftleistung REAL,
+    Haubenlaenge REAL,
+    Haubenbreite REAL,
+    Haubentiefe REAL,
+    Filter_Anzahl INTEGER,
+    Aerosolfilter TEXT CHECK(Aerosolfilter IN ('G', 'B')),
+    Behandlung_Abluft TEXT CHECK(Behandlung_Abluft IN ('SO', 'AK', 'UV', 'WA', 'NV')),
+    Injektionshaube BOOL,
+    Schalter_Installation TEXT,
+    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung),
+    FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum)
+);
+
+CREATE TABLE Verbrennungsluftzufuhr_Element (
+    ID_Verbrennungsluftzufuhr_Element INTEGER PRIMARY KEY AUTOINCREMENT,
+    Element TEXT CHECK(Element IN ('AD', 'T0', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'VL', 'VO', 'VB', 'VG', 'RG', 'VF', 'MV')),
+    Querschnitt REAL,
+    Querschnittsform_Verbrennungsluftzufuhr_Element TEXT CHECK(Querschnittsform_Verbrennungsluftzufuhr_Element IN ('RD', 'RE', 'OV')),
+    Laenge REAL,
+    Absperrvorrichtung BOOL,
+    Anzahl_Pruefoeffnung INTEGER,
+    Anzahl_Richtungsaenderungen INTEGER,
+    Zweck_Verbrennungsluftversorgung BOOL,
+    Zweck_Luftumspuelung BOOL,
+    Zweck_Raumlueftung BOOL,
+    ID_Raum INTEGER NOT NULL,
+    ID_Raum_Ziel INTEGER,
+    FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum),
+    FOREIGN KEY (ID_Raum_Ziel) REFERENCES Raum (ID_Raum)
+);
+
+CREATE TABLE Waermepumpe (
+    ID_Waermepumpe INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Raum INTEGER NOT NULL,
+    Heizlast REAL,
+    Hersteller TEXT,
+    Typ TEXT,
+    Seriennummer TEXT,
+    untere_Leistung REAL,
+    obere_Leistung REAL,
+    Baujahr INTEGER,
+    Errichtung DATE,
+    Waermequelle TEXT CHECK(Waermequelle IN ('LUFT', 'WASS', 'SOLE', 'EIS', 'ABL')),
+    Bauart TEXT CHECK(Bauart IN ('LW', 'WW', 'SW', 'LL')),
+    Betriebsweise TEXT CHECK(Betriebsweise IN ('MONO', 'MONE', 'BIP', 'BIA')),
+    Bauweise TEXT CHECK(Bauweise IN ('SPL', 'MNB')),
+    Heizstab BOOL,
+    Betriebspunkt TEXT CHECK(Betriebspunkt IN ('A2W35', 'B0W35', 'W10W35')),
+    COP REAL,
+    berechnete_JAZ_SCOP REAL,
+    Schallleistungspegel INTEGER,
+    Silentmode BOOL,
+    Fernkontrolle BOOL,
+    Fuellgewicht_Kaeltemittel REAL,
+    Kaeltemittelgruppe TEXT CHECK(Kaeltemittelgruppe IN ('R290', 'R454C', 'R454B', 'R32', 'R134A', 'R407C', 'R410A', 'R404A', 'R744', 'R717', 'R600A', 'R1234ZE', 'R1234YF', 'R513A')),
+    GWP_Wert TEXT CHECK(GWP_Wert IN ('G1', 'G3', 'G146', 'G148', 'G466', 'G675', 'G630', 'G1430', 'G1774', 'G2088', 'G3922')),
+    CO2_Aequivalent REAL,
+    Warmwasserbereitung BOOL,
+    Waermeuebertrager TEXT CHECK(Waermeuebertrager IN ('FH', 'HK', 'TABS', 'LH', 'WW', 'FC')),
+    hydraulischerAbgleich DATE,
+    Installationsort TEXT CHECK(Installationsort IN ('GRT', 'EIN', 'TER', 'DAC', 'GEB', 'HAW', 'VOG', 'CAR', 'GAR', 'GDAC', 'BAL', 'KEL', 'TEC', 'HWR', 'DAB')),
+    Ort_Ausseneinheit TEXT CHECK(Ort_Ausseneinheit IN ('KEIN', 'WAND', 'FND', 'KON')),
+    Abstand_Gebaeuden REAL,
+    Aufstellbedingung_Herstellerangaben_eingehalten TEXT CHECK(Aufstellbedingung_Herstellerangaben_eingehalten IN ('J', 'N', 'NV')),
+    Bemerkung TEXT,
+    FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum)
+);
+
+CREATE TABLE Mess_Pruefergebnisse_Raumluftoeffnung (
+    ID_Mess_Pruefergebnisse_Raumluftoeffnung INTEGER PRIMARY KEY AUTOINCREMENT,
+    Nummer INTEGER,
+    Luftvolumenstrom REAL,
+    Stroemungsgeschwindigkeit REAL,
+    Hoehe_ueber_NN REAL,
+    Raumlufttemperatur REAL,
+    Ausfuehrungsdatum DATE,
+    Erstelldatum DATE,
+    Bemerkung TEXT,
+    ID_Raumluftoeffnung INTEGER NOT NULL,
+    FOREIGN KEY (ID_Raumluftoeffnung) REFERENCES Raumluftoeffnung (ID_Raumluftoeffnung)
+);
+
+CREATE TABLE Mess_Pruefergebnisse_Waermepumpe (
+    ID_Mess_Pruefergebnisse_Waermepumpe INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Waermepumpe INTEGER NOT NULL,
+    Ausfuehrungsdatum TEXT,
+    Ueberpruefung_60a_GEG BOOL,
+    "Check" BOOL,
+    Antriebsenergie_Zaehlerstand REAL,
+    Waermeenergie_Waermemengenzaehler REAL,
+    Abgelesene_JAZ REAL,
+    Verdichterstarts INTEGER,
+    Heizkurve TEXT CHECK(Heizkurve IN ('W', 'H')),
+    Absenkzeiten BOOL,
+    Bivalenzpunkt REAL,
+    Eingestellte_Warmwassertemperatur INTEGER,
+    Heizgrenztemperatur REAL,
+    Hocheffizienzpumpe BOOL,
+    Quellentemperatur REAL,
+    Vorlauftemperatur INTEGER,
+    Ruecklauftemperatur INTEGER,
+    Ausdehnungsgefaess BOOL,
+    Kaeltemittelkreislauf BOOL,
+    hydraulische_Komponenten BOOL,
+    Daemmung_Rohrleitung BOOL,
+    elektrische_Anschluesse BOOL,
+    Kondensatablauf BOOL,
+    Zustand_Ausseneinheit BOOL,
+    Bericht_Kaeltekreislauf_vorhanden BOOL,
+    Effizienzverbesserungsvorschlag TEXT,
+    Auffaelligkeiten BOOL,
+    Auffaelligkeiten_festgestellt TEXT,
+    Bemerkungen TEXT,
+    Datum_Bescheinigung DATE,
+    Erstelldatum DATE,
+    FOREIGN KEY (ID_Waermepumpe) REFERENCES Waermepumpe (ID_Waermepumpe)
+);
+
+CREATE TABLE Abschnitt (
+    ID_Abschnitt INTEGER PRIMARY KEY AUTOINCREMENT,
+    Sortiernummer INTEGER,
+    Errichtung DATE,
+    Dicht_geschweisst BOOL,
+    Betriebsart TEXT CHECK(Betriebsart IN ('N', 'P', 'H')),
+    WirksameHoehe REAL,
+    Besteigbar BOOL,
+    Brennstoff_Arten TEXT CHECK(Brennstoff_Arten IN ('F', 'O', 'G', 'FO', 'FG', 'OG', 'FOG', 'S', 'FS', 'OS', 'GS', 'FOS', 'FGS', 'OGS', 'FOGS', 'N', 'T')),
+    Belegungs_Arten TEXT,
+    Querschnittsform TEXT CHECK(Querschnittsform IN ('RD', 'RE', 'OV')),
+    QuerschnittWert1 REAL,
+    QuerschnittWert2 REAL,
+    Laenge REAL,
+    Boegen_30 INTEGER,
+    Boegen_45 INTEGER,
+    Boegen_60 INTEGER,
+    Boegen_90 INTEGER,
+    Eintrittswinkel INTEGER,
+    Art TEXT CHECK(Art IN ('AB', 'AI', 'AL', 'AT', 'AX', 'LA', 'LU', 'LS', 'SC', 'SM', 'SN', 'SR', 'VS', 'ZR', 'AQ', 'LG', 'SX', 'LB', 'MK', 'HT')),
+    Nutzung TEXT CHECK(Nutzung IN ('G', 'H')),
+    Ueber_Durchgangshoehe BOOL,
+    Anzahl_Daemmung INTEGER,
+    Schalldaempfer BOOL,
+    Zyklon BOOL,
+    Abdecken BOOL,
+    Staubfreie_Reinigung BOOL,
+    ZIV_Kennzeichen TEXT,
+    Temperaturklasse TEXT CHECK(Temperaturklasse IN ('T080', 'T100', 'T120', 'T140', 'T160', 'T200', 'T250', 'T300', 'T400', 'T450', 'T600')),
+    Druckklasse TEXT CHECK(Druckklasse IN ('N1', 'N2', 'P1', 'P2', 'M1', 'M2', 'H1', 'H2', 'D0')),
+    Kondensatbestaendigkeitsklasse TEXT CHECK(Kondensatbestaendigkeitsklasse IN ('W', 'D')),
+    Korrosionswiderstandsklasse TEXT CHECK(Korrosionswiderstandsklasse IN ('K1', 'K2', 'K3')),
+    Russbrandbestaendigkeitsklasse TEXT CHECK(Russbrandbestaendigkeitsklasse IN ('O', 'G')),
+    Abstand_brennbare_Baustoffe REAL,
+    Feuerwiderstandsklasse TEXT CHECK(Feuerwiderstandsklasse IN ('L00', 'L30', 'L60', 'L90', 'L120', 'L30A', 'L90A')),
+    Waermedurchlasswiderstand REAL,
+    Material TEXT CHECK(Material IN ('AF', 'AU', 'AZ', 'BE', 'DF', 'DT', 'DS', 'EF', 'ES', 'FZ', 'FK', 'GI', 'GL', 'KF', 'KS', 'MW', 'SE', 'SK', 'ST')),
+    ID_Abgasanlage INTEGER,
+    ID_Feuerstaette INTEGER,
+    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage),
+    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
 );
 
 CREATE TABLE Dokument (
@@ -454,751 +1119,10 @@ CREATE TABLE Dokument (
     FOREIGN KEY (ID_Mess_Pruefergebnisse_Raumluftoeffnung) REFERENCES Mess_Pruefergebnisse_Raumluftoeffnung (ID_Mess_Pruefergebnisse_Raumluftoeffnung)
 );
 
-CREATE TABLE Dunstabzuganlage_Leitung (
-    ID_Dunstabzuganlage_Leitung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Anzahl_Geschoss INTEGER,
-    Anzahl_Muendung INTEGER,
-    Anzahl_Muendung_ohne_Ventilator INTEGER,
-    Anzahl_Muendung_mit_Ventilator INTEGER,
-    Kehrpflicht_Dunstanlage BOOL,
-    Ueberpruefungspflicht_Dunstanlage BOOL,
-    Laenge REAL,
-    Differenzdruckschalter BOOL,
-    Hoehe_ueber_Dach REAL,
-    Geraete_Kategorie TEXT CHECK(Geraete_Kategorie IN ('BA', 'BH', 'BO', 'DW', 'FC', 'GK', 'GO', 'HD', 'HE', 'HK', 'HO', 'KE', 'KH', 'KK', 'KO', 'KW', 'LE', 'LT', 'OK', 'RA', 'RD', 'RF', 'RH', 'RT', 'SD', 'SF', 'SG', 'SH', 'SO', 'UW', 'VM', 'VW', 'WA', 'WK', 'WL', 'WM', 'WP', 'WT', 'NO', 'PO', 'BP', 'EA', 'FT', 'GY', 'KB', 'KV', 'SI', 'WB', 'WO', 'SP', 'DE', 'KG', 'HG', 'GF', 'LP', 'KP', 'NR', 'FW', 'BB', 'SA', 'HT', 'GN', 'HB')),
-    Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
-    Leistung REAL,
-    Sonstige_Maengel TEXT,
-    Maengel_Frist DATE,
-    Bemerkung TEXT,
-    Zubehoer TEXT CHECK(Zubehoer IN ('AA', 'AK', 'AM', 'AV', 'BK', 'BS', 'DH', 'DK', 'DM', 'FA', 'FE', 'KA', 'LF', 'NE', 'NK', 'NM', 'NV', 'ROE', 'RV', 'SL', 'TB', 'VA', 'VV', 'ZD', 'ZG', 'ZW', 'BF', 'BV', 'FM', 'FV', 'UV')),
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
-);
-
-CREATE TABLE Feuerstaettenbescheid_Grunddaten (
-    ID_Feuerstaettenbescheid_Grunddaten INTEGER PRIMARY KEY AUTOINCREMENT,
-    Ausstellungsdatum DATE,
-    Nummer TEXT,
-    Naechste_FS INTEGER,
-    Zusatz TEXT,
-    Art TEXT CHECK(Art IN ('KB', 'FS', 'AE', 'BA')),
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
-);
-
-CREATE TABLE Feuerstaettenschau (
-    ID_Feuerstaettenschau INTEGER PRIMARY KEY AUTOINCREMENT,
-    Datum DATE,
-    Feuerstaettenschau_ok BOOL,
-    Verzeichnis_Nr INTEGER,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    ID_Kehrbuch_Gebaeude INTEGER,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil),
-    FOREIGN KEY (ID_Kehrbuch_Gebaeude) REFERENCES Kehrbuch_Gebaeude (ID_Kehrbuch_Gebaeude)
-);
-
-CREATE TABLE Gebaeudeeigenschaft (
-    ID_Gebaeudeeigenschaft INTEGER PRIMARY KEY AUTOINCREMENT,
-    Eigenschaft TEXT CHECK(Eigenschaft IN ('ELBH', 'NEUB', 'ROHB', 'LEER', 'KERN', 'KVT', 'FHAF', 'LGRD', 'NFW_MIT', 'NFW_OHN', 'BHTT', 'INSL')),
-    Kommentar TEXT,
-    Funktion TEXT CHECK(Funktion IN ('AN', 'EH', 'GA', 'HA', 'LR', 'MH', 'WI', 'OG', 'GR', 'UB', 'SB', 'GW', 'MZ', 'KI', 'BN', 'BG', 'BT', 'VU', 'ZH')),
-    ID_Gebaeude_Gebaeudeteil INTEGER,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
-);
-
-CREATE TABLE Gefaehrdungsbeurteilung (
-    ID_Gefaehrdungsbeurteilung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Durchfuehrung_QS DATE,
-    Durchfuehrung_Betriebsanweisung_objektbezogen DATE,
-    Durchfuehrung_Betriebsanweisung_nicht_objektbezogen DATE,
-    Standflaeche TEXT CHECK(Standflaeche IN ('A', 'B', 'C', 'D', 'E')),
-    Verkehrsweg TEXT CHECK(Verkehrsweg IN ('FT', 'BT', 'AL', 'AD_A', 'UD_B', 'UD_C', 'RO_D', 'BA_E')),
-    Pruefpunkte TEXT CHECK(Pruefpunkte IN ('BEL', 'LW_OK', 'LW_RS', 'LW_HG', 'SH_OK', 'BEF_OK', 'BES_OK', 'TST_OK', 'BP_OK', 'SB_OK', 'TB_OK', 'AL_USE', 'AL_TRBS', 'AL_FIT', 'AL_SEC', 'DSO_OK', 'LDS_OK', 'SS_OK', 'GEL_OK', 'SF_OK', 'SS_REQ', 'LRP_OK', 'RETT', 'PSGA', 'VW', 'RB', 'AP', 'URO')),
-    Pruefpunkte_Sammlung TEXT CHECK(Pruefpunkte_Sammlung IN ('NA', 'WORK', 'OK', 'NOK')),
-    Gefaehrdungseinschaetzung_Verkehrsweg_Standflaeche TEXT CHECK(Gefaehrdungseinschaetzung_Verkehrsweg_Standflaeche IN ('SGR', 'GR', 'AKZ', 'GRZ', 'IRZ')),
-    Standflaeche_A_Freitext_1 TEXT,
-    Standflaeche_A_Freitext_2 TEXT,
-    Standflaeche_A_Freitext_3 TEXT,
-    Standflaeche_A_Freitext_4 TEXT,
-    Standflaeche_A_Freitext_5 TEXT,
-    Standflaeche_A_Freitext_6 TEXT,
-    Standflaeche_A_Freitext_7 TEXT,
-    Standflaeche_A_Freitext_8 TEXT,
-    Standflaeche_B_Freitext_1 TEXT,
-    Standflaeche_B_Freitext_2 TEXT,
-    Standflaeche_B_Freitext_3 TEXT,
-    Standflaeche_B_Freitext_4 TEXT,
-    Standflaeche_B_Freitext_5 TEXT,
-    Standflaeche_B_Freitext_6 TEXT,
-    Standflaeche_B_Freitext_7 TEXT,
-    Standflaeche_B_Freitext_8 TEXT,
-    Standflaeche_C_Freitext_1 TEXT,
-    Standflaeche_C_Freitext_2 TEXT,
-    Standflaeche_C_Freitext_3 TEXT,
-    Standflaeche_C_Freitext_4 TEXT,
-    Standflaeche_C_Freitext_5 TEXT,
-    Standflaeche_C_Freitext_6 TEXT,
-    Standflaeche_C_Freitext_7 TEXT,
-    Standflaeche_C_Freitext_8 TEXT,
-    Standflaeche_D_Freitext_1 TEXT,
-    Standflaeche_D_Freitext_2 TEXT,
-    Standflaeche_D_Freitext_3 TEXT,
-    Standflaeche_D_Freitext_4 TEXT,
-    Standflaeche_D_Freitext_5 TEXT,
-    Standflaeche_D_Freitext_6 TEXT,
-    Standflaeche_D_Freitext_7 TEXT,
-    Standflaeche_D_Freitext_8 TEXT,
-    Standflaeche_E_Freitext_1 TEXT,
-    Standflaeche_E_Freitext_2 TEXT,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
-);
-
-CREATE TABLE Kehrbuch (
-    ID_Kehrbuch INTEGER PRIMARY KEY AUTOINCREMENT,
-    Kehrbuch_Start DATE NOT NULL,
-    Kehrbuch_Ende DATE NOT NULL,
-    ID_Kehrbezirk INTEGER NOT NULL,
-    FOREIGN KEY (ID_Kehrbezirk) REFERENCES Kehrbezirk (ID_Kehrbezirk)
-);
-
-CREATE TABLE Kehrbuch_Gebaeude (
-    ID_Kehrbuch_Gebaeude INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Kehrbuch INTEGER NOT NULL,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    ID_Kommunikation_Verwalter INTEGER,
-    ID_Kommunikation_Mieter INTEGER,
-    Kommentar TEXT,
-    FOREIGN KEY (ID_Kehrbuch) REFERENCES Kehrbuch (ID_Kehrbuch),
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil),
-    FOREIGN KEY (ID_Kommunikation_Verwalter) REFERENCES Kommunikation (ID_Kommunikation),
-    FOREIGN KEY (ID_Kommunikation_Mieter) REFERENCES Kommunikation (ID_Kommunikation)
-);
-
-CREATE TABLE Kehrbuch_Gebaeude_Eigentuemer (
-    ID_Kehrbuch_Gebaeude_Eigentuemer INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Kehrbuch_Gebaeude INTEGER NOT NULL,
-    ID_Kommunikation INTEGER NOT NULL,
-    Anteil TEXT,
-    Sprecher BOOL,
-    FOREIGN KEY (ID_Kehrbuch_Gebaeude) REFERENCES Kehrbuch_Gebaeude (ID_Kehrbuch_Gebaeude),
-    FOREIGN KEY (ID_Kommunikation) REFERENCES Kommunikation (ID_Kommunikation)
-);
-
-CREATE TABLE Kehrbuch_Nutzungseinheit (
-    ID_Kehrbuch_Nutzungseinheit INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Kehrbuch_Gebaeude INTEGER NOT NULL,
-    ID_Nutzungseinheit INTEGER NOT NULL,
-    ID_Kommunikation_Wohnungseigentuemer INTEGER,
-    ID_Kommunikation_Betreiber INTEGER,
-    FOREIGN KEY (ID_Kehrbuch_Gebaeude) REFERENCES Kehrbuch_Gebaeude (ID_Kehrbuch_Gebaeude),
-    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit),
-    FOREIGN KEY (ID_Kommunikation_Wohnungseigentuemer) REFERENCES Kommunikation (ID_Kommunikation),
-    FOREIGN KEY (ID_Kommunikation_Betreiber) REFERENCES Kommunikation (ID_Kommunikation)
-);
-
-CREATE TABLE Leistung (
-    ID_Leistung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Kuerzel TEXT,
-    Beschreibung TEXT,
-    Anzahl REAL,
-    Einheit REAL,
-    gueltig_von DATE,
-    gueltig_bis DATE,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
-);
-
-CREATE TABLE Lueftungsanlage (
-    ID_Lueftungsanlage INTEGER PRIMARY KEY AUTOINCREMENT,
-    Art TEXT CHECK(Art IN ('E1', 'E2', 'V1', 'V2', 'V3', 'V4', 'S1', 'S2', 'E3', 'E4', 'Z1', 'Z2', 'Z3', 'AE', 'AG', 'AO', 'AP', 'AW', 'FK', 'HL', 'HS', 'NS', 'SC')),
-    Gueltig_von DATE,
-    Gueltig_bis DATE,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
-);
-
-CREATE TABLE Kehrbuch_Anlage (
-    ID_Kehrbuch_Anlage INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Kehrbuch_Gebaeude INTEGER NOT NULL,
-    ID_Abgasanlage INTEGER,
-    ID_Feuerstaette INTEGER,
-    ID_Raumluftoeffnung INTEGER,
-    ID_Dunstabzuganlage_Leitung INTEGER,
-    ID_Lueftungsanlage INTEGER,
-    ID_Raumlueftung INTEGER,
-    ID_Raeucheranlage INTEGER,
-    ID_Brennstoffversorgungsanlage INTEGER,
-    ID_Bescheid_Positionen INTEGER,
-    Gueltig_von DATE,
-    Gueltig_bis DATE,
-    Aenderungsgrund TEXT,
-    Aenderungsdatum DATE,
-    FOREIGN KEY (ID_Kehrbuch_Gebaeude) REFERENCES Kehrbuch_Gebaeude (ID_Kehrbuch_Gebaeude),
-    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage),
-    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette),
-    FOREIGN KEY (ID_Raumluftoeffnung) REFERENCES Raumluftoeffnung (ID_Raumluftoeffnung),
-    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung),
-    FOREIGN KEY (ID_Lueftungsanlage) REFERENCES Lueftungsanlage (ID_Lueftungsanlage),
-    FOREIGN KEY (ID_Raumlueftung) REFERENCES Raumlueftung (ID_Raumlueftung),
-    FOREIGN KEY (ID_Raeucheranlage) REFERENCES Raeucheranlage (ID_Raeucheranlage),
-    FOREIGN KEY (ID_Brennstoffversorgungsanlage) REFERENCES Brennstoffversorgungsanlage (ID_Brennstoffversorgungsanlage),
-    FOREIGN KEY (ID_Bescheid_Positionen) REFERENCES Bescheid_Positionen (ID_Bescheid_Positionen)
-);
-
-CREATE TABLE Kehrbuch_Taetigkeit (
-    ID_Kehrbuch_Taetigkeit INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Kehrbuch_Anlage INTEGER NOT NULL,
-    Rechtsgrundlage TEXT,
-    Taetigkeit_Text TEXT,
-    Planungszeitraum_von DATE,
-    Planungszeitraum_bis DATE,
-    Ausfuehrungsdatum DATE,
-    Datum_Weiterleitung_Behoerde DATE,
-    FOREIGN KEY (ID_Kehrbuch_Anlage) REFERENCES Kehrbuch_Anlage (ID_Kehrbuch_Anlage)
-);
-
-CREATE TABLE Kehrbuch_Abnahme (
-    ID_Kehrbuch_Abnahme INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Kehrbuch_Nutzungseinheit INTEGER NOT NULL,
-    ID_Kehrbuch_Anlage INTEGER NOT NULL,
-    ID_Abnahme INTEGER NOT NULL,
-    FOREIGN KEY (ID_Kehrbuch_Nutzungseinheit) REFERENCES Kehrbuch_Nutzungseinheit (ID_Kehrbuch_Nutzungseinheit),
-    FOREIGN KEY (ID_Kehrbuch_Anlage) REFERENCES Kehrbuch_Anlage (ID_Kehrbuch_Anlage),
-    FOREIGN KEY (ID_Abnahme) REFERENCES Abnahme (ID_Abnahme)
-);
-
-CREATE TABLE Kehrbuch_Anlassbezogene_Ueberpruefung (
-    ID_Kehrbuch_Anlassbezogene_Ueberpruefung INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Kehrbuch_Nutzungseinheit INTEGER NOT NULL,
-    ID_Anlassbezogene_Ueberpruefung INTEGER NOT NULL,
-    FOREIGN KEY (ID_Kehrbuch_Nutzungseinheit) REFERENCES Kehrbuch_Nutzungseinheit (ID_Kehrbuch_Nutzungseinheit),
-    FOREIGN KEY (ID_Anlassbezogene_Ueberpruefung) REFERENCES Anlassbezogene_Ueberpruefung (ID_Anlassbezogene_Ueberpruefung)
-);
-
-CREATE TABLE Mangel (
-    ID_Mangel INTEGER PRIMARY KEY AUTOINCREMENT,
-    Laufende_Nummer_bBSF INTEGER,
-    Laufende_Nummer_Fremdfirma INTEGER,
-    Maengeltext TEXT,
-    Datum_Feststellung DATE,
-    Datum_Meldung DATE,
-    Frist_Maengel DATE,
-    Datum_Mahnung DATE,
-    Datum_Weiterleitung DATE,
-    Datum_Abstellung DATE,
-    Datum_Nachschau DATE,
-    Taetigkeit INTEGER,
-    Beurteilungsgegenstand INTEGER,
-    Pruefkriterien INTEGER,
-    Maengelgruppe INTEGER,
-    Textbausteinnummer INTEGER,
-    ID_Kehrbuch_Taetigkeit INTEGER,
-    ID_Pruefergebnisse_Feuerstaettenschau INTEGER,
-    ID_Kehrbuch_Abnahme INTEGER,
-    FOREIGN KEY (ID_Kehrbuch_Taetigkeit) REFERENCES Kehrbuch_Taetigkeit (ID_Kehrbuch_Taetigkeit),
-    FOREIGN KEY (ID_Pruefergebnisse_Feuerstaettenschau) REFERENCES Pruefergebnisse_Feuerstaettenschau (ID_Pruefergebnisse_Feuerstaettenschau),
-    FOREIGN KEY (ID_Kehrbuch_Abnahme) REFERENCES Kehrbuch_Abnahme (ID_Kehrbuch_Abnahme)
-);
-
-CREATE TABLE Nutzungseinheit (
-    ID_Nutzungseinheit INTEGER PRIMARY KEY AUTOINCREMENT,
-    UST_frei BOOL,
-    Feuerstaettenschau_Begehung_noetig BOOL,
-    Unbeheizter_Raum BOOL,
-    Besitzverh_geaendert_zum DATE,
-    Sondereigentum BOOL,
-    Haustyp_TRGI TEXT CHECK(Haustyp_TRGI IN ('HT1', 'HT2', 'HT3', 'HT4', 'HT5', 'HT6', 'HT7', 'N50')),
-    Haustyp_N50 REAL,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
-);
-
-CREATE TABLE Raumlueftung (
-    ID_Raumlueftung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Art TEXT CHECK(Art IN ('E1', 'E2', 'V1', 'V2', 'V3', 'V4', 'S1', 'S2', 'E3', 'E4', 'Z1', 'Z2', 'Z3', 'AE', 'AG', 'AO', 'AP', 'AW', 'FK', 'HL', 'HS', 'NS', 'SC')),
-    Errichtung DATE,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil)
-);
-
-CREATE TABLE Rechnung (
-    ID_Rechnung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Rechnungsdatum DATE,
-    Betrag_netto REAL,
-    Betrag_brutto REAL,
-    Mahngebuehr REAL,
-    Forderungssumme REAL,
-    USt_Satz REAL,
-    Datum_Eingang DATE,
-    Mahnung1 DATE,
-    Mahnung2 DATE,
-    Mahnung3 DATE,
-    Einzug DATE,
-    Rechnungsnummer TEXT,
-    ID_Gebaeude_Gebaeudeteil INTEGER NOT NULL,
-    ID_Kommunikation_Rechnungsempfaenger INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gebaeude_Gebaeudeteil) REFERENCES Gebaeude_Gebaeudeteil (ID_Gebaeude_Gebaeudeteil),
-    FOREIGN KEY (ID_Kommunikation_Rechnungsempfaenger) REFERENCES Kommunikation (ID_Kommunikation)
-);
-
-CREATE TABLE Sonstige_Arbeit (
-    ID_Sonstige_Arbeit INTEGER PRIMARY KEY AUTOINCREMENT,
-    Typ TEXT CHECK(Typ IN ('PF', 'GP', 'NG')),
-    Art INTEGER,
-    Berechnungstyp TEXT CHECK(Berechnungstyp IN ('MIN', 'AW', 'EUR')),
-    Berechnungswert REAL,
-    Bearbeitungszyklus TEXT CHECK(Bearbeitungszyklus IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
-    jaehrliche_Haeufigkeit INTEGER,
-    ID_Nutzungseinheit INTEGER NOT NULL,
-    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit)
-);
-
-CREATE TABLE Abschnitt (
-    ID_Abschnitt INTEGER PRIMARY KEY AUTOINCREMENT,
-    Sortiernummer INTEGER,
-    Errichtung DATE,
-    Dicht_geschweisst BOOL,
-    Betriebsart TEXT CHECK(Betriebsart IN ('N', 'P', 'H')),
-    WirksameHoehe REAL,
-    Besteigbar BOOL,
-    Brennstoff_Arten TEXT CHECK(Brennstoff_Arten IN ('F', 'O', 'G', 'FO', 'FG', 'OG', 'FOG', 'S', 'FS', 'OS', 'GS', 'FOS', 'FGS', 'OGS', 'FOGS', 'N', 'T')),
-    Belegungs_Arten TEXT,
-    Querschnittsform TEXT CHECK(Querschnittsform IN ('RD', 'RE', 'OV')),
-    QuerschnittWert1 REAL,
-    QuerschnittWert2 REAL,
-    Laenge REAL,
-    Boegen_30 INTEGER,
-    Boegen_45 INTEGER,
-    Boegen_60 INTEGER,
-    Boegen_90 INTEGER,
-    Eintrittswinkel INTEGER,
-    Art TEXT CHECK(Art IN ('AB', 'AI', 'AL', 'AT', 'AX', 'LA', 'LU', 'LS', 'SC', 'SM', 'SN', 'SR', 'VS', 'ZR', 'AQ', 'LG', 'SX', 'LB', 'MK', 'HT')),
-    Nutzung TEXT CHECK(Nutzung IN ('G', 'H')),
-    Ueber_Durchgangshoehe BOOL,
-    Anzahl_Daemmung INTEGER,
-    Schalldaempfer BOOL,
-    Zyklon BOOL,
-    Abdecken BOOL,
-    Staubfreie_Reinigung BOOL,
-    ZIV_Kennzeichen TEXT,
-    Temperaturklasse TEXT CHECK(Temperaturklasse IN ('T080', 'T100', 'T120', 'T140', 'T160', 'T200', 'T250', 'T300', 'T400', 'T450', 'T600')),
-    Druckklasse TEXT CHECK(Druckklasse IN ('N1', 'N2', 'P1', 'P2', 'M1', 'M2', 'H1', 'H2', 'D0')),
-    Kondensatbestaendigkeitsklasse TEXT CHECK(Kondensatbestaendigkeitsklasse IN ('W', 'D')),
-    Korrosionswiderstandsklasse TEXT CHECK(Korrosionswiderstandsklasse IN ('K1', 'K2', 'K3')),
-    Russbrandbestaendigkeitsklasse TEXT CHECK(Russbrandbestaendigkeitsklasse IN ('O', 'G')),
-    Abstand_brennbare_Baustoffe REAL,
-    Feuerwiderstandsklasse TEXT CHECK(Feuerwiderstandsklasse IN ('L00', 'L30', 'L60', 'L90', 'L120', 'L30A', 'L90A')),
-    Waermedurchlasswiderstand REAL,
-    Material TEXT CHECK(Material IN ('AF', 'AU', 'AZ', 'BE', 'DF', 'DT', 'DS', 'EF', 'ES', 'FZ', 'FK', 'GI', 'GL', 'KF', 'KS', 'MW', 'SE', 'SK', 'ST')),
-    ID_Abgasanlage INTEGER,
-    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
-);
-
-CREATE TABLE Feste_Brennstoff_Ableitbedingungen (
-    ID_Feste_Brennstoff_Ableitbedingungen INTEGER PRIMARY KEY AUTOINCREMENT,
-    Ableitbedingung_Dach_bis20 BOOL,
-    Schornsteinhoehe_Dach REAL,
-    Schornsteinhoehe_First REAL,
-    Schornsteinhoehe_Lueftung REAL,
-    Abstand_Muendung_Dach REAL,
-    Abstand_Mueuendung_Lueftung REAL,
-    Berechnung_VDI3781Blatt4 BOOL,
-    Firstnah_angeordnet BOOL,
-    Horizontaler_Abstand_First_Schornstein REAL,
-    Horizontaler_Abstand_Schornstein_Traufe REAL,
-    Vertikaler_Abstand_First_Muendung REAL,
-    Firstueberragung_40cm BOOL,
-    Dachneigung REAL,
-    Hoehe_ueber_Flachdach REAL,
-    Dachtiefe REAL,
-    ID_Abgasanlage INTEGER NOT NULL,
-    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
-);
-
-CREATE TABLE Muendung (
-    ID_Muendung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Verkehrsbereich BOOL,
-    CO_Messung BOOL,
-    Aufsatz TEXT CHECK(Aufsatz IN ('MS', 'DR', 'VE')),
-    ID_Abgasanlage INTEGER NOT NULL UNIQUE,
-    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
-);
-
-CREATE TABLE Raeucheranlage (
-    ID_Raeucheranlage INTEGER PRIMARY KEY AUTOINCREMENT,
-    Art TEXT CHECK(Art IN ('ROF', 'RSC', 'KRA', 'HRA', 'DAR', 'TRK', 'RFG', 'RST', 'TLA', 'ABW', 'RTU', 'SWB', 'RKM', 'VGL', 'RZE', 'FRA')),
-    Quadratmeter REAL,
-    Jaehrliche_Haeufigkeit INTEGER,
-    Anzahl_Raeucherwagen INTEGER,
-    benoetigte_Zeit INTEGER,
-    Nutzung TEXT CHECK(Nutzung IN ('G', 'H')),
-    Ausbrennen BOOL,
-    ID_Nutzungseinheit INTEGER NOT NULL,
-    ID_Abgasanlage INTEGER,
-    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit),
-    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
-);
-
-CREATE TABLE Reinigungsart (
-    ID_Reinigungsart INTEGER PRIMARY KEY AUTOINCREMENT,
-    Reinigungsart TEXT CHECK(Reinigungsart IN ('A', 'B', 'C', 'D', 'E')),
-    Stossbesen REAL,
-    Haspel REAL,
-    Leiter REAL,
-    Reinigungsoeffnung TEXT CHECK(Reinigungsoeffnung IN ('K9', 'K8', 'K7', 'K6', 'K5', 'K4', 'K3', 'K2', 'K1', 'EG', 'OG1', 'OG2', 'OG3', 'OG4', 'OG5', 'OG6', 'OG7', 'OG8', 'OG9', 'OG10', 'OG11', 'OG12', 'OG13', 'OG14', 'OG15', 'OG16', 'OG17', 'OG18', 'OG19', 'OG20', 'OG21', 'OG22', 'OG23', 'OG24', 'OG25', 'OG26', 'OG27', 'OG28', 'OG29', 'OG30', 'OG31', 'OG32', 'OG33', 'OG34', 'OG35', 'OG36', 'OG37', 'OG38', 'OG39', 'OG40', 'OG41', 'OG42', 'OG43', 'OG44', 'OG45', 'OG46', 'OG47', 'OG48', 'OG49', 'OG50', 'OG51', 'OG52', 'OG53', 'OG54', 'OG55', 'OG56', 'OG57', 'OG58', 'OG59', 'OG60', 'OG61', 'OG62', 'OG63', 'OG64', 'OG65', 'OG66', 'OG67', 'OG68', 'OG69', 'OG70', 'OG71', 'OG72', 'OG73', 'OG74', 'OG75', 'OG76', 'OG77', 'OG78', 'OG79', 'OG80', 'OG81', 'OG82', 'OG83', 'OG84', 'OG85', 'OG86', 'OG87', 'OG88', 'OG89', 'OG90', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'UE1', 'UE2', 'UE3', 'UE4', 'UE5', 'UE6', 'UE7', 'UE8', 'UE9')),
-    ID_Abgasanlage INTEGER NOT NULL,
-    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
-);
-
-CREATE TABLE Abschnitt_Dunstabzugsleitung (
-    ID_Abschnitt_Dunstabzugsleitung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Sortiernummer INTEGER,
-    Brennstoff_Arten TEXT CHECK(Brennstoff_Arten IN ('F', 'O', 'G', 'FO', 'FG', 'OG', 'FOG', 'S', 'FS', 'OS', 'GS', 'FOS', 'FGS', 'OGS', 'FOGS', 'N', 'T')),
-    Laenge_waagerecht REAL,
-    Laenge_senkrecht REAL,
-    Leitung_auf_Gebaeude BOOL,
-    Leitung_im_Gebaeude BOOL,
-    Aussenwand BOOL,
-    Material TEXT CHECK(Material IN ('AF', 'AU', 'AZ', 'BE', 'DF', 'DT', 'DS', 'EF', 'ES', 'FZ', 'FK', 'GI', 'GL', 'KF', 'KS', 'MW', 'SE', 'SK', 'ST')),
-    Abstand_brennbare_Teile INTEGER,
-    Brandschutztechnische_Anforderungen BOOL,
-    Pruefoeffnungen INTEGER,
-    Errichtung DATE,
-    Querschnittsform TEXT CHECK(Querschnittsform IN ('RD', 'RE', 'OV')),
-    QuerschnittWert1 REAL,
-    QuerschnittWert2 REAL,
-    Boegen_30 INTEGER,
-    Boegen_45 INTEGER,
-    Boegen_60 INTEGER,
-    Boegen_90 INTEGER,
-    Eintrittswinkel INTEGER,
-    Art TEXT CHECK(Art IN ('AB', 'AI', 'AL', 'AT', 'AX', 'LA', 'LU', 'LS', 'SC', 'SM', 'SN', 'SR', 'VS', 'ZR', 'AQ', 'LG', 'SX', 'LB', 'MK', 'HT')),
-    Nutzung TEXT CHECK(Nutzung IN ('G', 'H')),
-    Ueber_Durchgangshoehe BOOL,
-    Anzahl_Daemmung INTEGER,
-    Schalldaempfer BOOL,
-    Zeit REAL,
-    Abdecken BOOL,
-    ZIV_Kennzeichen TEXT,
-    Temperaturklasse TEXT CHECK(Temperaturklasse IN ('T080', 'T100', 'T120', 'T140', 'T160', 'T200', 'T250', 'T300', 'T400', 'T450', 'T600')),
-    Druckklasse TEXT CHECK(Druckklasse IN ('N1', 'N2', 'P1', 'P2', 'M1', 'M2', 'H1', 'H2', 'D0')),
-    Kondensatbestaendigkeitsklasse TEXT CHECK(Kondensatbestaendigkeitsklasse IN ('W', 'D')),
-    Korrosionswiderstandsklasse TEXT CHECK(Korrosionswiderstandsklasse IN ('K1', 'K2', 'K3')),
-    Russbrandbestaendigkeitsklasse TEXT CHECK(Russbrandbestaendigkeitsklasse IN ('O', 'G')),
-    Abstand_brennbare_Baustoffe REAL,
-    Feuerwiderstandsklasse TEXT CHECK(Feuerwiderstandsklasse IN ('L00', 'L30', 'L60', 'L90', 'L120', 'L30A', 'L90A')),
-    Waermedurchlasswiderstand REAL,
-    Kondensatablauf BOOL,
-    Verbindungsst_brandschutztechnisch_ausr BOOL,
-    Verbindungsst_baulich_ausr BOOL,
-    Schacht_brandschutztechnisch_ausr BOOL,
-    Schacht_baulich_ausr BOOL,
-    Brandschutzklappe BOOL,
-    Brandschutzklappe_Hersteller TEXT,
-    Brandschutzklappe_Ergaenzung TEXT,
-    ID_Dunstabzuganlage_Leitung INTEGER NOT NULL,
-    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung)
-);
-
-CREATE TABLE Dunstabzugsanlage_Haube (
-    ID_Dunstabzugsanlage_Haube INTEGER PRIMARY KEY AUTOINCREMENT,
-    Bauform TEXT,
-    Nutzung TEXT CHECK(Nutzung IN ('H', 'G', 'U')),
-    Berechnungstyp TEXT CHECK(Berechnungstyp IN ('MIN', 'AW', 'EUR')),
-    Berechnungswert REAL,
-    Geschoss TEXT CHECK(Geschoss IN ('K9', 'K8', 'K7', 'K6', 'K5', 'K4', 'K3', 'K2', 'K1', 'EG', 'OG1', 'OG2', 'OG3', 'OG4', 'OG5', 'OG6', 'OG7', 'OG8', 'OG9', 'OG10', 'OG11', 'OG12', 'OG13', 'OG14', 'OG15', 'OG16', 'OG17', 'OG18', 'OG19', 'OG20', 'OG21', 'OG22', 'OG23', 'OG24', 'OG25', 'OG26', 'OG27', 'OG28', 'OG29', 'OG30', 'OG31', 'OG32', 'OG33', 'OG34', 'OG35', 'OG36', 'OG37', 'OG38', 'OG39', 'OG40', 'OG41', 'OG42', 'OG43', 'OG44', 'OG45', 'OG46', 'OG47', 'OG48', 'OG49', 'OG50', 'OG51', 'OG52', 'OG53', 'OG54', 'OG55', 'OG56', 'OG57', 'OG58', 'OG59', 'OG60', 'OG61', 'OG62', 'OG63', 'OG64', 'OG65', 'OG66', 'OG67', 'OG68', 'OG69', 'OG70', 'OG71', 'OG72', 'OG73', 'OG74', 'OG75', 'OG76', 'OG77', 'OG78', 'OG79', 'OG80', 'OG81', 'OG82', 'OG83', 'OG84', 'OG85', 'OG86', 'OG87', 'OG88', 'OG89', 'OG90', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'UE1', 'UE2', 'UE3', 'UE4', 'UE5', 'UE6', 'UE7', 'UE8', 'UE9')),
-    Raum TEXT CHECK(Raum IN ('AR', 'BL', 'BR', 'BUE', 'BZ', 'DB', 'EZ', 'FL', 'GA', 'GZ', 'HA', 'HP', 'HR', 'HW', 'JZ', 'KR', 'KUE', 'LR', 'SZ', 'TR', 'VR', 'WC', 'WG', 'WUE', 'WZ', 'VO', 'SU', 'ER', 'IF', 'TH')),
-    Lage1 TEXT CHECK(Lage1 IN ('R', 'L', 'M', 'WR', 'WL', 'HBR', 'HBL')),
-    Lage2 TEXT CHECK(Lage2 IN ('V', 'H', 'WV', 'WH')),
-    Bauart TEXT CHECK(Bauart IN ('DA', 'DD', 'DU', 'DL', 'FK', 'SC', 'AO', 'LG', 'DC', 'MB', 'WN')),
-    Bearbeitungszyklus TEXT CHECK(Bearbeitungszyklus IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
-    jaehrliche_Haeufigkeit INTEGER,
-    Kondensatablauf BOOL,
-    Hoehe_Haube_Feuerst REAL,
-    Abluftvolumenstrom INTEGER,
-    Abgasfuehrung BOOL,
-    Hersteller TEXT,
-    Fabrikat TEXT,
-    Abluftleistung REAL,
-    Haubenlaenge REAL,
-    Haubenbreite REAL,
-    Haubentiefe REAL,
-    Filter_Anzahl INTEGER,
-    Aerosolfilter TEXT CHECK(Aerosolfilter IN ('G', 'B')),
-    Behandlung_Abluft TEXT CHECK(Behandlung_Abluft IN ('SO', 'AK', 'UV', 'WA', 'NV')),
-    Injektionshaube BOOL,
-    Schalter_Installation TEXT,
-    ID_Dunstabzuganlage_Leitung INTEGER NOT NULL,
-    ID_Raum INTEGER NOT NULL,
-    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung),
-    FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum)
-);
-
-CREATE TABLE Mess_Pruefergebnisse_Dunstabzugsleitung (
-    ID_Mess_Pruefergebnisse_Dunstabzugsleitung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Nummer INTEGER,
-    Datum DATE,
-    Dunstabzugshauben BOOL,
-    Aerosolfilter BOOL,
-    Waagerechte_Dunstleitung BOOL,
-    Senkrechte_Dunstleitung BOOL,
-    Ventilator BOOL,
-    Bemerkung TEXT,
-    Reinigungdurchfuehrung TEXT CHECK(Reinigungdurchfuehrung IN ('BT', 'FF', 'WF', 'AB', 'CH')),
-    Wartungsvertrag BOOL,
-    Feuerloescher_Brandklasse TEXT CHECK(Feuerloescher_Brandklasse IN ('A', 'B', 'C', 'D', 'F')),
-    Feuerloescher_Groesse REAL,
-    Feuerloescher_Groesse_Einheit TEXT CHECK(Feuerloescher_Groesse_Einheit IN ('L', 'KG')),
-    Feuerloescher_Loeschmittel TEXT CHECK(Feuerloescher_Loeschmittel IN ('W', 'S', 'P', 'CO2', 'FET')),
-    Loeschanlage BOOL,
-    ID_Dunstabzuganlage_Leitung INTEGER NOT NULL,
-    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung)
-);
-
-CREATE TABLE Ventilator_Dunstabzug (
-    ID_Ventilator_Dunstabzug INTEGER PRIMARY KEY AUTOINCREMENT,
-    Geschoss TEXT CHECK(Geschoss IN ('K9', 'K8', 'K7', 'K6', 'K5', 'K4', 'K3', 'K2', 'K1', 'EG', 'OG1', 'OG2', 'OG3', 'OG4', 'OG5', 'OG6', 'OG7', 'OG8', 'OG9', 'OG10', 'OG11', 'OG12', 'OG13', 'OG14', 'OG15', 'OG16', 'OG17', 'OG18', 'OG19', 'OG20', 'OG21', 'OG22', 'OG23', 'OG24', 'OG25', 'OG26', 'OG27', 'OG28', 'OG29', 'OG30', 'OG31', 'OG32', 'OG33', 'OG34', 'OG35', 'OG36', 'OG37', 'OG38', 'OG39', 'OG40', 'OG41', 'OG42', 'OG43', 'OG44', 'OG45', 'OG46', 'OG47', 'OG48', 'OG49', 'OG50', 'OG51', 'OG52', 'OG53', 'OG54', 'OG55', 'OG56', 'OG57', 'OG58', 'OG59', 'OG60', 'OG61', 'OG62', 'OG63', 'OG64', 'OG65', 'OG66', 'OG67', 'OG68', 'OG69', 'OG70', 'OG71', 'OG72', 'OG73', 'OG74', 'OG75', 'OG76', 'OG77', 'OG78', 'OG79', 'OG80', 'OG81', 'OG82', 'OG83', 'OG84', 'OG85', 'OG86', 'OG87', 'OG88', 'OG89', 'OG90', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'UE1', 'UE2', 'UE3', 'UE4', 'UE5', 'UE6', 'UE7', 'UE8', 'UE9')),
-    Raum TEXT CHECK(Raum IN ('AR', 'BL', 'BR', 'BUE', 'BZ', 'DB', 'EZ', 'FL', 'GA', 'GZ', 'HA', 'HP', 'HR', 'HW', 'JZ', 'KR', 'KUE', 'LR', 'SZ', 'TR', 'VR', 'WC', 'WG', 'WUE', 'WZ', 'VO', 'SU', 'ER', 'IF', 'TH')),
-    Motor_im_Luftstrom BOOL,
-    Ueberdruck BOOL,
-    Ein_Ausbau BOOL,
-    Dachgeschoss BOOL,
-    Fabrikat TEXT,
-    Leistung REAL,
-    Art TEXT CHECK(Art IN ('AX', 'RA')),
-    Ummantelung BOOL,
-    Installation TEXT,
-    Schalter_ok BOOL,
-    ID_Dunstabzuganlage_Leitung INTEGER NOT NULL,
-    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung)
-);
-
-CREATE TABLE Bescheid_Positionen (
-    ID_Bescheid_Positionen INTEGER PRIMARY KEY AUTOINCREMENT,
-    Positionsnummer INTEGER,
-    Art_Standort_Anlage TEXT,
-    Verweis_Anlage TEXT,
-    Rechtsgrundlage TEXT,
-    ID_Feuerstaettenbescheid_Grunddaten INTEGER NOT NULL,
-    FOREIGN KEY (ID_Feuerstaettenbescheid_Grunddaten) REFERENCES Feuerstaettenbescheid_Grunddaten (ID_Feuerstaettenbescheid_Grunddaten)
-);
-
-CREATE TABLE Pruefergebnisse_Feuerstaettenschau (
-    ID_Pruefergebnisse_Feuerstaettenschau INTEGER PRIMARY KEY AUTOINCREMENT,
-    Ausfuehrungsdatum DATE,
-    Anzahl_Senkrechte INTEGER,
-    Anzahl_Waagerechte INTEGER,
-    Anzahl_Feuerstaetten INTEGER,
-    Anzahl_Verbrennungsluftversorgung INTEGER,
-    Anzahl_Dunstabzugsanlagen INTEGER,
-    Anzahl_Belueftungsanlagen INTEGER,
-    Freifeld_Anzahl INTEGER,
-    Freifeld_Beschreibung TEXT,
-    Maengel BOOL,
-    Freifeld_Maengel TEXT,
-    Maengel_ohne_Gefahr BOOL,
-    Maengelfrist DATE,
-    Maengelpruefung_erforderlich BOOL,
-    Bemerkung TEXT,
-    Datum_Bescheinigung DATE,
-    ID_Feuerstaettenschau INTEGER NOT NULL,
-    ID_Vertreter INTEGER,
-    FOREIGN KEY (ID_Feuerstaettenschau) REFERENCES Feuerstaettenschau (ID_Feuerstaettenschau),
-    FOREIGN KEY (ID_Vertreter) REFERENCES Vertreter (ID_Vertreter)
-);
-
-CREATE TABLE Datum_Ausfuehrung_Leistung (
-    ID_Datum_Ausfuehrung_Leistung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Ausfuehrung DATE,
-    Ausfuehrender TEXT CHECK(Ausfuehrender IN ('BB', 'GE', 'HI', 'AU', 'FF')),
-    ID_Leistung INTEGER NOT NULL,
-    FOREIGN KEY (ID_Leistung) REFERENCES Leistung (ID_Leistung)
-);
-
-CREATE TABLE Zubehoer (
-    ID_Zubehoer INTEGER PRIMARY KEY AUTOINCREMENT,
-    Zubehoer TEXT CHECK(Zubehoer IN ('AA', 'AK', 'AM', 'AV', 'BK', 'BS', 'DH', 'DK', 'DM', 'FA', 'FE', 'KA', 'LF', 'NE', 'NK', 'NM', 'NV', 'ROE', 'RV', 'SL', 'TB', 'VA', 'VV', 'ZD', 'ZG', 'ZW', 'BF', 'BV', 'FM', 'FV', 'UV')),
-    ID_Lueftungsanlage INTEGER NOT NULL,
-    FOREIGN KEY (ID_Lueftungsanlage) REFERENCES Lueftungsanlage (ID_Lueftungsanlage)
-);
-
-CREATE TABLE Aufteilung_Leistung (
-    ID_Aufteilung_Leistung INTEGER PRIMARY KEY AUTOINCREMENT,
-    ID_Leistung INTEGER NOT NULL,
-    ID_Nutzungseinheit INTEGER NOT NULL,
-    FOREIGN KEY (ID_Leistung) REFERENCES Leistung (ID_Leistung),
-    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit)
-);
-
-CREATE TABLE Wohnung (
-    ID_Wohnung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Mieter_Vorname TEXT,
-    Mieter_Nachname TEXT,
-    Geschoss TEXT CHECK(Geschoss IN ('K9', 'K8', 'K7', 'K6', 'K5', 'K4', 'K3', 'K2', 'K1', 'EG', 'OG1', 'OG2', 'OG3', 'OG4', 'OG5', 'OG6', 'OG7', 'OG8', 'OG9', 'OG10', 'OG11', 'OG12', 'OG13', 'OG14', 'OG15', 'OG16', 'OG17', 'OG18', 'OG19', 'OG20', 'OG21', 'OG22', 'OG23', 'OG24', 'OG25', 'OG26', 'OG27', 'OG28', 'OG29', 'OG30', 'OG31', 'OG32', 'OG33', 'OG34', 'OG35', 'OG36', 'OG37', 'OG38', 'OG39', 'OG40', 'OG41', 'OG42', 'OG43', 'OG44', 'OG45', 'OG46', 'OG47', 'OG48', 'OG49', 'OG50', 'OG51', 'OG52', 'OG53', 'OG54', 'OG55', 'OG56', 'OG57', 'OG58', 'OG59', 'OG60', 'OG61', 'OG62', 'OG63', 'OG64', 'OG65', 'OG66', 'OG67', 'OG68', 'OG69', 'OG70', 'OG71', 'OG72', 'OG73', 'OG74', 'OG75', 'OG76', 'OG77', 'OG78', 'OG79', 'OG80', 'OG81', 'OG82', 'OG83', 'OG84', 'OG85', 'OG86', 'OG87', 'OG88', 'OG89', 'OG90', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'UE1', 'UE2', 'UE3', 'UE4', 'UE5', 'UE6', 'UE7', 'UE8', 'UE9')),
-    Lage1 TEXT CHECK(Lage1 IN ('R', 'L', 'M', 'WR', 'WL', 'HBR', 'HBL')),
-    Lage2 TEXT CHECK(Lage2 IN ('V', 'H', 'WV', 'WH')),
-    Lage3 INTEGER,
-    Geschoss_Freitext TEXT,
-    Unbenutzt BOOL,
-    ID_Nutzungseinheit INTEGER NOT NULL,
-    FOREIGN KEY (ID_Nutzungseinheit) REFERENCES Nutzungseinheit (ID_Nutzungseinheit)
-);
-
-CREATE TABLE Raumlueftungsleitung (
-    ID_Raumlueftungsleitung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Hauptschacht BOOL,
-    Nebenschacht BOOL,
-    Laenge_Hoehe REAL,
-    Anzahl_Geschosse INTEGER,
-    Betriebsart TEXT CHECK(Betriebsart IN ('UD', 'UED')),
-    Luefter_Muendung BOOL,
-    ID_Raumlueftung INTEGER NOT NULL,
-    FOREIGN KEY (ID_Raumlueftung) REFERENCES Raumlueftung (ID_Raumlueftung)
-);
-
-CREATE TABLE Schicht (
-    ID_Schicht INTEGER PRIMARY KEY AUTOINCREMENT,
-    Nummer INTEGER,
-    Querschnittsform TEXT CHECK(Querschnittsform IN ('RD', 'RE', 'OV')),
-    QuerschnittWert1 REAL,
-    QuerschnittWert2 REAL,
-    Schichtdicke INTEGER,
-    Material TEXT CHECK(Material IN ('AF', 'AU', 'AZ', 'BE', 'DF', 'DT', 'DS', 'EF', 'ES', 'FZ', 'FK', 'GI', 'GL', 'KF', 'KS', 'MW', 'SE', 'SK', 'ST')),
-    ZIV_Kennzeichen TEXT,
-    Temperaturklasse TEXT CHECK(Temperaturklasse IN ('T080', 'T100', 'T120', 'T140', 'T160', 'T200', 'T250', 'T300', 'T400', 'T450', 'T600')),
-    Druckklasse TEXT CHECK(Druckklasse IN ('N1', 'N2', 'P1', 'P2', 'M1', 'M2', 'H1', 'H2', 'D0')),
-    Kondensatbestaendigkeitsklasse TEXT CHECK(Kondensatbestaendigkeitsklasse IN ('W', 'D')),
-    Korrosionswiderstandsklasse TEXT CHECK(Korrosionswiderstandsklasse IN ('K1', 'K2', 'K3')),
-    Russbrandbestaendigkeitsklasse TEXT CHECK(Russbrandbestaendigkeitsklasse IN ('O', 'G')),
-    Abstand_brennbare_Baustoffe TEXT,
-    Feuerwiderstandsklasse TEXT CHECK(Feuerwiderstandsklasse IN ('L00', 'L30', 'L60', 'L90', 'L120', 'L30A', 'L90A')),
-    Waermedurchlasswiderstand REAL,
-    ID_Abschnitt INTEGER NOT NULL,
-    FOREIGN KEY (ID_Abschnitt) REFERENCES Abschnitt (ID_Abschnitt)
-);
-
-CREATE TABLE Bescheid_Termine_Positionen (
-    ID_Bescheid_Termine_Positionen INTEGER PRIMARY KEY AUTOINCREMENT,
-    Start_Zeitraum DATE,
-    Ende_Zeitraum DATE,
-    ID_Feuerstaettenbescheid_Grunddaten INTEGER NOT NULL,
-    ID_Bescheid_Positionen INTEGER,
-    FOREIGN KEY (ID_Feuerstaettenbescheid_Grunddaten) REFERENCES Feuerstaettenbescheid_Grunddaten (ID_Feuerstaettenbescheid_Grunddaten),
-    FOREIGN KEY (ID_Bescheid_Positionen) REFERENCES Bescheid_Positionen (ID_Bescheid_Positionen)
-);
-
-CREATE TABLE Raum (
-    ID_Raum INTEGER PRIMARY KEY AUTOINCREMENT,
-    Beschreibung TEXT,
-    Beschreibung_Ergaenzung TEXT,
-    Raumgroesse REAL,
-    Raumart TEXT CHECK(Raumart IN ('AR', 'BL', 'BR', 'BUE', 'BZ', 'DB', 'EZ', 'FL', 'GA', 'GZ', 'HA', 'HP', 'HR', 'HW', 'JZ', 'KR', 'KUE', 'LR', 'SZ', 'TR', 'VR', 'WC', 'WG', 'WUE', 'WZ', 'VO', 'SU', 'ER', 'IF', 'TH')),
-    Raumart_Zusatz TEXT CHECK(Raumart_Zusatz IN ('MF', 'OF')),
-    Mechanische_Entlueftung TEXT CHECK(Mechanische_Entlueftung IN ('J', 'JV', 'N')),
-    ID_Wohnung INTEGER NOT NULL,
-    FOREIGN KEY (ID_Wohnung) REFERENCES Wohnung (ID_Wohnung)
-);
-
-CREATE TABLE Raumluftoeffnung (
-    ID_Raumluftoeffnung INTEGER PRIMARY KEY AUTOINCREMENT,
-    "Filter" BOOL,
-    Luefter BOOL,
-    Ueberstroemoeffnung BOOL,
-    Bemerkung TEXT,
-    Sollvolumenstrom REAL,
-    ID_Raumlueftungsleitung INTEGER NOT NULL,
-    FOREIGN KEY (ID_Raumlueftungsleitung) REFERENCES Raumlueftungsleitung (ID_Raumlueftungsleitung)
-);
-
-CREATE TABLE Feuerstaette (
-    ID_Feuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
-    NWL_min REAL,
-    NWL_max REAL,
-    NWL_eingestellt REAL,
-    "44BImSchV_Pflichtig" BOOL,
-    "44BImSchV_Art" TEXT CHECK("44BImSchV_Art" IN ('SU', 'MD', 'GT', 'ZM', 'MO')),
-    "44BImSchV_FWL_max" REAL,
-    "44BImSchV_Aggregationsregel" BOOL,
-    "44BImSchV_Aggregationspool_" REAL,
-    Genehmigungsbeduerftig TEXT,
-    Baujahr INTEGER,
-    Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
-    Errichtung DATE,
-    Waermeaustauscher_Hersteller TEXT,
-    Waermeaustauscher_Typ TEXT,
-    Waermeaustauscher_HerstellerNr TEXT,
-    Zwei_Messstellen BOOL,
-    Nutzung TEXT CHECK(Nutzung IN ('G', 'H')),
-    GEG_Pruefung BOOL,
-    Feuerstaetten_Ident TEXT,
-    Art TEXT CHECK(Art IN ('BA', 'BH', 'BO', 'DW', 'FC', 'GK', 'GO', 'HD', 'HE', 'HK', 'HO', 'KE', 'KH', 'KK', 'KO', 'KW', 'LE', 'LT', 'OK', 'RA', 'RD', 'RF', 'RH', 'RT', 'SD', 'SF', 'SG', 'SH', 'SO', 'UW', 'VM', 'VW', 'WA', 'WK', 'WL', 'WM', 'WP', 'WT', 'NO', 'PO', 'BP', 'EA', 'FT', 'GY', 'KB', 'KV', 'SI', 'WB', 'WO', 'SP', 'DE', 'KG', 'HG', 'GF', 'LP', 'KP', 'NR', 'FW', 'BB', 'SA', 'HT', 'GN', 'HB')),
-    Art_der_Anlage TEXT CHECK(Art_der_Anlage IN ('HZ', 'HZB', 'BD', 'BZ', 'LU', 'ERF', 'SO', 'HE', 'HEB')),
-    Feuerstaetten_Text TEXT,
-    Brenner_HerstellerNr TEXT,
-    Brenner_Art TEXT CHECK(Brenner_Art IN ('OG', 'MG', 'GU')),
-    Verriegelung BOOL,
-    Ein_Mehrstoffbetrieb TEXT CHECK(Ein_Mehrstoffbetrieb IN ('F', 'O', 'G', 'FO', 'FG', 'OG', 'FOG', 'S', 'FS', 'OS', 'GS', 'FOS', 'FGS', 'OGS', 'FOGS', 'N', 'T')),
-    Verwendbarkeitsnachweis TEXT CHECK(Verwendbarkeitsnachweis IN ('CE', 'UE', 'ZIE', 'ABZ', 'ETA')),
-    Angabe_Abgasanlage TEXT CHECK(Angabe_Abgasanlage IN ('KA', 'MA', 'SZ')),
-    Raumluftabhaengig BOOL,
-    Stroemungssicherung BOOL,
-    Luftumspuelt BOOL,
-    Aussenwand BOOL,
-    Gemeinsame_Schacht BOOL,
-    LAS BOOL,
-    Gepruefte_Verbrennungsluft BOOL,
-    Energetische_Nutzung TEXT CHECK(Energetische_Nutzung IN ('B', 'H', 'N', 'S')),
-    TRGI TEXT CHECK(TRGI IN ('A1', 'A2', 'A3', 'B11', 'B12', 'B13', 'B14', 'B21', 'B22', 'B23', 'B31', 'B32', 'B33', 'B41', 'B42', 'B43', 'B44', 'B51', 'B52', 'B53', 'C11', 'C12', 'C13', 'C21', 'C22', 'C23', 'C31', 'C32', 'C33', 'C41', 'C42', 'C43', 'C51', 'C52', 'C53', 'C61', 'C62', 'C63', 'C71', 'C72', 'C73', 'C81', 'C82', 'C83', 'C91', 'C92', 'C93', 'C101', 'C102', 'C103', 'C111', 'C112', 'C113', 'C121', 'C122', 'C123', 'C131', 'C132', 'C133', 'C141', 'C142', 'C143', 'C151', 'C152', 'C153')),
-    TRGI_Zusatz TEXT CHECK(TRGI_Zusatz IN ('AS', 'BS', 'X', 'P', 'DT', 'S')),
-    Benutzungsintensitaet TEXT CHECK(Benutzungsintensitaet IN ('DU', 'GB', 'NR', 'RH', 'GR', 'SK', 'S1', 'DB', 'AB')),
-    Feuerstaettenstatus TEXT CHECK(Feuerstaettenstatus IN ('BE', 'AA', 'ST', 'EN', 'NN', 'NE', 'NB', 'NG')),
-    Ausnahmegenehmigung_Behoerde BOOL,
-    Austausch_Frist_Behoerde_BImSchV_Datum DATE,
-    Grenzwert_Frist_Behoerde_BImSchV_Datum DATE,
-    Etagenheizung_GEG24 BOOL,
-    Etagenheizung_ERF_Austausch_GEG24 BOOL,
-    ID_Raum INTEGER NOT NULL,
-    ID_Abgasanlage INTEGER,
-    FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum),
-    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage)
-);
-
-CREATE TABLE Verbrennungsluftzufuhr_Element (
-    ID_Verbrennungsluftzufuhr_Element INTEGER PRIMARY KEY AUTOINCREMENT,
-    Element TEXT CHECK(Element IN ('AD', 'T0', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'VL', 'VO', 'VB', 'VG', 'RG', 'VF', 'MV')),
-    Querschnitt REAL,
-    Querschnittsform_Verbrennungsluftzufuhr_Element TEXT CHECK(Querschnittsform_Verbrennungsluftzufuhr_Element IN ('RD', 'RE', 'OV')),
-    Laenge REAL,
-    Absperrvorrichtung BOOL,
-    Anzahl_Pruefoeffnung INTEGER,
-    Anzahl_Richtungsaenderungen INTEGER,
-    Zweck_Verbrennungsluftversorgung BOOL,
-    Zweck_Luftumspuelung BOOL,
-    Zweck_Raumlueftung BOOL,
-    ID_Raum INTEGER NOT NULL,
-    ID_Raum_Ziel INTEGER,
-    FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum),
-    FOREIGN KEY (ID_Raum_Ziel) REFERENCES Raum (ID_Raum)
-);
-
-CREATE TABLE Mess_Pruefergebnisse_Raumluftoeffnung (
-    ID_Mess_Pruefergebnisse_Raumluftoeffnung INTEGER PRIMARY KEY AUTOINCREMENT,
-    Nummer INTEGER,
-    Luftvolumenstrom REAL,
-    Stroemungsgeschwindigkeit REAL,
-    Hoehe_ueber_NN REAL,
-    Raumlufttemperatur REAL,
-    Ausfuehrungsdatum DATE,
-    Erstelldatum DATE,
-    Bemerkung TEXT,
-    ID_Raumluftoeffnung INTEGER NOT NULL,
-    FOREIGN KEY (ID_Raumluftoeffnung) REFERENCES Raumluftoeffnung (ID_Raumluftoeffnung)
-);
-
 CREATE TABLE Dunstabzugsanlage_Feuerstaette (
     ID_Dunstabzugsanlage_Feuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Dunstabzugsanlage_Haube INTEGER NOT NULL,
+    ID_Feuerstaette INTEGER,
     Betriebsweise_Brenner TEXT CHECK(Betriebsweise_Brenner IN ('OG', 'HG', 'VG', 'SG')),
     Waermeerzeuger_Art TEXT CHECK(Waermeerzeuger_Art IN ('BA', 'BH', 'BO', 'DW', 'FC', 'GK', 'GO', 'HD', 'HE', 'HK', 'HO', 'KE', 'KH', 'KK', 'KO', 'KW', 'LE', 'LT', 'OK', 'RA', 'RD', 'RF', 'RH', 'RT', 'SD', 'SF', 'SG', 'SH', 'SO', 'UW', 'VM', 'VW', 'WA', 'WK', 'WL', 'WM', 'WP', 'WT', 'NO', 'PO', 'BP', 'EA', 'FT', 'GY', 'KB', 'KV', 'SI', 'WB', 'WO', 'SP', 'DE', 'KG', 'HG', 'GF', 'LP', 'KP', 'NR', 'FW', 'BB', 'SA', 'HT', 'GN', 'HB')),
     Brenner_Hersteller TEXT,
@@ -1223,25 +1147,24 @@ CREATE TABLE Dunstabzugsanlage_Feuerstaette (
     Warmwasser_Leistung_max REAL,
     Warmwasser_Leistung_eingest REAL,
     Benutzungsintensitaet TEXT CHECK(Benutzungsintensitaet IN ('DU', 'GB', 'NR', 'RH', 'GR', 'SK', 'S1', 'DB', 'AB')),
-    ID_Dunstabzugsanlage_Haube INTEGER NOT NULL,
-    ID_Feuerstaette INTEGER,
     FOREIGN KEY (ID_Dunstabzugsanlage_Haube) REFERENCES Dunstabzugsanlage_Haube (ID_Dunstabzugsanlage_Haube),
     FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
 );
 
 CREATE TABLE Effizienzlabel (
     ID_Effizienzlabel INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaette INTEGER NOT NULL,
     Effizienzlabel_angebracht TEXT CHECK(Effizienzlabel_angebracht IN ('B', 'V')),
     Datum DATE,
     Energieeffizienzklasse TEXT CHECK(Energieeffizienzklasse IN ('A3P', 'A2P', 'AP', 'A', 'B', 'C', 'D', 'E')),
     Etikettennummer TEXT,
     Abgerechnet DATE,
-    ID_Feuerstaette INTEGER NOT NULL,
     FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
 );
 
 CREATE TABLE Feste_Brennstoff_Feuerstaette (
     ID_Feste_Brennstoff_Feuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaette INTEGER NOT NULL,
     Bearbeitungszyklus_BImSchV TEXT CHECK(Bearbeitungszyklus_BImSchV IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
     Kennzeichnung_Messung_1_BImSchV BOOL,
     Startzeitpunkt_Messpflicht DATE,
@@ -1292,12 +1215,78 @@ CREATE TABLE Feste_Brennstoff_Feuerstaette (
     Warmwasser_Leistung_min REAL,
     Warmwasser_Leistung_max REAL,
     Warmwasser_Leistung_eingest REAL,
-    ID_Feuerstaette INTEGER NOT NULL,
     FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
+);
+
+CREATE TABLE Feuerst_Verbr_Element (
+    ID_Feuerst_Verbr_Element INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaette INTEGER NOT NULL,
+    ID_Verbrennungsluftzufuhr_Element INTEGER NOT NULL,
+    VL_Raum_Art TEXT CHECK(VL_Raum_Art IN ('VR', 'VL')),
+    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette),
+    FOREIGN KEY (ID_Verbrennungsluftzufuhr_Element) REFERENCES Verbrennungsluftzufuhr_Element (ID_Verbrennungsluftzufuhr_Element)
+);
+
+CREATE TABLE Feuerstaette (
+    ID_Feuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Raum INTEGER NOT NULL,
+    ID_Abgasanlage INTEGER,
+    NWL_min REAL,
+    NWL_max REAL,
+    NWL_eingestellt REAL,
+    "44BImSchV_Pflichtig" BOOL,
+    "44BImSchV_Art" TEXT CHECK("44BImSchV_Art" IN ('SU', 'MD', 'GT', 'ZM', 'MO')),
+    "44BImSchV_FWL_max" REAL,
+    "44BImSchV_Aggregationsregel" BOOL,
+    "44BImSchV_Aggregationspool_" REAL,
+    Genehmigungsbeduerftig TEXT,
+    Baujahr INTEGER,
+    Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
+    Errichtung DATE,
+    Waermeaustauscher_Hersteller TEXT,
+    Waermeaustauscher_Typ TEXT,
+    Waermeaustauscher_HerstellerNr TEXT,
+    Zwei_Messstellen BOOL,
+    Nutzung TEXT CHECK(Nutzung IN ('G', 'H')),
+    GEG_Pruefung BOOL,
+    Feuerstaetten_Ident TEXT,
+    Art TEXT CHECK(Art IN ('BA', 'BH', 'BO', 'DW', 'FC', 'GK', 'GO', 'HD', 'HE', 'HK', 'HO', 'KE', 'KH', 'KK', 'KO', 'KW', 'LE', 'LT', 'OK', 'RA', 'RD', 'RF', 'RH', 'RT', 'SD', 'SF', 'SG', 'SH', 'SO', 'UW', 'VM', 'VW', 'WA', 'WK', 'WL', 'WM', 'WP', 'WT', 'NO', 'PO', 'BP', 'EA', 'FT', 'GY', 'KB', 'KV', 'SI', 'WB', 'WO', 'SP', 'DE', 'KG', 'HG', 'GF', 'LP', 'KP', 'NR', 'FW', 'BB', 'SA', 'HT', 'GN', 'HB')),
+    Art_der_Anlage TEXT CHECK(Art_der_Anlage IN ('HZ', 'HZB', 'BD', 'BZ', 'LU', 'ERF', 'SO', 'HE', 'HEB')),
+    Feuerstaetten_Text TEXT,
+    Brenner_HerstellerNr TEXT,
+    Brenner_Art TEXT CHECK(Brenner_Art IN ('OG', 'MG', 'GU')),
+    Verriegelung BOOL,
+    Ein_Mehrstoffbetrieb TEXT CHECK(Ein_Mehrstoffbetrieb IN ('F', 'O', 'G', 'FO', 'FG', 'OG', 'FOG', 'S', 'FS', 'OS', 'GS', 'FOS', 'FGS', 'OGS', 'FOGS', 'N', 'T')),
+    Verwendbarkeitsnachweis TEXT CHECK(Verwendbarkeitsnachweis IN ('CE', 'UE', 'ZIE', 'ABZ', 'ETA')),
+    Angabe_Abgasanlage TEXT CHECK(Angabe_Abgasanlage IN ('KA', 'MA', 'SZ')),
+    Raumluftabhaengig BOOL,
+    Stroemungssicherung BOOL,
+    Luftumspuelt BOOL,
+    Aussenwand BOOL,
+    Gemeinsame_Schacht BOOL,
+    LAS BOOL,
+    Gepruefte_Verbrennungsluft BOOL,
+    Energetische_Nutzung TEXT CHECK(Energetische_Nutzung IN ('B', 'H', 'N', 'S')),
+    TRGI TEXT CHECK(TRGI IN ('A1', 'A2', 'A3', 'B11', 'B12', 'B13', 'B14', 'B21', 'B22', 'B23', 'B31', 'B32', 'B33', 'B41', 'B42', 'B43', 'B44', 'B51', 'B52', 'B53', 'C11', 'C12', 'C13', 'C21', 'C22', 'C23', 'C31', 'C32', 'C33', 'C41', 'C42', 'C43', 'C51', 'C52', 'C53', 'C61', 'C62', 'C63', 'C71', 'C72', 'C73', 'C81', 'C82', 'C83', 'C91', 'C92', 'C93', 'C101', 'C102', 'C103', 'C111', 'C112', 'C113', 'C121', 'C122', 'C123', 'C131', 'C132', 'C133', 'C141', 'C142', 'C143', 'C151', 'C152', 'C153')),
+    TRGI_Zusatz TEXT CHECK(TRGI_Zusatz IN ('AS', 'BS', 'X', 'P', 'DT', 'S')),
+    Benutzungsintensitaet TEXT CHECK(Benutzungsintensitaet IN ('DU', 'GB', 'NR', 'RH', 'GR', 'SK', 'S1', 'DB', 'AB')),
+    Feuerstaettenstatus TEXT CHECK(Feuerstaettenstatus IN ('FB', 'FA', 'FS', 'FE', 'FN', 'FNE', 'FNB26', 'FNGEG')),
+    Ausnahmegenehmigung_Behoerde BOOL,
+    Ausnahmegenehmigung_Behoerde_Dokumente INTEGER,
+    Austausch_Frist_Behoerde_BImSchV_Datum DATE,
+    Grenzwert_Frist_Behoerde_BImSchV_Datum DATE,
+    Schreiben_Behoerde_Fristverlaengerung_BImSchV INTEGER,
+    Etagenheizung_GEG24 BOOL,
+    Etagenheizung_ERF_Austausch_GEG24 BOOL,
+    FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum),
+    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage),
+    FOREIGN KEY (Ausnahmegenehmigung_Behoerde_Dokumente) REFERENCES Dokument (ID_Dokument),
+    FOREIGN KEY (Schreiben_Behoerde_Fristverlaengerung_BImSchV) REFERENCES Dokument (ID_Dokument)
 );
 
 CREATE TABLE GEG (
     ID_GEG INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaette INTEGER NOT NULL,
     Kaufdatum_Gebaeude DATE,
     Ausfuehrungsdatum DATE,
     Heizkessel_FU BOOL,
@@ -1349,7 +1338,7 @@ CREATE TABLE GEG (
     GEG24_Befreiung_Behoerde_Ausstattung_Regelanlagen_Datum DATE,
     GEG24_Befreiung_Behoerde_Daemmung_Regelanlagen_Datum DATE,
     GEG24_Befreiung_Behoerde_heizungstechnische_Anlage_Datum DATE,
-    GEG24_NBE_Rechtsbezug TEXT,
+    GEG24_NBE_Rechtsbezug TEXT CHECK(GEG24_NBE_Rechtsbezug IN ('P72A4', 'P71I', 'P71A9', 'P71M10', 'P71M1F', 'P71M2', 'P71L1', 'P71L2E', 'P71L2F8', 'P71L2F1', 'P71K1', 'P71J1', 'P71J2', 'P71J3')),
     GEG24_Aufhebungsbescheid_Netzausbau_Datum DATE,
     GEG24_Aufhebungsbescheid_H2Netz_Datum DATE,
     GEG24_Frist_Abnahme_Ausserbetriebnahme_Heizungsanlage DATE,
@@ -1363,12 +1352,12 @@ CREATE TABLE GEG (
     GEG24_65_EE_eingahalten BOOL,
     GEG24_Beschluss_Zentralisierung DATE,
     Unternehmererklaerung_Abrechnung_Bestaetigung BOOL,
-    ID_Feuerstaette INTEGER NOT NULL,
     FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
 );
 
 CREATE TABLE Gasfeuerstaette (
     ID_Gasfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaette INTEGER NOT NULL,
     Brenner_Hersteller TEXT,
     Brenner_Typ TEXT,
     Brenner_Baujahr INTEGER,
@@ -1386,107 +1375,153 @@ CREATE TABLE Gasfeuerstaette (
     Warmwasser_Leistung_max REAL,
     Warmwasser_Leistung_eingest REAL,
     Zuendflamme BOOL,
-    ID_Feuerstaette INTEGER NOT NULL,
     FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
 );
 
-CREATE TABLE Nachgeschalteter_Waermeaustauscher (
-    ID_Nachgeschalteter_Waermeaustauscher INTEGER PRIMARY KEY AUTOINCREMENT,
-    Hersteller TEXT,
-    Typ TEXT,
-    Baujahr INTEGER,
-    Errichtungsdatum DATE,
-    Leistung_min REAL,
-    Leistung_max REAL,
-    Leistung_eingest REAL,
-    wird_Brennwert BOOL,
-    ID_Feuerstaette INTEGER NOT NULL,
-    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
+CREATE TABLE Kehrbuch_Abnahme (
+    ID_Kehrbuch_Abnahme INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbuch_Nutzungseinheit INTEGER NOT NULL,
+    ID_Kehrbuch_Anlage INTEGER NOT NULL,
+    ID_Abnahme INTEGER NOT NULL,
+    FOREIGN KEY (ID_Kehrbuch_Nutzungseinheit) REFERENCES Kehrbuch_Nutzungseinheit (ID_Kehrbuch_Nutzungseinheit),
+    FOREIGN KEY (ID_Kehrbuch_Anlage) REFERENCES Kehrbuch_Anlage (ID_Kehrbuch_Anlage),
+    FOREIGN KEY (ID_Abnahme) REFERENCES Abnahme (ID_Abnahme)
 );
 
-CREATE TABLE Oelfeuerstaette (
-    ID_Oelfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
-    Bearbeitungszyklus_KUEO TEXT CHECK(Bearbeitungszyklus_KUEO IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
-    Bearbeitungszyklus_BImSchV TEXT CHECK(Bearbeitungszyklus_BImSchV IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
-    Brennstoff_schwefelarm BOOL,
-    Brenner_Hersteller TEXT,
-    Brenner_Typ TEXT,
-    Brenner_Verbrennungstechnik TEXT CHECK(Brenner_Verbrennungstechnik IN ('D', 'Z')),
-    Brenner_Baujahr INTEGER,
-    Brenner_Errichtungsdatum DATE,
-    Brenner_Leistung_min REAL,
-    Brenner_Leistung_max REAL,
-    Brenner_Leistung_mess REAL,
-    Ueber_Durchgangshoehe BOOL,
-    Bemerkung TEXT,
-    gueltig_von DATE,
-    gueltig_bis DATE,
-    Warmwasser_Leistung_min REAL,
-    Warmwasser_Leistung_max REAL,
-    Warmwasser_Leistung_eingest REAL,
-    ID_Feuerstaette INTEGER NOT NULL,
-    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
-);
-
-CREATE TABLE Sonderfeuerstaetten (
-    ID_Sonderfeuerstaetten INTEGER PRIMARY KEY AUTOINCREMENT,
-    NWL REAL,
-    Thermische_Leistung REAL,
-    Bemerkung TEXT,
-    gueltig_von DATE,
-    gueltig_bis DATE,
-    ID_Feuerstaette INTEGER NOT NULL,
-    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
-);
-
-CREATE TABLE Waermepumpe (
-    ID_Waermepumpe INTEGER PRIMARY KEY AUTOINCREMENT,
-    Heizlast REAL,
-    Hersteller TEXT,
-    Typ TEXT,
-    Seriennummer TEXT,
-    untere_Leistung REAL,
-    obere_Leistung REAL,
-    Baujahr INTEGER,
-    Errichtung DATE,
-    Waermequelle TEXT CHECK(Waermequelle IN ('LUFT', 'WASS', 'SOLE', 'EIS', 'ABL')),
-    Bauart TEXT CHECK(Bauart IN ('LW', 'WW', 'SW', 'LL')),
-    Betriebsweise TEXT CHECK(Betriebsweise IN ('MONO', 'MONE', 'BIP', 'BIA')),
-    Bauweise TEXT CHECK(Bauweise IN ('SPL', 'MNB')),
-    Heizstab BOOL,
-    Betriebspunkt TEXT CHECK(Betriebspunkt IN ('A2W35', 'B0W35', 'W10W35')),
-    COP REAL,
-    berechnete_JAZ_SCOP REAL,
-    Schallleistungspegel INTEGER,
-    Silentmode BOOL,
-    Fernkontrolle BOOL,
-    Fuellgewicht_Kaeltemittel REAL,
-    Kaeltemittelgruppe TEXT CHECK(Kaeltemittelgruppe IN ('R290', 'R454C', 'R454B', 'R32', 'R134A', 'R407C', 'R410A', 'R404A', 'R744', 'R717', 'R600A', 'R1234ZE', 'R1234YF', 'R513A')),
-    GWP_Wert INTEGER,
-    CO2_Aequivalent REAL,
-    Warmwasserbereitung BOOL,
-    Waermeuebertrager TEXT CHECK(Waermeuebertrager IN ('FH', 'HK', 'TABS', 'LH', 'WW', 'FC')),
-    hydraulischerAbgleich DATE,
-    Installationsort TEXT CHECK(Installationsort IN ('GRT', 'EIN', 'TER', 'DAC', 'GEB', 'HAW', 'VOG', 'CAR', 'GAR', 'GDAC', 'BAL', 'KEL', 'TEC', 'HWR', 'DAB')),
-    Ort_Ausseneinheit TEXT CHECK(Ort_Ausseneinheit IN ('KEIN', 'WAND', 'FND', 'KON')),
-    Abstand_Gebaeuden REAL,
-    Aufstellbedingung_Herstellerangaben_eingehalten TEXT CHECK(Aufstellbedingung_Herstellerangaben_eingehalten IN ('J', 'N', 'NV')),
-    Bemerkung TEXT,
-    ID_Raum INTEGER NOT NULL,
-    FOREIGN KEY (ID_Raum) REFERENCES Raum (ID_Raum)
-);
-
-CREATE TABLE Feuerst_Verbr_Element (
-    ID_Feuerst_Verbr_Element INTEGER PRIMARY KEY AUTOINCREMENT,
-    VL_Raum_Art TEXT CHECK(VL_Raum_Art IN ('VR', 'VL')),
-    ID_Feuerstaette INTEGER NOT NULL,
-    ID_Verbrennungsluftzufuhr_Element INTEGER NOT NULL,
+CREATE TABLE Kehrbuch_Anlage (
+    ID_Kehrbuch_Anlage INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbuch_Gebaeude INTEGER NOT NULL,
+    ID_Abgasanlage INTEGER,
+    ID_Feuerstaette INTEGER,
+    ID_Raumluftoeffnung INTEGER,
+    ID_Dunstabzuganlage_Leitung INTEGER,
+    ID_Lueftungsanlage INTEGER,
+    ID_Raumlueftung INTEGER,
+    ID_Raeucheranlage INTEGER,
+    ID_Brennstoffversorgungsanlage INTEGER,
+    ID_Bescheid_Positionen INTEGER,
+    Gueltig_von DATE,
+    Gueltig_bis DATE,
+    Aenderungsgrund TEXT,
+    Aenderungsdatum DATE,
+    FOREIGN KEY (ID_Kehrbuch_Gebaeude) REFERENCES Kehrbuch_Gebaeude (ID_Kehrbuch_Gebaeude),
+    FOREIGN KEY (ID_Abgasanlage) REFERENCES Abgasanlage (ID_Abgasanlage),
     FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette),
-    FOREIGN KEY (ID_Verbrennungsluftzufuhr_Element) REFERENCES Verbrennungsluftzufuhr_Element (ID_Verbrennungsluftzufuhr_Element)
+    FOREIGN KEY (ID_Raumluftoeffnung) REFERENCES Raumluftoeffnung (ID_Raumluftoeffnung),
+    FOREIGN KEY (ID_Dunstabzuganlage_Leitung) REFERENCES Dunstabzuganlage_Leitung (ID_Dunstabzuganlage_Leitung),
+    FOREIGN KEY (ID_Lueftungsanlage) REFERENCES Lueftungsanlage (ID_Lueftungsanlage),
+    FOREIGN KEY (ID_Raumlueftung) REFERENCES Raumlueftung (ID_Raumlueftung),
+    FOREIGN KEY (ID_Raeucheranlage) REFERENCES Raeucheranlage (ID_Raeucheranlage),
+    FOREIGN KEY (ID_Brennstoffversorgungsanlage) REFERENCES Brennstoffversorgungsanlage (ID_Brennstoffversorgungsanlage),
+    FOREIGN KEY (ID_Bescheid_Positionen) REFERENCES Bescheid_Positionen (ID_Bescheid_Positionen)
+);
+
+CREATE TABLE Kehrbuch_Taetigkeit (
+    ID_Kehrbuch_Taetigkeit INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbuch_Anlage INTEGER NOT NULL,
+    Rechtsgrundlage TEXT,
+    Taetigkeit_Text TEXT,
+    Planungszeitraum_von DATE,
+    Planungszeitraum_bis DATE,
+    Ausfuehrungsdatum DATE,
+    Datum_Weiterleitung_Behoerde DATE,
+    FOREIGN KEY (ID_Kehrbuch_Anlage) REFERENCES Kehrbuch_Anlage (ID_Kehrbuch_Anlage)
+);
+
+CREATE TABLE Mangel (
+    ID_Mangel INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Kehrbuch_Taetigkeit INTEGER,
+    ID_Pruefergebnisse_Feuerstaettenschau INTEGER,
+    ID_Kehrbuch_Abnahme INTEGER,
+    Laufende_Nummer_bBSF INTEGER,
+    Laufende_Nummer_Fremdfirma INTEGER,
+    Maengeltext TEXT,
+    Datum_Feststellung DATE,
+    Datum_Meldung DATE,
+    Frist_Maengel DATE,
+    Datum_Mahnung DATE,
+    Datum_Weiterleitung DATE,
+    Datum_Abstellung DATE,
+    Datum_Nachschau DATE,
+    Taetigkeit INTEGER,
+    Beurteilungsgegenstand INTEGER,
+    Pruefkriterien INTEGER,
+    Maengelgruppe INTEGER,
+    Textbausteinnummer INTEGER,
+    FOREIGN KEY (ID_Kehrbuch_Taetigkeit) REFERENCES Kehrbuch_Taetigkeit (ID_Kehrbuch_Taetigkeit),
+    FOREIGN KEY (ID_Pruefergebnisse_Feuerstaettenschau) REFERENCES Pruefergebnisse_Feuerstaettenschau (ID_Pruefergebnisse_Feuerstaettenschau),
+    FOREIGN KEY (ID_Kehrbuch_Abnahme) REFERENCES Kehrbuch_Abnahme (ID_Kehrbuch_Abnahme)
+);
+
+CREATE TABLE Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette (
+    ID_Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gasfeuerstaette INTEGER NOT NULL,
+    MIN TEXT,
+    FWL_Messung REAL,
+    Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
+    Brennstoff_Text TEXT,
+    Messart TEXT CHECK(Messart IN ('EM', 'WM')),
+    "44BImSchV" BOOL,
+    Ausfuehrungsdatum DATE,
+    Erstelldatum DATE,
+    Abgasverlust REAL,
+    Abgasverlust_Grenzwert REAL,
+    Verbrennungslufttemperatur INTEGER,
+    Abgastemperatur INTEGER,
+    Waermetraegertemperatur REAL,
+    Sauerstoff_Volumengehalt REAL,
+    CO_Konzentration_Bezug REAL,
+    CO_Konzentration_Messunsicherheit REAL,
+    CO_Konzentration_Grenzwert REAL,
+    NO_Konzentration_Bezug REAL,
+    NO_Konzentration_Messunsicherheit REAL,
+    NO_Konzentration_Grenzwert REAL,
+    Betriebszustand_ok BOOL,
+    Druckdifferenz_Abgas INTEGER,
+    Bemerkung TEXT,
+    Datum_Bescheinigung DATE,
+    FOREIGN KEY (ID_Gasfeuerstaette) REFERENCES Gasfeuerstaette (ID_Gasfeuerstaette)
+);
+
+CREATE TABLE Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette (
+    ID_Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Oelfeuerstaette INTEGER NOT NULL,
+    MIN TEXT,
+    FWL_Messung REAL,
+    Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
+    Brennstoff_Text TEXT,
+    Messart TEXT CHECK(Messart IN ('EM', 'WM')),
+    "44BImSchV" BOOL,
+    Ausfuehrungsdatum DATE,
+    Erstelldatum DATE,
+    Russzahl_1 INTEGER,
+    Russzahl_2 INTEGER,
+    Russzahl_3 INTEGER,
+    Russzahl_mw INTEGER,
+    Oelderivate BOOL,
+    Russzahl_Grenzwert REAL,
+    Abgasverlust REAL,
+    Abgasverlust_Grenzwert REAL,
+    Verbrennungslufttemperatur INTEGER,
+    Abgastemperatur INTEGER,
+    Waermetraegertemperatur REAL,
+    Sauerstoff_Volumengehalt REAL,
+    CO_Konzentration_Bezug REAL,
+    CO_Konzentration_Messunsicherheit REAL,
+    CO_Konzentration_Grenzwert REAL,
+    NO_Konzentration_Bezug REAL,
+    NO_Konzentration_Messunsicherheit REAL,
+    NO_Konzentration_Grenzwert REAL,
+    Betriebszustand_ok BOOL,
+    Druckdifferenz_Abgas INTEGER,
+    Bemerkung TEXT,
+    Datum_Bescheinigung DATE,
+    FOREIGN KEY (ID_Oelfeuerstaette) REFERENCES Oelfeuerstaette (ID_Oelfeuerstaette)
 );
 
 CREATE TABLE Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF (
     ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feste_Brennstoff_Feuerstaette INTEGER NOT NULL,
     MIN TEXT,
     Messart_1BImSchV1 TEXT,
     Ausfuehrungsdatum DATE,
@@ -1530,12 +1565,12 @@ CREATE TABLE Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF (
     Messwert_8_CO REAL,
     Messwert_8_Staub REAL,
     Erstelldatum DATE,
-    ID_Feste_Brennstoff_Feuerstaette INTEGER NOT NULL,
     FOREIGN KEY (ID_Feste_Brennstoff_Feuerstaette) REFERENCES Feste_Brennstoff_Feuerstaette (ID_Feste_Brennstoff_Feuerstaette)
 );
 
 CREATE TABLE Mess_Pruefergebnisse_Feststofffeuerstaetten_HK (
     ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_HK INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feste_Brennstoff_Feuerstaette INTEGER NOT NULL,
     MIN TEXT,
     Messart_1BImSchV1 TEXT CHECK(Messart_1BImSchV1 IN ('U14_1', 'MU14_2', 'MU15_1', 'WU14_5', 'B4_8')),
     Messart_1BImSchV2 TEXT CHECK(Messart_1BImSchV2 IN ('U14_1', 'MU14_2', 'MU15_1', 'WU14_5', 'B4_8')),
@@ -1589,56 +1624,12 @@ CREATE TABLE Mess_Pruefergebnisse_Feststofffeuerstaetten_HK (
     Sondergrenzwert_CO_Behoerde REAL,
     Sondergrenzwert_Behoerde_Ende DATE,
     Erstelldatum DATE,
-    ID_Feste_Brennstoff_Feuerstaette INTEGER NOT NULL,
     FOREIGN KEY (ID_Feste_Brennstoff_Feuerstaette) REFERENCES Feste_Brennstoff_Feuerstaette (ID_Feste_Brennstoff_Feuerstaette)
-);
-
-CREATE TABLE Pruefergebnisse_GEG (
-    ID_Pruefergebnisse_GEG INTEGER PRIMARY KEY AUTOINCREMENT,
-    Datum_Behoerde DATE,
-    Ausfuehrungsdatum DATE,
-    Erstelldatum DATE,
-    Frist_Neuanlage DATE,
-    Frist_Bestandsanlage DATE,
-    Ergebnis BOOL,
-    Erlaeuterung_Neuanlage TEXT,
-    Erlaeuterung_Bestandsanlage TEXT,
-    ID_GEG INTEGER NOT NULL,
-    FOREIGN KEY (ID_GEG) REFERENCES GEG (ID_GEG)
-);
-
-CREATE TABLE Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette (
-    ID_Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
-    MIN TEXT,
-    FWL_Messung REAL,
-    Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
-    Brennstoff_Text TEXT,
-    Messart TEXT CHECK(Messart IN ('EM', 'WM')),
-    "44BImSchV" BOOL,
-    Ausfuehrungsdatum DATE,
-    Erstelldatum DATE,
-    Abgasverlust REAL,
-    Abgasverlust_Grenzwert REAL,
-    Verbrennungslufttemperatur INTEGER,
-    Abgastemperatur INTEGER,
-    Waermetraegertemperatur REAL,
-    Sauerstoff_Volumengehalt REAL,
-    CO_Konzentration_Bezug REAL,
-    CO_Konzentration_Messunsicherheit REAL,
-    CO_Konzentration_Grenzwert REAL,
-    NO_Konzentration_Bezug REAL,
-    NO_Konzentration_Messunsicherheit REAL,
-    NO_Konzentration_Grenzwert REAL,
-    Betriebszustand_ok BOOL,
-    Druckdifferenz_Abgas INTEGER,
-    Bemerkung TEXT,
-    Datum_Bescheinigung DATE,
-    ID_Gasfeuerstaette INTEGER NOT NULL,
-    FOREIGN KEY (ID_Gasfeuerstaette) REFERENCES Gasfeuerstaette (ID_Gasfeuerstaette)
 );
 
 CREATE TABLE Mess_Pruefergebnisse_Gasfeuerstaette (
     ID_Mess_Pruefergebnisse_Gasfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Gasfeuerstaette INTEGER NOT NULL,
     MIN TEXT,
     NWL_Messung REAL,
     Sondergrenzwert_Abgasverlust_Prozess REAL,
@@ -1690,48 +1681,12 @@ CREATE TABLE Mess_Pruefergebnisse_Gasfeuerstaette (
     Messunsicherheit REAL,
     Datum_Bescheinigung DATE,
     Herstellerbescheinigung BOOL,
-    ID_Gasfeuerstaette INTEGER NOT NULL,
     FOREIGN KEY (ID_Gasfeuerstaette) REFERENCES Gasfeuerstaette (ID_Gasfeuerstaette)
 );
 
-CREATE TABLE Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette (
-    ID_Pruefergebnisse_44BImSchV_Oelfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
-    MIN TEXT,
-    FWL_Messung REAL,
-    Brennstoff TEXT CHECK(Brennstoff IN ('SK', 'SKB', 'SKK', 'BK', 'BKB', 'BKK', 'BT', 'BTP', 'GHK', 'SHZ', 'HS', 'RZ', 'SM', 'SP', 'SST', 'RI', 'HB_DIN', 'HP_DIN', 'HB_EQ', 'HP_EQ', 'HBL', 'HLV', 'STR', 'GET', 'GEP', 'EL', 'EL_EQ', 'PO', 'PME', 'ME', 'ET', 'GGV', 'NG', 'OG', 'LPG', 'H2B', 'KBG', 'IG', 'NWR', 'E', 'KZ', 'NFW', 'H2G', 'SOL')),
-    Brennstoff_Text TEXT,
-    Messart TEXT CHECK(Messart IN ('EM', 'WM')),
-    "44BImSchV" BOOL,
-    Ausfuehrungsdatum DATE,
-    Erstelldatum DATE,
-    Russzahl_1 INTEGER,
-    Russzahl_2 INTEGER,
-    Russzahl_3 INTEGER,
-    Russzahl_mw INTEGER,
-    Oelderivate BOOL,
-    Russzahl_Grenzwert REAL,
-    Abgasverlust REAL,
-    Abgasverlust_Grenzwert REAL,
-    Verbrennungslufttemperatur INTEGER,
-    Abgastemperatur INTEGER,
-    Waermetraegertemperatur REAL,
-    Sauerstoff_Volumengehalt REAL,
-    CO_Konzentration_Bezug REAL,
-    CO_Konzentration_Messunsicherheit REAL,
-    CO_Konzentration_Grenzwert REAL,
-    NO_Konzentration_Bezug REAL,
-    NO_Konzentration_Messunsicherheit REAL,
-    NO_Konzentration_Grenzwert REAL,
-    Betriebszustand_ok BOOL,
-    Druckdifferenz_Abgas INTEGER,
-    Bemerkung TEXT,
-    Datum_Bescheinigung DATE,
-    ID_Oelfeuerstaette INTEGER NOT NULL,
-    FOREIGN KEY (ID_Oelfeuerstaette) REFERENCES Oelfeuerstaette (ID_Oelfeuerstaette)
-);
-
 CREATE TABLE Mess_Pruefergebnisse_Oelfeuerstaette (
-    ID_Pruefergebnisse_Oelfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Mess_Pruefergebnisse_Oelfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Oelfeuerstaette INTEGER NOT NULL,
     MIN TEXT,
     NWL_Messung REAL,
     Sondergrenzwert_Abgasverlust_Prozess REAL,
@@ -1788,12 +1743,12 @@ CREATE TABLE Mess_Pruefergebnisse_Oelfeuerstaette (
     Oelderivate BOOL,
     Datum_Bescheinigung DATE,
     Herstellerbescheinigung BOOL,
-    ID_Oelfeuerstaette INTEGER NOT NULL,
     FOREIGN KEY (ID_Oelfeuerstaette) REFERENCES Oelfeuerstaette (ID_Oelfeuerstaette)
 );
 
 CREATE TABLE Mess_Pruefergebnisse_Sonderfeuerstaetten (
     ID_Mess_Pruefergebnisse_Sonderfeuerstaetten INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Sonderfeuerstaetten INTEGER NOT NULL,
     MIN TEXT,
     Ausfuehrungsdatum DATE,
     Ueberpruefungsart TEXT CHECK(Ueberpruefungsart IN ('U', 'WC', 'AO')),
@@ -1823,42 +1778,89 @@ CREATE TABLE Mess_Pruefergebnisse_Sonderfeuerstaetten (
     Maengelpruefung_erforderlich BOOL,
     Datum_Bescheinigung DATE,
     Erstelldatum DATE,
-    ID_Sonderfeuerstaetten INTEGER NOT NULL,
     FOREIGN KEY (ID_Sonderfeuerstaetten) REFERENCES Sonderfeuerstaetten (ID_Sonderfeuerstaetten)
 );
 
-CREATE TABLE Mess_Pruefergebnisse_Waermepumpe (
-    ID_Mess_Pruefergebnisse_Waermepumpe INTEGER PRIMARY KEY AUTOINCREMENT,
-    Ausfuehrungsdatum TEXT,
-    Ueberpruefung_60a_GEG BOOL,
-    "Check" BOOL,
-    Antriebsenergie_Zaehlerstand REAL,
-    Waermeenergie_Waermemengenzaehler REAL,
-    Abgelesene_JAZ REAL,
-    Verdichterstarts INTEGER,
-    Heizkurve TEXT CHECK(Heizkurve IN ('W', 'H')),
-    Absenkzeiten BOOL,
-    Bivalenzpunkt REAL,
-    Eingestellte_Warmwassertemperatur INTEGER,
-    Heizgrenztemperatur REAL,
-    Hocheffizienzpumpe BOOL,
-    Quellentemperatur REAL,
-    Vorlauftemperatur INTEGER,
-    Ruecklauftemperatur INTEGER,
-    Ausdehnungsgefaess BOOL,
-    Kaeltemittelkreislauf BOOL,
-    hydraulische_Komponenten BOOL,
-    Daemmung_Rohrleitung BOOL,
-    elektrische_Anschluesse BOOL,
-    Kondensatablauf BOOL,
-    Zustand_Ausseneinheit BOOL,
-    Bericht_Kaeltekreislauf_vorhanden BOOL,
-    Effizienzverbesserungsvorschlag TEXT,
-    Auffaelligkeiten BOOL,
-    Auffaelligkeiten_festgestellt TEXT,
-    Bemerkungen TEXT,
-    Datum_Bescheinigung DATE,
+CREATE TABLE Nachgeschalteter_Waermeaustauscher (
+    ID_Nachgeschalteter_Waermeaustauscher INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaette INTEGER NOT NULL,
+    Hersteller TEXT,
+    Typ TEXT,
+    Baujahr INTEGER,
+    Errichtungsdatum DATE,
+    Leistung_min REAL,
+    Leistung_max REAL,
+    Leistung_eingest REAL,
+    wird_Brennwert BOOL,
+    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
+);
+
+CREATE TABLE Oelfeuerstaette (
+    ID_Oelfeuerstaette INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaette INTEGER NOT NULL,
+    Bearbeitungszyklus_KUEO TEXT CHECK(Bearbeitungszyklus_KUEO IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
+    Bearbeitungszyklus_BImSchV TEXT CHECK(Bearbeitungszyklus_BImSchV IN ('K', 'J', 'G', 'U', 'D', 'E', 'Z', 'F', 'EF', 'ZF', 'DF', 'VF', 'EM', 'AUE', 'K1', 'K2', 'K3', 'K4', 'K6', 'K8')),
+    Brennstoff_schwefelarm BOOL,
+    Brenner_Hersteller TEXT,
+    Brenner_Typ TEXT,
+    Brenner_Verbrennungstechnik TEXT CHECK(Brenner_Verbrennungstechnik IN ('D', 'Z')),
+    Brenner_Baujahr INTEGER,
+    Brenner_Errichtungsdatum DATE,
+    Brenner_Leistung_min REAL,
+    Brenner_Leistung_max REAL,
+    Brenner_Leistung_mess REAL,
+    Ueber_Durchgangshoehe BOOL,
+    Bemerkung TEXT,
+    gueltig_von DATE,
+    gueltig_bis DATE,
+    Warmwasser_Leistung_min REAL,
+    Warmwasser_Leistung_max REAL,
+    Warmwasser_Leistung_eingest REAL,
+    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
+);
+
+CREATE TABLE Pruefergebnisse_GEG (
+    ID_Pruefergebnisse_GEG INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_GEG INTEGER NOT NULL,
+    Datum_Behoerde DATE,
+    Ausfuehrungsdatum DATE,
     Erstelldatum DATE,
-    ID_Waermepumpe INTEGER NOT NULL,
-    FOREIGN KEY (ID_Waermepumpe) REFERENCES Waermepumpe (ID_Waermepumpe)
+    Frist_Neuanlage DATE,
+    Frist_Bestandsanlage DATE,
+    Ergebnis BOOL,
+    Erlaeuterung_Neuanlage TEXT,
+    Erlaeuterung_Bestandsanlage TEXT,
+    FOREIGN KEY (ID_GEG) REFERENCES GEG (ID_GEG)
+);
+
+CREATE TABLE Schicht (
+    ID_Schicht INTEGER PRIMARY KEY AUTOINCREMENT,
+    Nummer INTEGER,
+    Querschnittsform TEXT CHECK(Querschnittsform IN ('RD', 'RE', 'OV')),
+    QuerschnittWert1 REAL,
+    QuerschnittWert2 REAL,
+    Schichtdicke INTEGER,
+    Material TEXT CHECK(Material IN ('AF', 'AU', 'AZ', 'BE', 'DF', 'DT', 'DS', 'EF', 'ES', 'FZ', 'FK', 'GI', 'GL', 'KF', 'KS', 'MW', 'SE', 'SK', 'ST')),
+    ZIV_Kennzeichen TEXT,
+    Temperaturklasse TEXT CHECK(Temperaturklasse IN ('T080', 'T100', 'T120', 'T140', 'T160', 'T200', 'T250', 'T300', 'T400', 'T450', 'T600')),
+    Druckklasse TEXT CHECK(Druckklasse IN ('N1', 'N2', 'P1', 'P2', 'M1', 'M2', 'H1', 'H2', 'D0')),
+    Kondensatbestaendigkeitsklasse TEXT CHECK(Kondensatbestaendigkeitsklasse IN ('W', 'D')),
+    Korrosionswiderstandsklasse TEXT CHECK(Korrosionswiderstandsklasse IN ('K1', 'K2', 'K3')),
+    Russbrandbestaendigkeitsklasse TEXT CHECK(Russbrandbestaendigkeitsklasse IN ('O', 'G')),
+    Abstand_brennbare_Baustoffe TEXT,
+    Feuerwiderstandsklasse TEXT CHECK(Feuerwiderstandsklasse IN ('L00', 'L30', 'L60', 'L90', 'L120', 'L30A', 'L90A')),
+    Waermedurchlasswiderstand REAL,
+    ID_Abschnitt INTEGER NOT NULL,
+    FOREIGN KEY (ID_Abschnitt) REFERENCES Abschnitt (ID_Abschnitt)
+);
+
+CREATE TABLE Sonderfeuerstaetten (
+    ID_Sonderfeuerstaetten INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_Feuerstaette INTEGER NOT NULL,
+    NWL REAL,
+    Thermische_Leistung REAL,
+    Bemerkung TEXT,
+    gueltig_von DATE,
+    gueltig_bis DATE,
+    FOREIGN KEY (ID_Feuerstaette) REFERENCES Feuerstaette (ID_Feuerstaette)
 );

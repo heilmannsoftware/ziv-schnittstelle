@@ -8,8 +8,7 @@ Dieses Projekt definiert das **ZIV Datenmodell 4.0** – ein SQLite-Datenbanksch
 
 | Datei | Beschreibung |
 |---|---|
-| `Datenmodell4_0.dbml` | Hauptdatenmodell in DBML-Notation (Tabellen, Spalten, Typen, Enums, Relationen, Notes) |
-| `relationen_zuordnung.csv` | CSV mit allen Fremdschlüssel-Relationen (Semikolon-getrennt). Spalten: Nr, Kind_Tabelle, FK_Feld, Eltern_Tabelle, Kardinalitaet, NOT_NULL, Status, Kommentar |
+| `Datenmodell4_0.dbml` | Hauptdatenmodell in DBML-Notation (Tabellen, Spalten, Typen, Enums, Relationen via `ref:`, Notes) |
 | `stammdaten_enums.sql` | SQL-Datei mit Enum-/Stammdaten-Wertetabellen (CREATE TABLE IF NOT EXISTS + INSERT-Statements) |
 
 ## Generierte Dateien
@@ -23,8 +22,8 @@ Dieses Projekt definiert das **ZIV Datenmodell 4.0** – ein SQLite-Datenbanksch
 
 ## Build-Skripte
 
-- **`generate_schema.py`** – Erzeugt `schema.sql` aus `Datenmodell4_0.dbml` und `relationen_zuordnung.csv`. Führt topologische Sortierung der Tabellen durch, mappt DBML-Typen auf SQLite-Typen, generiert CHECK-Constraints für Enums und FOREIGN KEY-Constraints.
-- **`generate_docs.py`** – Erzeugt `dokumentation.html` aus `schema.sql`, `stammdaten_enums.sql`, `relationen_zuordnung.csv` und den Notes aus `Datenmodell4_0.dbml`.
+- **`generate_schema.py`** – Erzeugt `schema.sql` aus `Datenmodell4_0.dbml`. Führt topologische Sortierung der Tabellen durch, mappt DBML-Typen auf SQLite-Typen, generiert CHECK-Constraints für Enums und FOREIGN KEY-Constraints. Relationen werden aus den `ref:`-Zeilen im DBML abgeleitet.
+- **`generate_docs.py`** – Erzeugt `dokumentation.html` aus `schema.sql`, `stammdaten_enums.sql` und den Notes/Relationen aus `Datenmodell4_0.dbml`.
 
 ## Konventionen
 
@@ -34,16 +33,15 @@ Dieses Projekt definiert das **ZIV Datenmodell 4.0** – ein SQLite-Datenbanksch
 - **Enums**: Als TEXT-Spalten mit CHECK-Constraint realisiert; Enum-Werte in `stammdaten_enums.sql` gepflegt
 - **Enum-Prefix**: Enum-Typen im DBML beginnen mit `_` (z.B. `_Bundesland`, `_Innung`)
 - **Notes im DBML**: Format `'[Art] | Beschreibung'` – Art kann sein: `QS` (Qualitätssicherung), `§ 19_K`/`§ 19_B` (gesetzliche Grundlage), `NEIN` (nicht relevant), `V` (wird ignoriert)
-- **CSV-Delimiter**: Semikolon (`;`)
+- **Relationen**: Alle FK-Relationen werden als `ref:`-Zeilen direkt im DBML gepflegt (Single Source of Truth)
 - **Encoding**: UTF-8 durchgängig
 - **SQLite**: `PRAGMA foreign_keys = ON;` wird im Schema gesetzt
 
 ## Workflow
 
-1. Datenmodell in `Datenmodell4_0.dbml` pflegen
-2. Relationen in `relationen_zuordnung.csv` pflegen
-3. `python generate_schema.py` → erzeugt `schema.sql`
-4. `python generate_docs.py` → erzeugt `dokumentation.html`
+1. Datenmodell und Relationen in `Datenmodell4_0.dbml` pflegen
+2. `python generate_schema.py` → erzeugt `schema.sql`
+3. `python generate_docs.py` → erzeugt `dokumentation.html`
 
 ## Tabellengruppen
 
