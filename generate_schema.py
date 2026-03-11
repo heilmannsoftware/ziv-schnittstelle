@@ -377,6 +377,10 @@ def main():
             if col['not_null']:
                 parts.append("NOT NULL")
 
+            # UNIQUE
+            if col['unique']:
+                parts.append("UNIQUE")
+
             # DEFAULT
             if col['default'] is not None:
                 parts.append("DEFAULT " + col['default'])

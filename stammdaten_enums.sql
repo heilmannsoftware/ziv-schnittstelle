@@ -1783,42 +1783,42 @@ INSERT INTO Enum_WaermepumpeWaermeuebertrager (Wert, Beschreibung) VALUES ('LH',
 INSERT INTO Enum_WaermepumpeWaermeuebertrager (Wert, Beschreibung) VALUES ('WW', 'Wasser | Erläuterung: z.B. zur Warmwasserbereitung');
 INSERT INTO Enum_WaermepumpeWaermeuebertrager (Wert, Beschreibung) VALUES ('FC', 'Gebläsekonvektor / Fan Coil');
 
-CREATE TABLE IF NOT EXISTS Enum_ZubehoerLueftungsanlagen (
+CREATE TABLE IF NOT EXISTS Enum_Zubehoer (
     Wert TEXT PRIMARY KEY,
     Beschreibung TEXT NOT NULL
 );
 
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('AA', 'Aufsatz und Verlängerungen für Abgasanlagen');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('AK', 'Abgasklappe, thermisch');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('AM', 'Abgasklappe, motorisch');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('AV', 'Abgasventilator');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('BK', 'Brandschutzklappe');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('BS', 'Abgasüberwachungseinrichtung');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('DH', 'Drossel- oder Absperreinrichtung, handgesteuert');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('DK', 'Druckwächter');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('DM', 'Drossel- oder Absperreinrichtung, motorisch');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('FA', 'Abgasfilter / Staubabscheider');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('FE', 'Abgasfilter / Staubabscheider elektrisch');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('KA', 'Kondensatabführung/Siphon');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('LF', 'Luftrohr bei konzentrisch angordnetem VS');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('NE', 'Neutralisationseinrichtung');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('NK', 'Nebenluftvorrichtung, kombiniert');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('NM', 'Nebenluftvorrichtung, motorisch');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('NV', 'Nebenluftvorrichtung, selbsttätig');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('ROE', 'Prüf- und Reinigungsöffnung');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('RV', 'Verschluss der Prüf- und Reinigungsöffnung');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('SL', 'Schalldämpfer/Schallschutzhaube');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('TB', 'Temperaturbegrenzer');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('VA', 'Ventil / Öffnung in Lüftungsanlagen');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('VV', 'Vorrang-, Verriegelungsschaltung');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('ZD', 'Zusatzwärmedämmung');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('ZG', 'Zusatzgebläse');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('ZW', 'Zusatzwärmetauscher');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('BF', 'Brandschutzfilter');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('BV', 'Brandschutzventil');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('FM', 'Maschenfilter');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('FV', 'Aktivkohlefilter');
-INSERT INTO Enum_ZubehoerLueftungsanlagen (Wert, Beschreibung) VALUES ('UV', 'UV-Röhren');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('AA', 'Aufsatz und Verlängerungen für Abgasanlagen');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('AK', 'Abgasklappe, thermisch');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('AM', 'Abgasklappe, motorisch');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('AV', 'Abgasventilator');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('BK', 'Brandschutzklappe');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('BS', 'Abgasüberwachungseinrichtung');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('DH', 'Drossel- oder Absperreinrichtung, handgesteuert');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('DK', 'Druckwächter');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('DM', 'Drossel- oder Absperreinrichtung, motorisch');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('FA', 'Abgasfilter / Staubabscheider');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('FE', 'Abgasfilter / Staubabscheider elektrisch');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('KA', 'Kondensatabführung/Siphon');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('LF', 'Luftrohr bei konzentrisch angordnetem VS');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('NE', 'Neutralisationseinrichtung');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('NK', 'Nebenluftvorrichtung, kombiniert');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('NM', 'Nebenluftvorrichtung, motorisch');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('NV', 'Nebenluftvorrichtung, selbsttätig');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('ROE', 'Prüf- und Reinigungsöffnung');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('RV', 'Verschluss der Prüf- und Reinigungsöffnung');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('SL', 'Schalldämpfer/Schallschutzhaube');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('TB', 'Temperaturbegrenzer');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('VA', 'Ventil / Öffnung in Lüftungsanlagen');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('VV', 'Vorrang-, Verriegelungsschaltung');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('ZD', 'Zusatzwärmedämmung');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('ZG', 'Zusatzgebläse');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('ZW', 'Zusatzwärmetauscher');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('BF', 'Brandschutzfilter');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('BV', 'Brandschutzventil');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('FM', 'Maschenfilter');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('FV', 'Aktivkohlefilter');
+INSERT INTO Enum_Zubehoer (Wert, Beschreibung) VALUES ('UV', 'UV-Röhren');
 
 CREATE TABLE IF NOT EXISTS Enum_ZuluftversorgungLueftungsanlagen (
     Wert TEXT PRIMARY KEY,
@@ -1886,4 +1886,53 @@ CREATE TABLE IF NOT EXISTS Enum_ZusatzkennzeichnungFeuerstaettenkategorieOelBren
 INSERT INTO Enum_ZusatzkennzeichnungFeuerstaettenkategorieOelBrenner (Wert, Beschreibung) VALUES ('D', 'Verdampfungsbrenner');
 INSERT INTO Enum_ZusatzkennzeichnungFeuerstaettenkategorieOelBrenner (Wert, Beschreibung) VALUES ('Z', 'Zerstäuberbrenner');
 
--- Gesamt: 118 Enum-Tabellen mit 1178 Werten
+CREATE TABLE IF NOT EXISTS Enum_Anlagetyp (
+    Wert TEXT PRIMARY KEY
+);
+
+INSERT INTO Enum_Anlagetyp (Wert) VALUES ('Abgasanlage');
+INSERT INTO Enum_Anlagetyp (Wert) VALUES ('Feuerstaette');
+INSERT INTO Enum_Anlagetyp (Wert) VALUES ('Raumluftoeffnung');
+INSERT INTO Enum_Anlagetyp (Wert) VALUES ('Dunstabzuganlage_Leitung');
+INSERT INTO Enum_Anlagetyp (Wert) VALUES ('Lueftungsanlage');
+INSERT INTO Enum_Anlagetyp (Wert) VALUES ('Raumlueftung');
+INSERT INTO Enum_Anlagetyp (Wert) VALUES ('Raeucheranlage');
+INSERT INTO Enum_Anlagetyp (Wert) VALUES ('Brennstoffversorgungsanlage');
+
+CREATE TABLE IF NOT EXISTS Enum_AbschnittAnlagetyp (
+    Wert TEXT PRIMARY KEY,
+    Beschreibung TEXT NOT NULL
+);
+
+INSERT INTO Enum_AbschnittAnlagetyp (Wert, Beschreibung) VALUES ('Abgasanlage', 'Abschnitt gehört zu einer Abgasanlage');
+INSERT INTO Enum_AbschnittAnlagetyp (Wert, Beschreibung) VALUES ('Feuerstaette', 'Abschnitt ist Verbindungsstück einer Feuerstätte');
+
+CREATE TABLE IF NOT EXISTS Enum_Herkunftstyp (
+    Wert TEXT PRIMARY KEY
+);
+
+INSERT INTO Enum_Herkunftstyp (Wert) VALUES ('Kehrbuch_Taetigkeit');
+INSERT INTO Enum_Herkunftstyp (Wert) VALUES ('Kehrbuch_Abnahme');
+INSERT INTO Enum_Herkunftstyp (Wert) VALUES ('Kehrbuch_Feuerstaettenschau');
+INSERT INTO Enum_Herkunftstyp (Wert) VALUES ('Kehrbuch_Anlassbezogene_Ueberpruefung');
+
+CREATE TABLE IF NOT EXISTS Enum_DokumentHerkunftstyp (
+    Wert TEXT PRIMARY KEY
+);
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Gebaeude_Gebaeudeteil');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Nutzungseinheit');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Feuerstaettenbescheid_Grunddaten');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Abnahme');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Anlassbezogene_Ueberpruefung');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Pruefergebnis_Feuerstaettenschau');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Pruefergebnis_GEG');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Gasfeuerstaette');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Oelfeuerstaette');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Feststofffeuerstaette_HK');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Feststofffeuerstaette_ERF');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Sonderfeuerstaette');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Waermepumpe');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Dunstabzugsleitung');
+INSERT INTO Enum_DokumentHerkunftstyp (Wert) VALUES ('Mess_Pruefergebnis_Raumluftoeffnung');
+
+-- Gesamt: 122 Enum-Tabellen mit 1207 Werten

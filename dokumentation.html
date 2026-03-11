@@ -234,6 +234,7 @@ body {
 }
 .badge-pk { background: #ffd60a; color: #1d1d1f; }
 .badge-fk { background: var(--accent-light); color: var(--accent); }
+.badge-fk[title*="Polymorph"] { background: #e8f5e9; color: #2e7d32; }
 .badge-qs { background: #0071e3; color: #fff; }
 .badge-19 { background: #30d158; color: #fff; }
 .badge-nein { background: #ff3b30; color: #fff; }
@@ -413,9 +414,9 @@ body {
 <p class="subtitle">Dokumentation der SQLite-Datenbank</p>
 <div class="stats">
 <div class="stat-card"><span class="stat-number">89</span><span class="stat-label">Tabellen</span></div>
-<div class="stat-card"><span class="stat-number">140</span><span class="stat-label">Relationen</span></div>
-<div class="stat-card"><span class="stat-number">118</span><span class="stat-label">Enums</span></div>
-<div class="stat-card"><span class="stat-number">1,178</span><span class="stat-label">Enum-Werte</span></div>
+<div class="stat-card"><span class="stat-number">117</span><span class="stat-label">Relationen</span></div>
+<div class="stat-card"><span class="stat-number">122</span><span class="stat-label">Enums</span></div>
+<div class="stat-card"><span class="stat-number">1,207</span><span class="stat-label">Enum-Werte</span></div>
 </div>
 </div>
 </header>
@@ -461,6 +462,7 @@ body {
 <a href="#table-Schicht" class="nav-item">Schicht</a>
 <a href="#table-Muendung" class="nav-item">Muendung</a>
 <a href="#table-Reinigungsart" class="nav-item">Reinigungsart</a>
+<a href="#table-Zubehoer" class="nav-item">Zubehoer</a>
 </div></div>
 <div class="nav-group">
 <div class="nav-group-title" onclick="toggleGroup(this)">
@@ -471,8 +473,7 @@ body {
 <a href="#table-Raumlueftung" class="nav-item">Raumlueftung</a>
 <a href="#table-Raumlueftungsleitung" class="nav-item">Raumlueftungsleitung</a>
 <a href="#table-Raumluftoeffnung" class="nav-item">Raumluftoeffnung</a>
-<a href="#table-Mess_Pruefergebnisse_Raumluftoeffnung" class="nav-item">Mess_Pruefergebnisse_Raumluftoeffnung</a>
-<a href="#table-Zubehoer" class="nav-item">Zubehoer</a>
+<a href="#table-Mess_Pruefergebnis_Raumluftoeffnung" class="nav-item">Mess_Pruefergebnis_Raumluftoeffnung</a>
 </div></div>
 <div class="nav-group">
 <div class="nav-group-title" onclick="toggleGroup(this)">
@@ -480,38 +481,40 @@ body {
 </div>
 <div class="nav-group-items">
 <a href="#table-Nutzungseinheit" class="nav-item">Nutzungseinheit</a>
+<a href="#table-Nutzungseinheit_Eigentuemer" class="nav-item">Nutzungseinheit_Eigentuemer</a>
 <a href="#table-Wohnung" class="nav-item">Wohnung</a>
 <a href="#table-Raum" class="nav-item">Raum</a>
 </div></div>
 <div class="nav-group">
 <div class="nav-group-title" onclick="toggleGroup(this)">
-<span class="arrow">&#9654;</span> Feuerstaetten
+<span class="arrow">&#9654;</span> Feuerstätten
 </div>
 <div class="nav-group-items">
 <a href="#table-Feuerstaette" class="nav-item">Feuerstaette</a>
 <a href="#table-Gasfeuerstaette" class="nav-item">Gasfeuerstaette</a>
 <a href="#table-Oelfeuerstaette" class="nav-item">Oelfeuerstaette</a>
 <a href="#table-Feste_Brennstoff_Feuerstaette" class="nav-item">Feste_Brennstoff_Feuerstaette</a>
-<a href="#table-Sonderfeuerstaetten" class="nav-item">Sonderfeuerstaetten</a>
+<a href="#table-Sonderfeuerstaette" class="nav-item">Sonderfeuerstaette</a>
 <a href="#table-Waermepumpe" class="nav-item">Waermepumpe</a>
 <a href="#table-Feste_Brennstoff_Ableitbedingungen" class="nav-item">Feste_Brennstoff_Ableitbedingungen</a>
 <a href="#table-Nachgeschalteter_Waermeaustauscher" class="nav-item">Nachgeschalteter_Waermeaustauscher</a>
 <a href="#table-Brennstoffversorgungsanlage" class="nav-item">Brennstoffversorgungsanlage</a>
 <a href="#table-Raeucheranlage" class="nav-item">Raeucheranlage</a>
+<a href="#table-Effizienzlabel" class="nav-item">Effizienzlabel</a>
 </div></div>
 <div class="nav-group">
 <div class="nav-group-title" onclick="toggleGroup(this)">
 <span class="arrow">&#9654;</span> Messergebnisse
 </div>
 <div class="nav-group-items">
-<a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette" class="nav-item">Mess_Pruefergebnisse_Gasfeuerstaette</a>
-<a href="#table-Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette" class="nav-item">Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette</a>
-<a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette" class="nav-item">Mess_Pruefergebnisse_Oelfeuerstaette</a>
-<a href="#table-Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette" class="nav-item">Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette</a>
-<a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_HK" class="nav-item">Mess_Pruefergebnisse_Feststofffeuerstaetten_HK</a>
-<a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF" class="nav-item">Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF</a>
-<a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten" class="nav-item">Mess_Pruefergebnisse_Sonderfeuerstaetten</a>
-<a href="#table-Mess_Pruefergebnisse_Waermepumpe" class="nav-item">Mess_Pruefergebnisse_Waermepumpe</a>
+<a href="#table-Mess_Pruefergebnis_Gasfeuerstaette" class="nav-item">Mess_Pruefergebnis_Gasfeuerstaette</a>
+<a href="#table-Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette" class="nav-item">Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette</a>
+<a href="#table-Mess_Pruefergebnis_Oelfeuerstaette" class="nav-item">Mess_Pruefergebnis_Oelfeuerstaette</a>
+<a href="#table-Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette" class="nav-item">Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette</a>
+<a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_HK" class="nav-item">Mess_Pruefergebnis_Feststofffeuerstaette_HK</a>
+<a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_ERF" class="nav-item">Mess_Pruefergebnis_Feststofffeuerstaette_ERF</a>
+<a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette" class="nav-item">Mess_Pruefergebnis_Sonderfeuerstaette</a>
+<a href="#table-Mess_Pruefergebnis_Waermepumpe" class="nav-item">Mess_Pruefergebnis_Waermepumpe</a>
 <a href="#table-Messgeraet" class="nav-item">Messgeraet</a>
 <a href="#table-Messgeraet_44" class="nav-item">Messgeraet_44</a>
 <a href="#table-Messunsicherheit" class="nav-item">Messunsicherheit</a>
@@ -526,7 +529,7 @@ body {
 <a href="#table-Dunstabzugsanlage_Feuerstaette" class="nav-item">Dunstabzugsanlage_Feuerstaette</a>
 <a href="#table-Abschnitt_Dunstabzugsleitung" class="nav-item">Abschnitt_Dunstabzugsleitung</a>
 <a href="#table-Ventilator_Dunstabzug" class="nav-item">Ventilator_Dunstabzug</a>
-<a href="#table-Mess_Pruefergebnisse_Dunstabzugsleitung" class="nav-item">Mess_Pruefergebnisse_Dunstabzugsleitung</a>
+<a href="#table-Mess_Pruefergebnis_Dunstabzugsleitung" class="nav-item">Mess_Pruefergebnis_Dunstabzugsleitung</a>
 </div></div>
 <div class="nav-group">
 <div class="nav-group-title" onclick="toggleGroup(this)">
@@ -542,8 +545,7 @@ body {
 </div>
 <div class="nav-group-items">
 <a href="#table-GEG" class="nav-item">GEG</a>
-<a href="#table-Pruefergebnisse_GEG" class="nav-item">Pruefergebnisse_GEG</a>
-<a href="#table-Effizienzlabel" class="nav-item">Effizienzlabel</a>
+<a href="#table-Pruefergebnis_GEG" class="nav-item">Pruefergebnis_GEG</a>
 </div></div>
 <div class="nav-group">
 <div class="nav-group-title" onclick="toggleGroup(this)">
@@ -551,19 +553,20 @@ body {
 </div>
 <div class="nav-group-items">
 <a href="#table-Abnahme" class="nav-item">Abnahme</a>
+<a href="#table-Abnahme_Anlage" class="nav-item">Abnahme_Anlage</a>
 <a href="#table-Anlassbezogene_Ueberpruefung" class="nav-item">Anlassbezogene_Ueberpruefung</a>
 <a href="#table-Sonstige_Arbeit" class="nav-item">Sonstige_Arbeit</a>
 <a href="#table-Feuerstaettenschau" class="nav-item">Feuerstaettenschau</a>
-<a href="#table-Pruefergebnisse_Feuerstaettenschau" class="nav-item">Pruefergebnisse_Feuerstaettenschau</a>
+<a href="#table-Pruefergebnis_Feuerstaettenschau" class="nav-item">Pruefergebnis_Feuerstaettenschau</a>
 </div></div>
 <div class="nav-group">
 <div class="nav-group-title" onclick="toggleGroup(this)">
-<span class="arrow">&#9654;</span> Feuerstaettenbescheid
+<span class="arrow">&#9654;</span> Feuerstättenbescheid
 </div>
 <div class="nav-group-items">
 <a href="#table-Feuerstaettenbescheid_Grunddaten" class="nav-item">Feuerstaettenbescheid_Grunddaten</a>
-<a href="#table-Bescheid_Positionen" class="nav-item">Bescheid_Positionen</a>
-<a href="#table-Bescheid_Termine_Positionen" class="nav-item">Bescheid_Termine_Positionen</a>
+<a href="#table-Bescheid_Position" class="nav-item">Bescheid_Position</a>
+<a href="#table-Bescheid_Termin_Position" class="nav-item">Bescheid_Termin_Position</a>
 </div></div>
 <div class="nav-group">
 <div class="nav-group-title" onclick="toggleGroup(this)">
@@ -574,7 +577,7 @@ body {
 <a href="#table-Aufteilung_Leistung" class="nav-item">Aufteilung_Leistung</a>
 <a href="#table-Datum_Ausfuehrung_Leistung" class="nav-item">Datum_Ausfuehrung_Leistung</a>
 <a href="#table-Rechnung" class="nav-item">Rechnung</a>
-<a href="#table-Landesrechtliche_Vorschriften" class="nav-item">Landesrechtliche_Vorschriften</a>
+<a href="#table-Landesrechtliche_Vorschrift" class="nav-item">Landesrechtliche_Vorschrift</a>
 <a href="#table-Bundes_KUEO" class="nav-item">Bundes_KUEO</a>
 </div></div>
 <div class="nav-group">
@@ -590,13 +593,7 @@ body {
 <a href="#table-Kehrbuch_Taetigkeit" class="nav-item">Kehrbuch_Taetigkeit</a>
 <a href="#table-Kehrbuch_Abnahme" class="nav-item">Kehrbuch_Abnahme</a>
 <a href="#table-Kehrbuch_Anlassbezogene_Ueberpruefung" class="nav-item">Kehrbuch_Anlassbezogene_Ueberpruefung</a>
-</div></div>
-<div class="nav-group">
-<div class="nav-group-title" onclick="toggleGroup(this)">
-<span class="arrow">&#9654;</span> Berichte/Maengel
-</div>
-<div class="nav-group-items">
-<a href="#table-Bericht" class="nav-item">Bericht</a>
+<a href="#table-Kehrbuch_Feuerstaettenschau" class="nav-item">Kehrbuch_Feuerstaettenschau</a>
 <a href="#table-Mangel" class="nav-item">Mangel</a>
 </div></div>
 <div class="nav-group">
@@ -606,7 +603,6 @@ body {
 <div class="nav-group-items">
 <a href="#table-Dachskizze" class="nav-item">Dachskizze</a>
 <a href="#table-Dachskizze_Element" class="nav-item">Dachskizze_Element</a>
-<a href="#table-Belegungsplan" class="nav-item">Belegungsplan</a>
 <a href="#table-Dokument" class="nav-item">Dokument</a>
 <a href="#table-Gefaehrdungsbeurteilung" class="nav-item">Gefaehrdungsbeurteilung</a>
 </div></div>
@@ -1061,7 +1057,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Kehrbezirk">Kehrbezirk</a> <span class="rel-detail">(ID_Vertreter_11, 1:1)</span>, <a href="#table-Kehrbezirk">Kehrbezirk</a> <span class="rel-detail">(ID_Vertreter_11a, 1:1)</span>, <a href="#table-Mitarbeiter">Mitarbeiter</a> <span class="rel-detail">(ID_Vertreter_11b, 1:1)</span>, <a href="#table-Pruefergebnisse_Feuerstaettenschau">Pruefergebnisse_Feuerstaettenschau</a> <span class="rel-detail">(ID_Vertreter, n:1)</span>
+<a href="#table-Kehrbezirk">Kehrbezirk</a> <span class="rel-detail">(ID_Vertreter_11, 1:1)</span>, <a href="#table-Kehrbezirk">Kehrbezirk</a> <span class="rel-detail">(ID_Vertreter_11a, 1:1)</span>, <a href="#table-Mitarbeiter">Mitarbeiter</a> <span class="rel-detail">(ID_Vertreter_11b, 1:1)</span>, <a href="#table-Pruefergebnis_Feuerstaettenschau">Pruefergebnis_Feuerstaettenschau</a> <span class="rel-detail">(ID_Vertreter, n:1)</span>
 </div>
 </div>
 </div>
@@ -1294,7 +1290,7 @@ body {
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Untere_Aufsichtsbehoerde">Untere_Aufsichtsbehoerde</a> <span class="rel-detail">(ID_Kommunikation, 1:1)</span>, <a href="#table-Mitarbeiter">Mitarbeiter</a> <span class="rel-detail">(ID_Kommunikation, 1:1)</span>, <a href="#table-Vertreter">Vertreter</a> <span class="rel-detail">(ID_Kommunikation, 1:1)</span>, <a href="#table-Fremdfirma">Fremdfirma</a> <span class="rel-detail">(ID_Kommunikation, 1:1)</span>, <a href="#table-Grundstueck">Grundstueck</a> <span class="rel-detail">(ID_Kommunikation_Verwalter, n:1)</span>, <a href="#table-Grundstueck">Grundstueck</a> <span class="rel-detail">(ID_Kommunikation_Eigentuemer, n:1)</span>, <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Kommunikation_Mieter, n:1)</span>, <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Kommunikation_Verwalter, n:1)</span>, <a href="#table-Gebaeude_Eigentuemer">Gebaeude_Eigentuemer</a> <span class="rel-detail">(ID_Kommunikation, n:1)</span>, <a href="#table-Nutzungseinheit_Eigentuemer">Nutzungseinheit_Eigentuemer</a> <span class="rel-detail">(ID_Kommunikation, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a> <span class="rel-detail">(ID_Kommunikation_Verwalter, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a> <span class="rel-detail">(ID_Kommunikation_Mieter, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude_Eigentuemer">Kehrbuch_Gebaeude_Eigentuemer</a> <span class="rel-detail">(ID_Kommunikation, n:1)</span>, <a href="#table-Kehrbuch_Nutzungseinheit">Kehrbuch_Nutzungseinheit</a> <span class="rel-detail">(ID_Kommunikation_Wohnungseigentuemer, n:1)</span>, <a href="#table-Kehrbuch_Nutzungseinheit">Kehrbuch_Nutzungseinheit</a> <span class="rel-detail">(ID_Kommunikation_Betreiber, n:1)</span>, <a href="#table-Rechnung">Rechnung</a> <span class="rel-detail">(ID_Kommunikation_Rechnungsempfaenger, n:1)</span>
+<a href="#table-Untere_Aufsichtsbehoerde">Untere_Aufsichtsbehoerde</a> <span class="rel-detail">(ID_Kommunikation, 1:1)</span>, <a href="#table-Mitarbeiter">Mitarbeiter</a> <span class="rel-detail">(ID_Kommunikation, 1:1)</span>, <a href="#table-Vertreter">Vertreter</a> <span class="rel-detail">(ID_Kommunikation, 1:1)</span>, <a href="#table-Fremdfirma">Fremdfirma</a> <span class="rel-detail">(ID_Kommunikation, 1:1)</span>, <a href="#table-Grundstueck">Grundstueck</a> <span class="rel-detail">(ID_Kommunikation_Verwalter, n:1)</span>, <a href="#table-Grundstueck">Grundstueck</a> <span class="rel-detail">(ID_Kommunikation_Eigentuemer, n:1)</span>, <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Kommunikation_Mieter, n:1)</span>, <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Kommunikation_Verwalter, n:1)</span>, <a href="#table-Gebaeude_Eigentuemer">Gebaeude_Eigentuemer</a> <span class="rel-detail">(ID_Kommunikation, n:1)</span>, <a href="#table-Nutzungseinheit_Eigentuemer">Nutzungseinheit_Eigentuemer</a> <span class="rel-detail">(ID_Kommunikation, n:1)</span>, <a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a> <span class="rel-detail">(Empfaenger, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a> <span class="rel-detail">(ID_Kommunikation_Verwalter, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a> <span class="rel-detail">(ID_Kommunikation_Mieter, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude_Eigentuemer">Kehrbuch_Gebaeude_Eigentuemer</a> <span class="rel-detail">(ID_Kommunikation, n:1)</span>, <a href="#table-Kehrbuch_Nutzungseinheit">Kehrbuch_Nutzungseinheit</a> <span class="rel-detail">(ID_Kommunikation_Wohnungseigentuemer, n:1)</span>, <a href="#table-Kehrbuch_Nutzungseinheit">Kehrbuch_Nutzungseinheit</a> <span class="rel-detail">(ID_Kommunikation_Betreiber, n:1)</span>, <a href="#table-Rechnung">Rechnung</a> <span class="rel-detail">(ID_Kommunikation_Rechnungsempfaenger, n:1)</span>
 </div>
 </div>
 </div>
@@ -1523,7 +1519,7 @@ body {
 <td class="center"></td>
 <td><code></code></td>
 <td class="desc-cell">Baublocknummer nach Gemarkungsliste</td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Blocknummer</code></td>
@@ -1735,8 +1731,8 @@ body {
 <td><code>TEXT</code></td>
 <td class="center"></td>
 <td><code></code></td>
-<td class="desc-cell"></td>
-<td class="center">§ QS</td>
+<td class="desc-cell">Betriebsanweisung Gefährdungsbeurteilung objektbezogen</td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Grundstueck</code></td>
@@ -1779,7 +1775,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Gebaeude_Eigentuemer">Gebaeude_Eigentuemer</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Gebaeudeeigenschaft">Gebaeudeeigenschaft</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Abgasanlage">Abgasanlage</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Lueftungsanlage">Lueftungsanlage</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Raumlueftung">Raumlueftung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Nutzungseinheit">Nutzungseinheit</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Abnahme">Abnahme</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Anlassbezogene_Ueberpruefung">Anlassbezogene_Ueberpruefung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Feuerstaettenschau">Feuerstaettenschau</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Leistung">Leistung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Rechnung">Rechnung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Dachskizze">Dachskizze</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Gefaehrdungsbeurteilung">Gefaehrdungsbeurteilung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>
+<a href="#table-Gebaeude_Eigentuemer">Gebaeude_Eigentuemer</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Gebaeudeeigenschaft">Gebaeudeeigenschaft</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Abgasanlage">Abgasanlage</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Lueftungsanlage">Lueftungsanlage</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Raumlueftung">Raumlueftung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Nutzungseinheit">Nutzungseinheit</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Abnahme">Abnahme</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Anlassbezogene_Ueberpruefung">Anlassbezogene_Ueberpruefung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Feuerstaettenschau">Feuerstaettenschau</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Leistung">Leistung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Rechnung">Rechnung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Dachskizze">Dachskizze</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Gefaehrdungsbeurteilung">Gefaehrdungsbeurteilung</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
@@ -2205,7 +2201,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Abschnitt">Abschnitt</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Muendung">Muendung</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Reinigungsart">Reinigungsart</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Feste_Brennstoff_Ableitbedingungen">Feste_Brennstoff_Ableitbedingungen</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Raeucheranlage">Raeucheranlage</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>
+<a href="#table-Muendung">Muendung</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Reinigungsart">Reinigungsart</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Feste_Brennstoff_Ableitbedingungen">Feste_Brennstoff_Ableitbedingungen</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Raeucheranlage">Raeucheranlage</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Abschnitt">Abschnitt</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Abnahme_Anlage">Abnahme_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 </div>
 </div>
@@ -2230,8 +2226,8 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center"></td>
 <td><code></code></td>
-<td class="desc-cell">Reihenfolge des Abschnitts innerhalb der Abgasanlage.</td>
-<td class="center"><span class="badge badge-qs">QS</span></td>
+<td class="desc-cell">Reihenfolge des Abschnitts innerhalb der Abgasanlage/Feuerstätte.</td>
+<td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Errichtung</code></td>
@@ -2506,19 +2502,19 @@ body {
 <td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Abgasanlage</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
+<td class="col-name"><code>Anlagetyp</code></td>
+<td><code>TEXT</code></td>
+<td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Abgasanlage<br><span class="fk-ref">&#8594; <a href="#table-Abgasanlage">Abgasanlage</a></span></td>
+<td class="desc-cell">Typ der zugeordneten Anlage (bestimmt Zieltabelle von ID_Anlage)<br><span class="enum-ref">Enum: <a href="#enum-Enum_AbschnittAnlagetyp">Enum_AbschnittAnlagetyp</a></span></td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Feuerstaette</code></td>
+<td class="col-name"><span class="badge badge-fk" title="Polymorphe Referenz via Anlagetyp">FK*</span> <code>ID_Anlage</code></td>
 <td><code>INTEGER</code></td>
-<td class="center"></td>
+<td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Verbindungsstück einer Feuerstätte<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
+<td class="desc-cell">ID der zugeordneten Anlage (Zieltabelle ergibt sich aus Anlagetyp)</td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 </tbody></table>
@@ -2526,11 +2522,11 @@ body {
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>
+<a href="#table-Abgasanlage">Abgasanlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Schicht">Schicht</a> <span class="rel-detail">(ID_Abschnitt, n:1)</span>
+<a href="#table-Schicht">Schicht</a> <span class="rel-detail">(ID_Abschnitt, n:1)</span>, <a href="#table-Zubehoer">Zubehoer</a> <span class="rel-detail">(ID_Abschnitt, n:1)</span>
 </div>
 </div>
 </div>
@@ -2817,6 +2813,47 @@ body {
 </div>
 </div>
 </div>
+<div class="table-card" id="table-Zubehoer" data-name="zubehoer">
+<h3 class="table-title">Zubehoer</h3>
+<div class="table-responsive">
+<table class="columns-table">
+<thead><tr>
+<th>Spalte</th><th>Datentyp</th><th>NOT NULL</th><th>Default</th><th>Beschreibung / Constraint</th><th>Art</th>
+</tr></thead>
+<tbody>
+<tr class="pk-row">
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Zubehoer</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell"></td>
+<td class="center"></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Abschnitt</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">Zubehoer gehoert zu einem Abschnitt<br><span class="fk-ref">&#8594; <a href="#table-Abschnitt">Abschnitt</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><code>Zubehoer</code></td>
+<td><code>TEXT</code></td>
+<td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Beschreibung des Zubehörs. | Siehe Kennzeichnungstabelle 3.3<br><span class="enum-ref">Enum: <a href="#enum-Enum_Zubehoer">Enum_Zubehoer</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+</tbody></table>
+</div>
+<div class="relations-box">
+<div class="rel-section">
+<strong>Referenziert:</strong> 
+<a href="#table-Abschnitt">Abschnitt</a> <span class="rel-detail">(ID_Abschnitt, n:1)</span>
+</div>
+</div>
+</div>
 <div class="group-header" id="group-Lueftungsanlagen">
 <h2>Lueftungsanlagen</h2>
 </div>
@@ -2885,7 +2922,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Lueftungsanlage, n:1)</span>, <a href="#table-Zubehoer">Zubehoer</a> <span class="rel-detail">(ID_Lueftungsanlage, n:1)</span>
+<a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 </div>
 </div>
@@ -2938,7 +2975,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Raumlueftungsleitung">Raumlueftungsleitung</a> <span class="rel-detail">(ID_Raumlueftung, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Raumlueftung, n:1)</span>
+<a href="#table-Raumlueftungsleitung">Raumlueftungsleitung</a> <span class="rel-detail">(ID_Raumlueftung, n:1)</span>, <a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 </div>
 </div>
@@ -3100,12 +3137,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Raumluftoeffnung">Mess_Pruefergebnisse_Raumluftoeffnung</a> <span class="rel-detail">(ID_Raumluftoeffnung, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Raumluftoeffnung, n:1)</span>
+<a href="#table-Mess_Pruefergebnis_Raumluftoeffnung">Mess_Pruefergebnis_Raumluftoeffnung</a> <span class="rel-detail">(ID_Raumluftoeffnung, n:1)</span>, <a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_Raumluftoeffnung" data-name="mess_pruefergebnisse_raumluftoeffnung">
-<h3 class="table-title">Mess_Pruefergebnisse_Raumluftoeffnung</h3>
+<div class="table-card" id="table-Mess_Pruefergebnis_Raumluftoeffnung" data-name="mess_pruefergebnis_raumluftoeffnung">
+<h3 class="table-title">Mess_Pruefergebnis_Raumluftoeffnung</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -3113,7 +3150,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_Raumluftoeffnung</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_Raumluftoeffnung</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -3201,48 +3238,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Raumluftoeffnung, n:1)</span>
-</div>
-</div>
-</div>
-<div class="table-card" id="table-Zubehoer" data-name="zubehoer">
-<h3 class="table-title">Zubehoer</h3>
-<div class="table-responsive">
-<table class="columns-table">
-<thead><tr>
-<th>Spalte</th><th>Datentyp</th><th>NOT NULL</th><th>Default</th><th>Beschreibung / Constraint</th><th>Art</th>
-</tr></thead>
-<tbody>
-<tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Zubehoer</code></td>
-<td><code>INTEGER</code></td>
-<td class="center">Ja</td>
-<td><code></code></td>
-<td class="desc-cell"></td>
-<td class="center"></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Lueftungsanlage</code></td>
-<td><code>INTEGER</code></td>
-<td class="center">Ja</td>
-<td><code></code></td>
-<td class="desc-cell">Zubehoer gehoert zu Lueftungsanlage (aus Kommentar abgeleitet)<br><span class="fk-ref">&#8594; <a href="#table-Lueftungsanlage">Lueftungsanlage</a></span></td>
-<td class="center"></td>
-</tr>
-<tr>
-<td class="col-name"><code>Zubehoer</code></td>
-<td><code>TEXT</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Beschreibung des Zubehörs. | Siehe Kennzeichnungstabelle 3.3<br><span class="enum-ref">Enum: <a href="#enum-Enum_ZubehoerLueftungsanlagen">Enum_ZubehoerLueftungsanlagen</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-</tbody></table>
-</div>
-<div class="relations-box">
-<div class="rel-section">
-<strong>Referenziert:</strong> 
-<a href="#table-Lueftungsanlage">Lueftungsanlage</a> <span class="rel-detail">(ID_Lueftungsanlage, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
@@ -3270,8 +3266,8 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Kommentar: Eine Nutzungseinheit ist in einem Gebaeude/Gebaeudeteil<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Eine Nutzungseinheit ist in einem Gebaeude/Gebaeudeteil<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>UST_frei</code></td>
@@ -3338,7 +3334,56 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Brennstoffversorgungsanlage">Brennstoffversorgungsanlage</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Nutzungseinheit_Eigentuemer">Nutzungseinheit_Eigentuemer</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Wohnung">Wohnung</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Raeucheranlage">Raeucheranlage</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Sonstige_Arbeit">Sonstige_Arbeit</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Aufteilung_Leistung">Aufteilung_Leistung</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Kehrbuch_Nutzungseinheit">Kehrbuch_Nutzungseinheit</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>
+<a href="#table-Brennstoffversorgungsanlage">Brennstoffversorgungsanlage</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Nutzungseinheit_Eigentuemer">Nutzungseinheit_Eigentuemer</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Wohnung">Wohnung</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Raeucheranlage">Raeucheranlage</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Abnahme">Abnahme</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Anlassbezogene_Ueberpruefung">Anlassbezogene_Ueberpruefung</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Sonstige_Arbeit">Sonstige_Arbeit</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Aufteilung_Leistung">Aufteilung_Leistung</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Kehrbuch_Nutzungseinheit">Kehrbuch_Nutzungseinheit</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
+</div>
+</div>
+</div>
+<div class="table-card" id="table-Nutzungseinheit_Eigentuemer" data-name="nutzungseinheit_eigentuemer">
+<h3 class="table-title">Nutzungseinheit_Eigentuemer</h3>
+<div class="table-responsive">
+<table class="columns-table">
+<thead><tr>
+<th>Spalte</th><th>Datentyp</th><th>NOT NULL</th><th>Default</th><th>Beschreibung / Constraint</th><th>Art</th>
+</tr></thead>
+<tbody>
+<tr class="pk-row">
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Nutzungseinheit_Eigentuemer</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell"></td>
+<td class="center"></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Nutzungseinheit</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">Nutzungseinheit zu der dieser Sondereigentümer gehört.<br><span class="fk-ref">&#8594; <a href="#table-Nutzungseinheit">Nutzungseinheit</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Kommunikation</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">Sondereigentümer (Person/Firma).<br><span class="fk-ref">&#8594; <a href="#table-Kommunikation">Kommunikation</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><code>Sprecher</code></td>
+<td><code>BOOL</code></td>
+<td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Sprecher der Eigentümergemeinschaft.</td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+</tbody></table>
+</div>
+<div class="relations-box">
+<div class="rel-section">
+<strong>Referenziert:</strong> 
+<a href="#table-Nutzungseinheit">Nutzungseinheit</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Kommunikation">Kommunikation</a> <span class="rel-detail">(ID_Kommunikation, n:1)</span>
 </div>
 </div>
 </div>
@@ -3363,8 +3408,8 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Kommentar: Abgeleitet aus Nutzungseinheit<br><span class="fk-ref">&#8594; <a href="#table-Nutzungseinheit">Nutzungseinheit</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Abgeleitet aus Nutzungseinheit<br><span class="fk-ref">&#8594; <a href="#table-Nutzungseinheit">Nutzungseinheit</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Mieter_Vorname</code></td>
@@ -3464,8 +3509,8 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Kommentar: Abgeleitet aus Wohnung<br><span class="fk-ref">&#8594; <a href="#table-Wohnung">Wohnung</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Abgeleitet aus Wohnung<br><span class="fk-ref">&#8594; <a href="#table-Wohnung">Wohnung</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Beschreibung</code></td>
@@ -3528,8 +3573,8 @@ body {
 </div>
 </div>
 </div>
-<div class="group-header" id="group-Feuerstaetten">
-<h2>Feuerstaetten</h2>
+<div class="group-header" id="group-Feuerstätten">
+<h2>Feuerstätten</h2>
 </div>
 <div class="table-card" id="table-Feuerstaette" data-name="feuerstaette">
 <h3 class="table-title">Feuerstaette</h3>
@@ -3552,16 +3597,16 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Kommentar: Verweis auf Raum. Feuerstaette steht in einem Raum<br><span class="fk-ref">&#8594; <a href="#table-Raum">Raum</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Verweis auf Raum. Feuerstaette steht in einem Raum<br><span class="fk-ref">&#8594; <a href="#table-Raum">Raum</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Abgasanlage</code></td>
 <td><code>INTEGER</code></td>
 <td class="center"></td>
 <td><code></code></td>
-<td class="desc-cell">Kommentar: Feuerstaetten sind an einer Abgasanlage angeschlossen (ID_Abgasanlage in Abgasanlage-Kommentar)<br><span class="fk-ref">&#8594; <a href="#table-Abgasanlage">Abgasanlage</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Feuerstaetten sind an einer Abgasanlage angeschlossen (ID_Abgasanlage in Abgasanlage-Kommentar)<br><span class="fk-ref">&#8594; <a href="#table-Abgasanlage">Abgasanlage</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>NWL_min</code></td>
@@ -3948,7 +3993,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Abschnitt">Abschnitt</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Gasfeuerstaette">Gasfeuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>, <a href="#table-Oelfeuerstaette">Oelfeuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>, <a href="#table-Feste_Brennstoff_Feuerstaette">Feste_Brennstoff_Feuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>, <a href="#table-Sonderfeuerstaetten">Sonderfeuerstaetten</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>, <a href="#table-GEG">GEG</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Effizienzlabel">Effizienzlabel</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Nachgeschalteter_Waermeaustauscher">Nachgeschalteter_Waermeaustauscher</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Feuerst_Verbr_Element">Feuerst_Verbr_Element</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Dunstabzugsanlage_Feuerstaette">Dunstabzugsanlage_Feuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>
+<a href="#table-Gasfeuerstaette">Gasfeuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>, <a href="#table-Oelfeuerstaette">Oelfeuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>, <a href="#table-Feste_Brennstoff_Feuerstaette">Feste_Brennstoff_Feuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>, <a href="#table-Sonderfeuerstaette">Sonderfeuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>, <a href="#table-GEG">GEG</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Effizienzlabel">Effizienzlabel</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>, <a href="#table-Nachgeschalteter_Waermeaustauscher">Nachgeschalteter_Waermeaustauscher</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Feuerst_Verbr_Element">Feuerst_Verbr_Element</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Dunstabzugsanlage_Feuerstaette">Dunstabzugsanlage_Feuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Abschnitt">Abschnitt</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Abnahme_Anlage">Abnahme_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 </div>
 </div>
@@ -3974,7 +4019,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Spezialisierung von Feuerstaette fuer Gas<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Brenner_Hersteller</code></td>
@@ -4121,7 +4166,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette</a> <span class="rel-detail">(ID_Gasfeuerstaette, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette">Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette</a> <span class="rel-detail">(ID_Gasfeuerstaette, n:1)</span>
+<a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette</a> <span class="rel-detail">(ID_Gasfeuerstaette, n:1)</span>, <a href="#table-Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette">Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette</a> <span class="rel-detail">(ID_Gasfeuerstaette, n:1)</span>
 </div>
 </div>
 </div>
@@ -4147,7 +4192,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Spezialisierung von Feuerstaette fuer Oel<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Bearbeitungszyklus_KUEO</code></td>
@@ -4302,7 +4347,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette</a> <span class="rel-detail">(ID_Oelfeuerstaette, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette">Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette</a> <span class="rel-detail">(ID_Oelfeuerstaette, n:1)</span>
+<a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette</a> <span class="rel-detail">(ID_Oelfeuerstaette, n:1)</span>, <a href="#table-Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette">Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette</a> <span class="rel-detail">(ID_Oelfeuerstaette, n:1)</span>
 </div>
 </div>
 </div>
@@ -4328,7 +4373,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Spezialisierung von Feuerstaette fuer feste Brennstoffe<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Bearbeitungszyklus_BImSchV</code></td>
@@ -4739,12 +4784,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_HK">Mess_Pruefergebnisse_Feststofffeuerstaetten_HK</a> <span class="rel-detail">(ID_Feste_Brennstoff_Feuerstaette, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF">Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF</a> <span class="rel-detail">(ID_Feste_Brennstoff_Feuerstaette, n:1)</span>
+<a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_HK">Mess_Pruefergebnis_Feststofffeuerstaette_HK</a> <span class="rel-detail">(ID_Feste_Brennstoff_Feuerstaette, n:1)</span>, <a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_ERF">Mess_Pruefergebnis_Feststofffeuerstaette_ERF</a> <span class="rel-detail">(ID_Feste_Brennstoff_Feuerstaette, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Sonderfeuerstaetten" data-name="sonderfeuerstaetten">
-<h3 class="table-title">Sonderfeuerstaetten</h3>
+<div class="table-card" id="table-Sonderfeuerstaette" data-name="sonderfeuerstaette">
+<h3 class="table-title">Sonderfeuerstaette</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -4752,7 +4797,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Sonderfeuerstaetten</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Sonderfeuerstaette</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -4764,8 +4809,8 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Spezialisierung von Feuerstaette fuer Sonderfeuerstaetten<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Spezialisierung von Feuerstaette fuer Sonderfeuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>NWL</code></td>
@@ -4816,7 +4861,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten</a> <span class="rel-detail">(ID_Sonderfeuerstaetten, n:1)</span>
+<a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette</a> <span class="rel-detail">(ID_Sonderfeuerstaette, n:1)</span>
 </div>
 </div>
 </div>
@@ -4842,7 +4887,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Raum in dem die Wärmepumpe steht.<br><span class="fk-ref">&#8594; <a href="#table-Raum">Raum</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Heizlast</code></td>
@@ -5101,7 +5146,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Waermepumpe">Mess_Pruefergebnisse_Waermepumpe</a> <span class="rel-detail">(ID_Waermepumpe, n:1)</span>
+<a href="#table-Mess_Pruefergebnis_Waermepumpe">Mess_Pruefergebnis_Waermepumpe</a> <span class="rel-detail">(ID_Waermepumpe, n:1)</span>
 </div>
 </div>
 </div>
@@ -5126,8 +5171,8 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Kommentar: Ableitbedingungen bei Abgasanlagen mit Feststoff-Feuerstaetten<br><span class="fk-ref">&#8594; <a href="#table-Abgasanlage">Abgasanlage</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Ableitbedingungen bei Abgasanlagen mit Feststoff-Feuerstaetten<br><span class="fk-ref">&#8594; <a href="#table-Abgasanlage">Abgasanlage</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Ableitbedingung_Dach_bis20</code></td>
@@ -5280,7 +5325,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Nachgeschalteter Waermeaustauscher gehoert zu einer Feuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Hersteller</code></td>
@@ -5756,7 +5801,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Brennstoffversorgungsanlage, n:1)</span>
+<a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 </div>
 </div>
@@ -5782,7 +5827,7 @@ body {
 <td class="center"></td>
 <td><code></code></td>
 <td class="desc-cell">Raeucheranlage kann an Abgasanlage angeschlossen sein<br><span class="fk-ref">&#8594; <a href="#table-Abgasanlage">Abgasanlage</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Nutzungseinheit</code></td>
@@ -5857,15 +5902,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Raeucheranlage, n:1)</span>
+<a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 </div>
 </div>
-<div class="group-header" id="group-Messergebnisse">
-<h2>Messergebnisse</h2>
-</div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_Gasfeuerstaette" data-name="mess_pruefergebnisse_gasfeuerstaette">
-<h3 class="table-title">Mess_Pruefergebnisse_Gasfeuerstaette</h3>
+<div class="table-card" id="table-Effizienzlabel" data-name="effizienzlabel">
+<h3 class="table-title">Effizienzlabel</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -5873,7 +5915,83 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_Gasfeuerstaette</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Effizienzlabel</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell"></td>
+<td class="center"></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Feuerstaette</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">Effizienzlabel gehoert zu einer Feuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><code>Effizienzlabel_angebracht</code></td>
+<td><code>TEXT</code></td>
+<td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Angabe wer das Label angebracht hat<br><span class="enum-ref">Enum: <a href="#enum-Enum_EffizienzlabelAngebracht">Enum_EffizienzlabelAngebracht</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><code>Datum</code></td>
+<td><code>DATE</code></td>
+<td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Wenn das Effizienzlabel durch einen Berechtigten angebracht wurde, ist das Datum der Feststellung; bei Anbringung durch den bBSF gilt das Datum der Anbringung.</td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><code>Energieeffizienzklasse</code></td>
+<td><code>TEXT</code></td>
+<td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Energieeffizienzklasse der jeweiligen Feuerstätte | Siehe Kennzeichnungstabelle 2.2.9<br><span class="enum-ref">Enum: <a href="#enum-Enum_EffizienzlabelEffizienzklasse">Enum_EffizienzlabelEffizienzklasse</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><code>Etikettennummer</code></td>
+<td><code>TEXT</code></td>
+<td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Beispiel: 1A0.000.123.5B</td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><code>Abgerechnet</code></td>
+<td><code>DATE</code></td>
+<td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Datum, an dem das Label mit dem BAFA abgerechnet wurde.</td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
+</tr>
+</tbody></table>
+</div>
+<div class="relations-box">
+<div class="rel-section">
+<strong>Referenziert:</strong> 
+<a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, 1:1)</span>
+</div>
+</div>
+</div>
+<div class="group-header" id="group-Messergebnisse">
+<h2>Messergebnisse</h2>
+</div>
+<div class="table-card" id="table-Mess_Pruefergebnis_Gasfeuerstaette" data-name="mess_pruefergebnis_gasfeuerstaette">
+<h3 class="table-title">Mess_Pruefergebnis_Gasfeuerstaette</h3>
+<div class="table-responsive">
+<table class="columns-table">
+<thead><tr>
+<th>Spalte</th><th>Datentyp</th><th>NOT NULL</th><th>Default</th><th>Beschreibung / Constraint</th><th>Art</th>
+</tr></thead>
+<tbody>
+<tr class="pk-row">
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_Gasfeuerstaette</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -5886,7 +6004,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Messergebnisse gehoeren zu einer Gasfeuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Gasfeuerstaette">Gasfeuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>MIN</code></td>
@@ -6305,12 +6423,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Gasfeuerstaette, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette" data-name="mess_pruefergebnisse_44bimschv_gasfeuerstaette">
-<h3 class="table-title">Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette</h3>
+<div class="table-card" id="table-Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette" data-name="mess_pruefergebnis_44bimschv_gasfeuerstaette">
+<h3 class="table-title">Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -6318,7 +6436,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -6331,7 +6449,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">44BImSchV-Messergebnisse gehoeren zu einer Gasfeuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Gasfeuerstaette">Gasfeuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>MIN</code></td>
@@ -6534,8 +6652,8 @@ body {
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_Oelfeuerstaette" data-name="mess_pruefergebnisse_oelfeuerstaette">
-<h3 class="table-title">Mess_Pruefergebnisse_Oelfeuerstaette</h3>
+<div class="table-card" id="table-Mess_Pruefergebnis_Oelfeuerstaette" data-name="mess_pruefergebnis_oelfeuerstaette">
+<h3 class="table-title">Mess_Pruefergebnis_Oelfeuerstaette</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -6543,7 +6661,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_Oelfeuerstaette</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_Oelfeuerstaette</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -6556,7 +6674,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Messergebnisse gehoeren zu einer Oelfeuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Oelfeuerstaette">Oelfeuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>MIN</code></td>
@@ -7015,12 +7133,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Oelfeuerstaette, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette" data-name="mess_pruefergebnisse_44bimschv_oelfeuerstaette">
-<h3 class="table-title">Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette</h3>
+<div class="table-card" id="table-Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette" data-name="mess_pruefergebnis_44bimschv_oelfeuerstaette">
+<h3 class="table-title">Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -7028,7 +7146,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -7041,7 +7159,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">44BImSchV-Messergebnisse gehoeren zu einer Oelfeuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Oelfeuerstaette">Oelfeuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>MIN</code></td>
@@ -7292,8 +7410,8 @@ body {
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_Feststofffeuerstaetten_HK" data-name="mess_pruefergebnisse_feststofffeuerstaetten_hk">
-<h3 class="table-title">Mess_Pruefergebnisse_Feststofffeuerstaetten_HK</h3>
+<div class="table-card" id="table-Mess_Pruefergebnis_Feststofffeuerstaette_HK" data-name="mess_pruefergebnis_feststofffeuerstaette_hk">
+<h3 class="table-title">Mess_Pruefergebnis_Feststofffeuerstaette_HK</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -7301,7 +7419,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_HK</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_Feststofffeuerstaette_HK</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -7314,7 +7432,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">HK-Messergebnisse gehoeren zu Feststofffeuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Feste_Brennstoff_Feuerstaette">Feste_Brennstoff_Feuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>MIN</code></td>
@@ -7749,12 +7867,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_HK, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF" data-name="mess_pruefergebnisse_feststofffeuerstaetten_erf">
-<h3 class="table-title">Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF</h3>
+<div class="table-card" id="table-Mess_Pruefergebnis_Feststofffeuerstaette_ERF" data-name="mess_pruefergebnis_feststofffeuerstaette_erf">
+<h3 class="table-title">Mess_Pruefergebnis_Feststofffeuerstaette_ERF</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -7762,7 +7880,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_Feststofffeuerstaette_ERF</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -7775,7 +7893,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">ERF-Messergebnisse gehoeren zu Feststofffeuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Feste_Brennstoff_Feuerstaette">Feste_Brennstoff_Feuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>MIN</code></td>
@@ -8130,12 +8248,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_Sonderfeuerstaetten" data-name="mess_pruefergebnisse_sonderfeuerstaetten">
-<h3 class="table-title">Mess_Pruefergebnisse_Sonderfeuerstaetten</h3>
+<div class="table-card" id="table-Mess_Pruefergebnis_Sonderfeuerstaette" data-name="mess_pruefergebnis_sonderfeuerstaette">
+<h3 class="table-title">Mess_Pruefergebnis_Sonderfeuerstaette</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -8143,7 +8261,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_Sonderfeuerstaetten</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_Sonderfeuerstaette</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -8151,12 +8269,12 @@ body {
 <td class="center"></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Sonderfeuerstaetten</code></td>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Sonderfeuerstaette</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Messergebnisse gehoeren zu Sonderfeuerstaetten<br><span class="fk-ref">&#8594; <a href="#table-Sonderfeuerstaetten">Sonderfeuerstaetten</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Messergebnisse gehoeren zu Sonderfeuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Sonderfeuerstaette">Sonderfeuerstaette</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>MIN</code></td>
@@ -8395,16 +8513,16 @@ body {
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Sonderfeuerstaetten">Sonderfeuerstaetten</a> <span class="rel-detail">(ID_Sonderfeuerstaetten, n:1)</span>
+<a href="#table-Sonderfeuerstaette">Sonderfeuerstaette</a> <span class="rel-detail">(ID_Sonderfeuerstaette, n:1)</span>
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Sonderfeuerstaetten, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_Waermepumpe" data-name="mess_pruefergebnisse_waermepumpe">
-<h3 class="table-title">Mess_Pruefergebnisse_Waermepumpe</h3>
+<div class="table-card" id="table-Mess_Pruefergebnis_Waermepumpe" data-name="mess_pruefergebnis_waermepumpe">
+<h3 class="table-title">Mess_Pruefergebnis_Waermepumpe</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -8412,7 +8530,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_Waermepumpe</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_Waermepumpe</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -8425,7 +8543,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Messergebnisse gehoeren zu Waermepumpe<br><span class="fk-ref">&#8594; <a href="#table-Waermepumpe">Waermepumpe</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Ausfuehrungsdatum</code></td>
@@ -8676,7 +8794,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Waermepumpe, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
@@ -8702,7 +8820,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Messgeraete gehoeren zum Kehrbezirk<br><span class="fk-ref">&#8594; <a href="#table-Kehrbezirk">Kehrbezirk</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>MIN</code></td>
@@ -8771,7 +8889,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">44BImSchV-Messgeraete gehoeren zum Kehrbezirk<br><span class="fk-ref">&#8594; <a href="#table-Kehrbezirk">Kehrbezirk</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>MIN</code></td>
@@ -8852,7 +8970,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Messunsicherheit bezieht sich auf ein Messgeraet<br><span class="fk-ref">&#8594; <a href="#table-Messgeraet">Messgeraet</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Russ</code></td>
@@ -8959,8 +9077,8 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Kommentar: Dunstabzugsleitung eines Gebaeude/Gebaeudeteils<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Dunstabzugsleitung eines Gebaeude/Gebaeudeteils<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Anzahl_Geschoss</code></td>
@@ -9087,7 +9205,7 @@ body {
 <td><code>TEXT</code></td>
 <td class="center"></td>
 <td><code></code></td>
-<td class="desc-cell">Siehe Kennzeichnungstabelle 3.3 | Siehe Kennzeichnungstabelle 3.3<br><span class="enum-ref">Enum: <a href="#enum-Enum_ZubehoerLueftungsanlagen">Enum_ZubehoerLueftungsanlagen</a></span></td>
+<td class="desc-cell">Siehe Kennzeichnungstabelle 3.3 | Siehe Kennzeichnungstabelle 3.3</td>
 <td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 </tbody></table>
@@ -9099,7 +9217,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Dunstabzugsleitung">Mess_Pruefergebnisse_Dunstabzugsleitung</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>, <a href="#table-Dunstabzugsanlage_Haube">Dunstabzugsanlage_Haube</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>, <a href="#table-Ventilator_Dunstabzug">Ventilator_Dunstabzug</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>
+<a href="#table-Mess_Pruefergebnis_Dunstabzugsleitung">Mess_Pruefergebnis_Dunstabzugsleitung</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>, <a href="#table-Dunstabzugsanlage_Haube">Dunstabzugsanlage_Haube</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>, <a href="#table-Ventilator_Dunstabzug">Ventilator_Dunstabzug</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>, <a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 </div>
 </div>
@@ -9125,7 +9243,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Haube gehoert zu Dunstabzugsleitung<br><span class="fk-ref">&#8594; <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Raum</code></td>
@@ -9611,7 +9729,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Abschnitt gehoert zur Dunstabzugsleitung<br><span class="fk-ref">&#8594; <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Sortiernummer</code></td>
@@ -9619,7 +9737,7 @@ body {
 <td class="center"></td>
 <td><code></code></td>
 <td class="desc-cell">Reihenfolge des Abschnitts innerhalb der Dunstabzugsleitung.</td>
-<td class="center"><span class="badge badge-qs">QS</span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Brennstoff_Arten</code></td>
@@ -9996,7 +10114,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Ventilator gehoert zur Dunstabzugsleitung<br><span class="fk-ref">&#8594; <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Geschoss</code></td>
@@ -10103,8 +10221,8 @@ body {
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Mess_Pruefergebnisse_Dunstabzugsleitung" data-name="mess_pruefergebnisse_dunstabzugsleitung">
-<h3 class="table-title">Mess_Pruefergebnisse_Dunstabzugsleitung</h3>
+<div class="table-card" id="table-Mess_Pruefergebnis_Dunstabzugsleitung" data-name="mess_pruefergebnis_dunstabzugsleitung">
+<h3 class="table-title">Mess_Pruefergebnis_Dunstabzugsleitung</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -10112,7 +10230,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnisse_Dunstabzugsleitung</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Mess_Pruefergebnis_Dunstabzugsleitung</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -10125,7 +10243,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Messergebnisse gehoeren zu Dunstabzugsleitung<br><span class="fk-ref">&#8594; <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Nummer</code></td>
@@ -10256,7 +10374,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Dunstabzugsleitung, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
@@ -10410,7 +10528,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Verknuepfungstabelle: Feuerstaette &lt;-&gt; Verbrennungsluftzufuhr_Element<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Verbrennungsluftzufuhr_Element</code></td>
@@ -10418,7 +10536,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Verknuepfungstabelle: Feuerstaette &lt;-&gt; Verbrennungsluftzufuhr_Element<br><span class="fk-ref">&#8594; <a href="#table-Verbrennungsluftzufuhr_Element">Verbrennungsluftzufuhr_Element</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>VL_Raum_Art</code></td>
@@ -10462,7 +10580,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">GEG-Daten beziehen sich auf eine Feuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Kaufdatum_Gebaeude</code></td>
@@ -10993,12 +11111,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Pruefergebnisse_GEG">Pruefergebnisse_GEG</a> <span class="rel-detail">(ID_GEG, n:1)</span>
+<a href="#table-Pruefergebnis_GEG">Pruefergebnis_GEG</a> <span class="rel-detail">(ID_GEG, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Pruefergebnisse_GEG" data-name="pruefergebnisse_geg">
-<h3 class="table-title">Pruefergebnisse_GEG</h3>
+<div class="table-card" id="table-Pruefergebnis_GEG" data-name="pruefergebnis_geg">
+<h3 class="table-title">Pruefergebnis_GEG</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -11006,7 +11124,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Pruefergebnisse_GEG</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Pruefergebnis_GEG</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -11019,7 +11137,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">GEG-Pruefergebnisse gehoeren zu GEG-Eintrag<br><span class="fk-ref">&#8594; <a href="#table-GEG">GEG</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Datum_Behoerde</code></td>
@@ -11094,80 +11212,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Pruefergebnisse_GEG, n:1)</span>
-</div>
-</div>
-</div>
-<div class="table-card" id="table-Effizienzlabel" data-name="effizienzlabel">
-<h3 class="table-title">Effizienzlabel</h3>
-<div class="table-responsive">
-<table class="columns-table">
-<thead><tr>
-<th>Spalte</th><th>Datentyp</th><th>NOT NULL</th><th>Default</th><th>Beschreibung / Constraint</th><th>Art</th>
-</tr></thead>
-<tbody>
-<tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Effizienzlabel</code></td>
-<td><code>INTEGER</code></td>
-<td class="center">Ja</td>
-<td><code></code></td>
-<td class="desc-cell"></td>
-<td class="center"></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Feuerstaette</code></td>
-<td><code>INTEGER</code></td>
-<td class="center">Ja</td>
-<td><code></code></td>
-<td class="desc-cell">Effizienzlabel gehoert zu einer Feuerstaette<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
-<td class="center"></td>
-</tr>
-<tr>
-<td class="col-name"><code>Effizienzlabel_angebracht</code></td>
-<td><code>TEXT</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Angabe wer das Label angebracht hat<br><span class="enum-ref">Enum: <a href="#enum-Enum_EffizienzlabelAngebracht">Enum_EffizienzlabelAngebracht</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-<tr>
-<td class="col-name"><code>Datum</code></td>
-<td><code>DATE</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Wenn das Effizienzlabel durch einen Berechtigten angebracht wurde, ist das Datum der Feststellung; bei Anbringung durch den bBSF gilt das Datum der Anbringung.</td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-<tr>
-<td class="col-name"><code>Energieeffizienzklasse</code></td>
-<td><code>TEXT</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Energieeffizienzklasse der jeweiligen Feuerstätte | Siehe Kennzeichnungstabelle 2.2.9<br><span class="enum-ref">Enum: <a href="#enum-Enum_EffizienzlabelEffizienzklasse">Enum_EffizienzlabelEffizienzklasse</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-<tr>
-<td class="col-name"><code>Etikettennummer</code></td>
-<td><code>TEXT</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Beispiel: 1A0.000.123.5B</td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-<tr>
-<td class="col-name"><code>Abgerechnet</code></td>
-<td><code>DATE</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Datum, an dem das Label mit dem BAFA abgerechnet wurde.</td>
-<td class="center"><span class="badge badge-qs">QS</span></td>
-</tr>
-</tbody></table>
-</div>
-<div class="relations-box">
-<div class="rel-section">
-<strong>Referenziert:</strong> 
-<a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
@@ -11196,7 +11241,15 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Abnahme bezieht sich auf ein Gebaeude/Gebaeudeteil<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Nutzungseinheit</code></td>
+<td><code>INTEGER</code></td>
 <td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Optionaler Verweis auf die Nutzungseinheit, in der die Abnahme stattfindet.<br><span class="fk-ref">&#8594; <a href="#table-Nutzungseinheit">Nutzungseinheit</a></span></td>
+<td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Typ</code></td>
@@ -11251,11 +11304,60 @@ body {
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>
+<a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Nutzungseinheit">Nutzungseinheit</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Kehrbuch_Abnahme">Kehrbuch_Abnahme</a> <span class="rel-detail">(ID_Abnahme, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Abnahme, n:1)</span>
+<a href="#table-Abnahme_Anlage">Abnahme_Anlage</a> <span class="rel-detail">(ID_Abnahme, n:1)</span>, <a href="#table-Kehrbuch_Abnahme">Kehrbuch_Abnahme</a> <span class="rel-detail">(ID_Abnahme, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
+</div>
+</div>
+</div>
+<div class="table-card" id="table-Abnahme_Anlage" data-name="abnahme_anlage">
+<h3 class="table-title">Abnahme_Anlage</h3>
+<div class="table-responsive">
+<table class="columns-table">
+<thead><tr>
+<th>Spalte</th><th>Datentyp</th><th>NOT NULL</th><th>Default</th><th>Beschreibung / Constraint</th><th>Art</th>
+</tr></thead>
+<tbody>
+<tr class="pk-row">
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Abnahme_Anlage</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell"></td>
+<td class="center"></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Abnahme</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">Verweis auf die Abnahme<br><span class="fk-ref">&#8594; <a href="#table-Abnahme">Abnahme</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><code>Anlagetyp</code></td>
+<td><code>TEXT</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">Typ der zugeordneten Anlage (bestimmt Zieltabelle von ID_Anlage)<br><span class="enum-ref">Enum: <a href="#enum-Enum_AbschnittAnlagetyp">Enum_AbschnittAnlagetyp</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Polymorphe Referenz via Anlagetyp">FK*</span> <code>ID_Anlage</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">ID der zugeordneten Anlage (Zieltabelle ergibt sich aus Anlagetyp)</td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+</tbody></table>
+</div>
+<div class="relations-box">
+<div class="rel-section">
+<strong>Referenziert:</strong> 
+<a href="#table-Abnahme">Abnahme</a> <span class="rel-detail">(ID_Abnahme, n:1)</span>, <a href="#table-Abgasanlage">Abgasanlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 </div>
 </div>
@@ -11281,7 +11383,15 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Anlassbezogene Ueberpruefung bezieht sich auf ein Gebaeude/Gebaeudeteil<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Nutzungseinheit</code></td>
+<td><code>INTEGER</code></td>
 <td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Optionaler Verweis auf die Nutzungseinheit, in der die anlassbezogene Überprüfung stattfindet.<br><span class="fk-ref">&#8594; <a href="#table-Nutzungseinheit">Nutzungseinheit</a></span></td>
+<td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Berechnungstyp</code></td>
@@ -11344,11 +11454,11 @@ body {
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>
+<a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Nutzungseinheit">Nutzungseinheit</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Kehrbuch_Anlassbezogene_Ueberpruefung">Kehrbuch_Anlassbezogene_Ueberpruefung</a> <span class="rel-detail">(ID_Anlassbezogene_Ueberpruefung, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Anlassbezogene_Ueberpruefung, n:1)</span>
+<a href="#table-Kehrbuch_Anlassbezogene_Ueberpruefung">Kehrbuch_Anlassbezogene_Ueberpruefung</a> <span class="rel-detail">(ID_Anlassbezogene_Ueberpruefung, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
@@ -11374,7 +11484,7 @@ body {
 <td class="center"></td>
 <td><code></code></td>
 <td class="desc-cell">Verweis auf die Nutzungseinheit. Sonstige Arbeiten können in der Nutzungseinheit eines Gebäudes/Gebäudeteils anfallen.<br><span class="fk-ref">&#8594; <a href="#table-Nutzungseinheit">Nutzungseinheit</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Typ</code></td>
@@ -11455,7 +11565,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Feuerstaettenschau bezieht sich auf ein Gebaeude/Gebaeudeteil<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Datum</code></td>
@@ -11498,12 +11608,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Pruefergebnisse_Feuerstaettenschau">Pruefergebnisse_Feuerstaettenschau</a> <span class="rel-detail">(ID_Feuerstaettenschau, n:1)</span>
+<a href="#table-Kehrbuch_Feuerstaettenschau">Kehrbuch_Feuerstaettenschau</a> <span class="rel-detail">(ID_Feuerstaettenschau, n:1)</span>, <a href="#table-Pruefergebnis_Feuerstaettenschau">Pruefergebnis_Feuerstaettenschau</a> <span class="rel-detail">(ID_Feuerstaettenschau, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Pruefergebnisse_Feuerstaettenschau" data-name="pruefergebnisse_feuerstaettenschau">
-<h3 class="table-title">Pruefergebnisse_Feuerstaettenschau</h3>
+<div class="table-card" id="table-Pruefergebnis_Feuerstaettenschau" data-name="pruefergebnis_feuerstaettenschau">
+<h3 class="table-title">Pruefergebnis_Feuerstaettenschau</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -11511,7 +11621,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Pruefergebnisse_Feuerstaettenschau</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Pruefergebnis_Feuerstaettenschau</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -11524,7 +11634,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Pruefergebnisse gehoeren zur Feuerstaettenschau<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaettenschau">Feuerstaettenschau</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Ausfuehrungsdatum</code></td>
@@ -11671,12 +11781,12 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mangel">Mangel</a> <span class="rel-detail">(ID_Pruefergebnisse_Feuerstaettenschau, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Pruefergebnisse_Feuerstaettenschau, n:1)</span>
+<a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
-<div class="group-header" id="group-Feuerstaettenbescheid">
-<h2>Feuerstaettenbescheid</h2>
+<div class="group-header" id="group-Feuerstättenbescheid">
+<h2>Feuerstättenbescheid</h2>
 </div>
 <div class="table-card" id="table-Feuerstaettenbescheid_Grunddaten" data-name="feuerstaettenbescheid_grunddaten">
 <h3 class="table-title">Feuerstaettenbescheid_Grunddaten</h3>
@@ -11700,7 +11810,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Feuerstaettenbescheid bezieht sich auf ein Gebaeude/Gebaeudeteil<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Ausstellungsdatum</code></td>
@@ -11723,7 +11833,7 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center"></td>
 <td><code></code></td>
-<td class="desc-cell">Datum der nächsten Feuerstättenschau.</td>
+<td class="desc-cell">Jahr der nächsten Feuerstättenschau</td>
 <td class="center"><span class="badge badge-19">19K wenn ausgefüllt und an Kunden mitgeteilt.</span></td>
 </tr>
 <tr>
@@ -11742,21 +11852,29 @@ body {
 <td class="desc-cell">Art des Feuerstättenbescheides<br><span class="enum-ref">Enum: <a href="#enum-Enum_FeuerstaettenbescheidArt">Enum_FeuerstaettenbescheidArt</a></span></td>
 <td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>Empfaenger</code></td>
+<td><code>INTEGER</code></td>
+<td class="center"></td>
+<td><code></code></td>
+<td class="desc-cell">Empfaenger des Feuerstättenbescheids<br><span class="fk-ref">&#8594; <a href="#table-Kommunikation">Kommunikation</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
+</tr>
 </tbody></table>
 </div>
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>
+<a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Kommunikation">Kommunikation</a> <span class="rel-detail">(Empfaenger, n:1)</span>
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Bescheid_Positionen">Bescheid_Positionen</a> <span class="rel-detail">(ID_Feuerstaettenbescheid_Grunddaten, n:1)</span>, <a href="#table-Bescheid_Termine_Positionen">Bescheid_Termine_Positionen</a> <span class="rel-detail">(ID_Feuerstaettenbescheid_Grunddaten, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Feuerstaettenbescheid_Grunddaten, n:1)</span>
+<a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Feuerstaettenbescheid_Grunddaten, n:1)</span>, <a href="#table-Dokument">Dokument</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Bescheid_Positionen" data-name="bescheid_positionen">
-<h3 class="table-title">Bescheid_Positionen</h3>
+<div class="table-card" id="table-Bescheid_Position" data-name="bescheid_position">
+<h3 class="table-title">Bescheid_Position</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -11764,7 +11882,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Bescheid_Positionen</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Bescheid_Position</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -11777,7 +11895,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Position gehoert zu Feuerstaettenbescheid<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Positionsnummer</code></td>
@@ -11811,21 +11929,37 @@ body {
 <td class="desc-cell">Auflistung der Kürzel der auszuführenden Arbeiten. Aus diesen Kürzeln kann die Rechtsgrundlage ersehen werden. Siehe Ordner Z_Bund-Spezifikation: Kürzel- und Gebührenverzeichnis_Hoheitliche Tätigkeiten_2013-04-17+Formeln z.B. Nr. 3.1 Anlage 1 zu § 1 Abs. 4 KUEO</td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
+<tr>
+<td class="col-name"><code>Anlagetyp</code></td>
+<td><code>TEXT</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">Typ der zugeordneten Anlage (bestimmt Zieltabelle von ID_Anlage)<br><span class="enum-ref">Enum: <a href="#enum-Enum_Anlagetyp">Enum_Anlagetyp</a></span></td>
+<td class="center"><span class="badge badge-19">19K</span></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Polymorphe Referenz via Anlagetyp">FK*</span> <code>ID_Anlage</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">ID der zugeordneten Anlage (Zieltabelle ergibt sich aus Anlagetyp)</td>
+<td class="center"><span class="badge badge-19">19K</span></td>
+</tr>
 </tbody></table>
 </div>
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a> <span class="rel-detail">(ID_Feuerstaettenbescheid_Grunddaten, n:1)</span>
+<a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a> <span class="rel-detail">(ID_Feuerstaettenbescheid_Grunddaten, n:1)</span>, <a href="#table-Abgasanlage">Abgasanlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Raumluftoeffnung">Raumluftoeffnung</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Lueftungsanlage">Lueftungsanlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Raumlueftung">Raumlueftung</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Raeucheranlage">Raeucheranlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Brennstoffversorgungsanlage">Brennstoffversorgungsanlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Bescheid_Positionen, n:1)</span>, <a href="#table-Bescheid_Termine_Positionen">Bescheid_Termine_Positionen</a> <span class="rel-detail">(ID_Bescheid_Positionen, n:1)</span>
+<a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Bescheid_Position, n:1)</span>, <a href="#table-Bescheid_Termin_Position">Bescheid_Termin_Position</a> <span class="rel-detail">(ID_Bescheid_Position, n:1)</span>
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Bescheid_Termine_Positionen" data-name="bescheid_termine_positionen">
-<h3 class="table-title">Bescheid_Termine_Positionen</h3>
+<div class="table-card" id="table-Bescheid_Termin_Position" data-name="bescheid_termin_position">
+<h3 class="table-title">Bescheid_Termin_Position</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -11833,7 +11967,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Bescheid_Termine_Positionen</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Bescheid_Termin_Position</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -11841,20 +11975,12 @@ body {
 <td class="center"></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Feuerstaettenbescheid_Grunddaten</code></td>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Bescheid_Position</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Termin gehoert zu Feuerstaettenbescheid<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a></span></td>
-<td class="center"></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Bescheid_Positionen</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Termin kann sich auf eine Position beziehen<br><span class="fk-ref">&#8594; <a href="#table-Bescheid_Positionen">Bescheid_Positionen</a></span></td>
-<td class="center"></td>
+<td class="desc-cell">Termin bezieht sich auf eine Position des Feuerstättenbescheids<br><span class="fk-ref">&#8594; <a href="#table-Bescheid_Position">Bescheid_Position</a></span></td>
+<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Start_Zeitraum</code></td>
@@ -11877,7 +12003,7 @@ body {
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a> <span class="rel-detail">(ID_Feuerstaettenbescheid_Grunddaten, n:1)</span>, <a href="#table-Bescheid_Positionen">Bescheid_Positionen</a> <span class="rel-detail">(ID_Bescheid_Positionen, n:1)</span>
+<a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Bescheid_Position, n:1)</span>
 </div>
 </div>
 </div>
@@ -11906,7 +12032,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Leistung bezieht sich auf ein Gebaeude/Gebaeudeteil<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Kuerzel</code></td>
@@ -11991,7 +12117,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Aufteilung gehoert zu einer Leistung<br><span class="fk-ref">&#8594; <a href="#table-Leistung">Leistung</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Nutzungseinheit</code></td>
@@ -11999,7 +12125,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Aufteilung auf eine Nutzungseinheit<br><span class="fk-ref">&#8594; <a href="#table-Nutzungseinheit">Nutzungseinheit</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 </tbody></table>
 </div>
@@ -12032,7 +12158,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Ausfuehrungsdatum gehoert zu einer Leistung<br><span class="fk-ref">&#8594; <a href="#table-Leistung">Leistung</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Ausfuehrung</code></td>
@@ -12081,7 +12207,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Rechnung bezieht sich auf ein Gebaeude/Gebaeudeteil<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-nein">NEIN</span></td>
 </tr>
 <tr>
 <td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Kommunikation_Rechnungsempfaenger</code></td>
@@ -12089,7 +12215,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Rechnung hat einen Rechnungsempfaenger<br><span class="fk-ref">&#8594; <a href="#table-Kommunikation">Kommunikation</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-nein">NEIN</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Rechnungsdatum</code></td>
@@ -12196,8 +12322,8 @@ body {
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Landesrechtliche_Vorschriften" data-name="landesrechtliche_vorschriften">
-<h3 class="table-title">Landesrechtliche_Vorschriften</h3>
+<div class="table-card" id="table-Landesrechtliche_Vorschrift" data-name="landesrechtliche_vorschrift">
+<h3 class="table-title">Landesrechtliche_Vorschrift</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -12205,7 +12331,7 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Landesrechtliche_Vorschriften</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Landesrechtliche_Vorschrift</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
@@ -12611,7 +12737,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Feuerstaettenschau">Feuerstaettenschau</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude_Eigentuemer">Kehrbuch_Gebaeude_Eigentuemer</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Kehrbuch_Nutzungseinheit">Kehrbuch_Nutzungseinheit</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>
+<a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Kehrbuch_Feuerstaettenschau">Kehrbuch_Feuerstaettenschau</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Feuerstaettenschau">Feuerstaettenschau</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Kehrbuch_Gebaeude_Eigentuemer">Kehrbuch_Gebaeude_Eigentuemer</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Kehrbuch_Nutzungseinheit">Kehrbuch_Nutzungseinheit</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>
 </div>
 </div>
 </div>
@@ -12701,7 +12827,7 @@ body {
 <td><code>INTEGER</code></td>
 <td class="center"></td>
 <td><code></code></td>
-<td class="desc-cell">Wohnungseigentümer zum Zeitpunkt des Kehrbuchzeitraums.<br><span class="fk-ref">&#8594; <a href="#table-Kommunikation">Kommunikation</a></span></td>
+<td class="desc-cell">Wohnungseigentümer bzw. Sprecher bei Eigentümergemeinschaft zum Zeitpunkt des Kehrbuchzeitraums.<br><span class="fk-ref">&#8594; <a href="#table-Kommunikation">Kommunikation</a></span></td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
@@ -12750,75 +12876,27 @@ body {
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Abgasanlage</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
+<td class="col-name"><code>Anlagetyp</code></td>
+<td><code>TEXT</code></td>
+<td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Senkrechte Teile (Schornstein, Abgasleitung)<br><span class="fk-ref">&#8594; <a href="#table-Abgasanlage">Abgasanlage</a></span></td>
+<td class="desc-cell">Typ der zugeordneten Anlage (bestimmt Zieltabelle von ID_Anlage)<br><span class="enum-ref">Enum: <a href="#enum-Enum_Anlagetyp">Enum_Anlagetyp</a></span></td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Feuerstaette</code></td>
+<td class="col-name"><span class="badge badge-fk" title="Polymorphe Referenz via Anlagetyp">FK*</span> <code>ID_Anlage</code></td>
 <td><code>INTEGER</code></td>
-<td class="center"></td>
+<td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Feuerstätte mit Verbindungsstück<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaette">Feuerstaette</a></span></td>
+<td class="desc-cell">ID der zugeordneten Anlage (Zieltabelle ergibt sich aus Anlagetyp)</td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Raumluftoeffnung</code></td>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Bescheid_Position</code></td>
 <td><code>INTEGER</code></td>
 <td class="center"></td>
 <td><code></code></td>
-<td class="desc-cell">Luftöffnung<br><span class="fk-ref">&#8594; <a href="#table-Raumluftoeffnung">Raumluftoeffnung</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Dunstabzuganlage_Leitung</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Dunstschacht / Dunstabzugsleitung<br><span class="fk-ref">&#8594; <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Lueftungsanlage</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Lüftungsanlage<br><span class="fk-ref">&#8594; <a href="#table-Lueftungsanlage">Lueftungsanlage</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Raumlueftung</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Raumlüftung<br><span class="fk-ref">&#8594; <a href="#table-Raumlueftung">Raumlueftung</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Raeucheranlage</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Räucheranlage<br><span class="fk-ref">&#8594; <a href="#table-Raeucheranlage">Raeucheranlage</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Brennstoffversorgungsanlage</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Brennstoffversorgungsanlage<br><span class="fk-ref">&#8594; <a href="#table-Brennstoffversorgungsanlage">Brennstoffversorgungsanlage</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Bescheid_Positionen</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Position im Feuerstättenbescheid<br><span class="fk-ref">&#8594; <a href="#table-Bescheid_Positionen">Bescheid_Positionen</a></span></td>
+<td class="desc-cell">Position im Feuerstättenbescheid<br><span class="fk-ref">&#8594; <a href="#table-Bescheid_Position">Bescheid_Position</a></span></td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
@@ -12858,7 +12936,7 @@ body {
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Abgasanlage">Abgasanlage</a> <span class="rel-detail">(ID_Abgasanlage, n:1)</span>, <a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Feuerstaette, n:1)</span>, <a href="#table-Raumluftoeffnung">Raumluftoeffnung</a> <span class="rel-detail">(ID_Raumluftoeffnung, n:1)</span>, <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a> <span class="rel-detail">(ID_Dunstabzuganlage_Leitung, n:1)</span>, <a href="#table-Lueftungsanlage">Lueftungsanlage</a> <span class="rel-detail">(ID_Lueftungsanlage, n:1)</span>, <a href="#table-Raumlueftung">Raumlueftung</a> <span class="rel-detail">(ID_Raumlueftung, n:1)</span>, <a href="#table-Raeucheranlage">Raeucheranlage</a> <span class="rel-detail">(ID_Raeucheranlage, n:1)</span>, <a href="#table-Brennstoffversorgungsanlage">Brennstoffversorgungsanlage</a> <span class="rel-detail">(ID_Brennstoffversorgungsanlage, n:1)</span>, <a href="#table-Bescheid_Positionen">Bescheid_Positionen</a> <span class="rel-detail">(ID_Bescheid_Positionen, n:1)</span>
+<a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Bescheid_Position">Bescheid_Position</a> <span class="rel-detail">(ID_Bescheid_Position, n:1)</span>, <a href="#table-Abgasanlage">Abgasanlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Feuerstaette">Feuerstaette</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Raumluftoeffnung">Raumluftoeffnung</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Lueftungsanlage">Lueftungsanlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Raumlueftung">Raumlueftung</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Raeucheranlage">Raeucheranlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>, <a href="#table-Brennstoffversorgungsanlage">Brennstoffversorgungsanlage</a> <span class="rel-detail">(ID_Anlage, n:1)</span>
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
@@ -12947,7 +13025,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mangel">Mangel</a> <span class="rel-detail">(ID_Kehrbuch_Taetigkeit, n:1)</span>
+<a href="#table-Mangel">Mangel</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
@@ -13000,7 +13078,7 @@ body {
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
-<a href="#table-Mangel">Mangel</a> <span class="rel-detail">(ID_Kehrbuch_Abnahme, n:1)</span>
+<a href="#table-Mangel">Mangel</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
@@ -13043,13 +13121,14 @@ body {
 <strong>Referenziert:</strong> 
 <a href="#table-Kehrbuch_Nutzungseinheit">Kehrbuch_Nutzungseinheit</a> <span class="rel-detail">(ID_Kehrbuch_Nutzungseinheit, n:1)</span>, <a href="#table-Anlassbezogene_Ueberpruefung">Anlassbezogene_Ueberpruefung</a> <span class="rel-detail">(ID_Anlassbezogene_Ueberpruefung, n:1)</span>
 </div>
+<div class="rel-section">
+<strong>Referenziert von:</strong> 
+<a href="#table-Mangel">Mangel</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
-<div class="group-header" id="group-Berichte_Maengel">
-<h2>Berichte/Maengel</h2>
 </div>
-<div class="table-card" id="table-Bericht" data-name="bericht">
-<h3 class="table-title">Bericht</h3>
+<div class="table-card" id="table-Kehrbuch_Feuerstaettenschau" data-name="kehrbuch_feuerstaettenschau">
+<h3 class="table-title">Kehrbuch_Feuerstaettenschau</h3>
 <div class="table-responsive">
 <table class="columns-table">
 <thead><tr>
@@ -13057,14 +13136,40 @@ body {
 </tr></thead>
 <tbody>
 <tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Bericht</code></td>
+<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Kehrbuch_Feuerstaettenschau</code></td>
 <td><code>INTEGER</code></td>
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell"></td>
 <td class="center"></td>
 </tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Kehrbuch_Gebaeude</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">Gebäudereferenz im Kehrbuch zu der diese Feuerstättenschau gehört.<br><span class="fk-ref">&#8594; <a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a></span></td>
+<td class="center"><span class="badge badge-19">19K</span></td>
+</tr>
+<tr>
+<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Feuerstaettenschau</code></td>
+<td><code>INTEGER</code></td>
+<td class="center">Ja</td>
+<td><code></code></td>
+<td class="desc-cell">Referenz auf die Feuerstättenschau.<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaettenschau">Feuerstaettenschau</a></span></td>
+<td class="center"><span class="badge badge-19">19K</span></td>
+</tr>
 </tbody></table>
+</div>
+<div class="relations-box">
+<div class="rel-section">
+<strong>Referenziert:</strong> 
+<a href="#table-Kehrbuch_Gebaeude">Kehrbuch_Gebaeude</a> <span class="rel-detail">(ID_Kehrbuch_Gebaeude, n:1)</span>, <a href="#table-Feuerstaettenschau">Feuerstaettenschau</a> <span class="rel-detail">(ID_Feuerstaettenschau, n:1)</span>
+</div>
+<div class="rel-section">
+<strong>Referenziert von:</strong> 
+<a href="#table-Mangel">Mangel</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
+</div>
 </div>
 </div>
 <div class="table-card" id="table-Mangel" data-name="mangel">
@@ -13084,27 +13189,19 @@ body {
 <td class="center"></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Kehrbuch_Taetigkeit</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
+<td class="col-name"><code>Herkunftstyp</code></td>
+<td><code>TEXT</code></td>
+<td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Mangel bei einer anlagenbezogenen Tätigkeit.<br><span class="fk-ref">&#8594; <a href="#table-Kehrbuch_Taetigkeit">Kehrbuch_Taetigkeit</a></span></td>
+<td class="desc-cell">Typ der Herkunft des Mangels (bestimmt Zieltabelle von ID_Herkunft)<br><span class="enum-ref">Enum: <a href="#enum-Enum_Herkunftstyp">Enum_Herkunftstyp</a></span></td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Pruefergebnisse_Feuerstaettenschau</code></td>
+<td class="col-name"><span class="badge badge-fk" title="Polymorphe Referenz via Herkunftstyp">FK*</span> <code>ID_Herkunft</code></td>
 <td><code>INTEGER</code></td>
-<td class="center"></td>
+<td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Mangel bei einer Feuerstättenschau.<br><span class="fk-ref">&#8594; <a href="#table-Pruefergebnisse_Feuerstaettenschau">Pruefergebnisse_Feuerstaettenschau</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Kehrbuch_Abnahme</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Mangel bei einer Bauabnahme.<br><span class="fk-ref">&#8594; <a href="#table-Kehrbuch_Abnahme">Kehrbuch_Abnahme</a></span></td>
+<td class="desc-cell">ID der Herkunft (Zieltabelle ergibt sich aus Herkunftstyp)</td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
@@ -13232,7 +13329,7 @@ body {
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Kehrbuch_Taetigkeit">Kehrbuch_Taetigkeit</a> <span class="rel-detail">(ID_Kehrbuch_Taetigkeit, n:1)</span>, <a href="#table-Pruefergebnisse_Feuerstaettenschau">Pruefergebnisse_Feuerstaettenschau</a> <span class="rel-detail">(ID_Pruefergebnisse_Feuerstaettenschau, n:1)</span>, <a href="#table-Kehrbuch_Abnahme">Kehrbuch_Abnahme</a> <span class="rel-detail">(ID_Kehrbuch_Abnahme, n:1)</span>
+<a href="#table-Kehrbuch_Taetigkeit">Kehrbuch_Taetigkeit</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Kehrbuch_Abnahme">Kehrbuch_Abnahme</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Kehrbuch_Feuerstaettenschau">Kehrbuch_Feuerstaettenschau</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Kehrbuch_Anlassbezogene_Ueberpruefung">Kehrbuch_Anlassbezogene_Ueberpruefung</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 </div>
 </div>
@@ -13277,7 +13374,7 @@ body {
 <td class="center"></td>
 <td><code></code></td>
 <td class="desc-cell">Verweis auf das Gebäude/Gebäudeteil. Ein Gebäude/Gebäudeteil kann Dachskizzen besitzen.<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 </tbody></table>
 </div>
@@ -13314,7 +13411,7 @@ body {
 <td class="center"></td>
 <td><code></code></td>
 <td class="desc-cell">Verweis auf die zugehörige Dachskizze.<br><span class="fk-ref">&#8594; <a href="#table-Dachskizze">Dachskizze</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Dachskizzen_Objekt</code></td>
@@ -13389,25 +13486,6 @@ body {
 </div>
 </div>
 </div>
-<div class="table-card" id="table-Belegungsplan" data-name="belegungsplan">
-<h3 class="table-title">Belegungsplan</h3>
-<div class="table-responsive">
-<table class="columns-table">
-<thead><tr>
-<th>Spalte</th><th>Datentyp</th><th>NOT NULL</th><th>Default</th><th>Beschreibung / Constraint</th><th>Art</th>
-</tr></thead>
-<tbody>
-<tr class="pk-row">
-<td class="col-name"><span class="badge badge-pk" title="Primary Key">PK</span> <code>ID_Belegungsplan</code></td>
-<td><code>INTEGER</code></td>
-<td class="center">Ja</td>
-<td><code></code></td>
-<td class="desc-cell"></td>
-<td class="center"></td>
-</tr>
-</tbody></table>
-</div>
-</div>
 <div class="table-card" id="table-Dokument" data-name="dokument">
 <h3 class="table-title">Dokument</h3>
 <div class="table-responsive">
@@ -13465,131 +13543,27 @@ body {
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Gebaeude_Gebaeudeteil</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
+<td class="col-name"><code>Herkunftstyp</code></td>
+<td><code>TEXT</code></td>
+<td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zum Gebäude/Gebäudeteil.<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
+<td class="desc-cell">Typ der Zuordnung des Dokuments (bestimmt Zieltabelle von ID_Herkunft)<br><span class="enum-ref">Enum: <a href="#enum-Enum_DokumentHerkunftstyp">Enum_DokumentHerkunftstyp</a></span></td>
 <td class="center"><span class="badge badge-19">19K</span></td>
 </tr>
 <tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Nutzungseinheit</code></td>
+<td class="col-name"><span class="badge badge-fk" title="Polymorphe Referenz via Herkunftstyp">FK*</span> <code>ID_Herkunft</code></td>
 <td><code>INTEGER</code></td>
-<td class="center"></td>
+<td class="center">Ja</td>
 <td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zur Nutzungseinheit.<br><span class="fk-ref">&#8594; <a href="#table-Nutzungseinheit">Nutzungseinheit</a></span></td>
+<td class="desc-cell">ID der Zuordnung (Zieltabelle ergibt sich aus Herkunftstyp)</td>
 <td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Feuerstaettenbescheid_Grunddaten</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zum Feuerstättenbescheid.<br><span class="fk-ref">&#8594; <a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Abnahme</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zur Abnahme.<br><span class="fk-ref">&#8594; <a href="#table-Abnahme">Abnahme</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Anlassbezogene_Ueberpruefung</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zur anlassbezogenen Überprüfung.<br><span class="fk-ref">&#8594; <a href="#table-Anlassbezogene_Ueberpruefung">Anlassbezogene_Ueberpruefung</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Pruefergebnisse_Feuerstaettenschau</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Prüfergebnissen der Feuerstättenschau.<br><span class="fk-ref">&#8594; <a href="#table-Pruefergebnisse_Feuerstaettenschau">Pruefergebnisse_Feuerstaettenschau</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Pruefergebnisse_GEG</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Prüfergebnissen GEG.<br><span class="fk-ref">&#8594; <a href="#table-Pruefergebnisse_GEG">Pruefergebnisse_GEG</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Mess_Pruefergebnisse_Gasfeuerstaette</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Mess-Prüfergebnissen Gasfeuerstätte.<br><span class="fk-ref">&#8594; <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Mess_Pruefergebnisse_Oelfeuerstaette</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Mess-Prüfergebnissen Ölfeuerstätte.<br><span class="fk-ref">&#8594; <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_HK</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Mess-Prüfergebnissen Feststofffeuerstätten HK.<br><span class="fk-ref">&#8594; <a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_HK">Mess_Pruefergebnisse_Feststofffeuerstaetten_HK</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Mess-Prüfergebnissen Feststofffeuerstätten ERF.<br><span class="fk-ref">&#8594; <a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF">Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Mess_Pruefergebnisse_Sonderfeuerstaetten</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Mess-Prüfergebnissen Sonderfeuerstätten.<br><span class="fk-ref">&#8594; <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten</a></span></td>
-<td class="center"><span class="badge badge-19">19K</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Mess_Pruefergebnisse_Waermepumpe</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Mess-Prüfergebnissen Wärmepumpe.<br><span class="fk-ref">&#8594; <a href="#table-Mess_Pruefergebnisse_Waermepumpe">Mess_Pruefergebnisse_Waermepumpe</a></span></td>
-<td class="center"><span class="badge badge-qs">QS</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Mess_Pruefergebnisse_Dunstabzugsleitung</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Mess-Prüfergebnissen Dunstabzugsleitung.<br><span class="fk-ref">&#8594; <a href="#table-Mess_Pruefergebnisse_Dunstabzugsleitung">Mess_Pruefergebnisse_Dunstabzugsleitung</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
-</tr>
-<tr>
-<td class="col-name"><span class="badge badge-fk" title="Foreign Key">FK</span> <code>ID_Mess_Pruefergebnisse_Raumluftoeffnung</code></td>
-<td><code>INTEGER</code></td>
-<td class="center"></td>
-<td><code></code></td>
-<td class="desc-cell">Optionale Zuordnung zu den Mess-Prüfergebnissen Raumluftöffnung.<br><span class="fk-ref">&#8594; <a href="#table-Mess_Pruefergebnisse_Raumluftoeffnung">Mess_Pruefergebnisse_Raumluftoeffnung</a></span></td>
-<td class="center"><span class="badge badge-19">19B</span></td>
 </tr>
 </tbody></table>
 </div>
 <div class="relations-box">
 <div class="rel-section">
 <strong>Referenziert:</strong> 
-<a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Gebaeude_Gebaeudeteil, n:1)</span>, <a href="#table-Nutzungseinheit">Nutzungseinheit</a> <span class="rel-detail">(ID_Nutzungseinheit, n:1)</span>, <a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a> <span class="rel-detail">(ID_Feuerstaettenbescheid_Grunddaten, n:1)</span>, <a href="#table-Abnahme">Abnahme</a> <span class="rel-detail">(ID_Abnahme, n:1)</span>, <a href="#table-Anlassbezogene_Ueberpruefung">Anlassbezogene_Ueberpruefung</a> <span class="rel-detail">(ID_Anlassbezogene_Ueberpruefung, n:1)</span>, <a href="#table-Pruefergebnisse_Feuerstaettenschau">Pruefergebnisse_Feuerstaettenschau</a> <span class="rel-detail">(ID_Pruefergebnisse_Feuerstaettenschau, n:1)</span>, <a href="#table-Pruefergebnisse_GEG">Pruefergebnisse_GEG</a> <span class="rel-detail">(ID_Pruefergebnisse_GEG, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Gasfeuerstaette, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Oelfeuerstaette, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_HK">Mess_Pruefergebnisse_Feststofffeuerstaetten_HK</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_HK, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF">Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Sonderfeuerstaetten, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_Waermepumpe">Mess_Pruefergebnisse_Waermepumpe</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Waermepumpe, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_Dunstabzugsleitung">Mess_Pruefergebnisse_Dunstabzugsleitung</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Dunstabzugsleitung, n:1)</span>, <a href="#table-Mess_Pruefergebnisse_Raumluftoeffnung">Mess_Pruefergebnisse_Raumluftoeffnung</a> <span class="rel-detail">(ID_Mess_Pruefergebnisse_Raumluftoeffnung, n:1)</span>
+<a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Nutzungseinheit">Nutzungseinheit</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Feuerstaettenbescheid_Grunddaten">Feuerstaettenbescheid_Grunddaten</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Abnahme">Abnahme</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Anlassbezogene_Ueberpruefung">Anlassbezogene_Ueberpruefung</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Pruefergebnis_Feuerstaettenschau">Pruefergebnis_Feuerstaettenschau</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Pruefergebnis_GEG">Pruefergebnis_GEG</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_HK">Mess_Pruefergebnis_Feststofffeuerstaette_HK</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_ERF">Mess_Pruefergebnis_Feststofffeuerstaette_ERF</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Mess_Pruefergebnis_Waermepumpe">Mess_Pruefergebnis_Waermepumpe</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Mess_Pruefergebnis_Dunstabzugsleitung">Mess_Pruefergebnis_Dunstabzugsleitung</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>, <a href="#table-Mess_Pruefergebnis_Raumluftoeffnung">Mess_Pruefergebnis_Raumluftoeffnung</a> <span class="rel-detail">(ID_Herkunft, n:1)</span>
 </div>
 <div class="rel-section">
 <strong>Referenziert von:</strong> 
@@ -13619,7 +13593,7 @@ body {
 <td class="center">Ja</td>
 <td><code></code></td>
 <td class="desc-cell">Gefaehrdungsbeurteilung bezieht sich auf ein Gebaeude/Gebaeudeteil<br><span class="fk-ref">&#8594; <a href="#table-Gebaeude_Gebaeudeteil">Gebaeude_Gebaeudeteil</a></span></td>
-<td class="center"></td>
+<td class="center"><span class="badge badge-qs">QS</span></td>
 </tr>
 <tr>
 <td class="col-name"><code>Durchfuehrung_QS</code></td>
@@ -13980,7 +13954,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage.Art</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Art</a>, <a href="#table-Abschnitt">Abschnitt.Art</a>
+<a href="#table-Abschnitt">Abschnitt.Art</a>, <a href="#table-Abgasanlage">Abgasanlage.Art</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Art</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -14069,7 +14043,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Verbrennungsluft_Lueftung</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Feuerstaette_Befestigung</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Feuerstaette_aeusserer_Zustand</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Feuerstaette_Heizgasweg</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Feuerstaette_Flammenbild</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Abgasabzug_Stroemungssicherung</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Abgasabzug_in_Brennerhoehe</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Abgasabzug_an_anderer_Stelle</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Abgasklappe</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Verbindungsstueck</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Verbrennungsluft_Lueftung</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Feuerstaette_Befestigung</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Feuerstaette_aeusserer_Zustand</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Feuerstaette_Heizgasweg</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Abgasabzug_in_Brennerhoehe</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Abgasabzug_an_anderer_Stelle</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Verbindungsstueck</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Verbrennungsluft_Lueftung</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Standsicherheit</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Abstaende</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Schalldaempfer</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Abgasabzug_Geraet</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Abgasabzug_Abgasstutzen</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Abgasabzug_Schalldaempfer</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Verbindungsstueck</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Abgasleitung</a>
+<a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Verbrennungsluft_Lueftung</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Feuerstaette_Befestigung</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Feuerstaette_aeusserer_Zustand</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Feuerstaette_Heizgasweg</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Feuerstaette_Flammenbild</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Abgasabzug_Stroemungssicherung</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Abgasabzug_in_Brennerhoehe</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Abgasabzug_an_anderer_Stelle</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Abgasklappe</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Verbindungsstueck</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Verbrennungsluft_Lueftung</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Feuerstaette_Befestigung</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Feuerstaette_aeusserer_Zustand</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Feuerstaette_Heizgasweg</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Abgasabzug_in_Brennerhoehe</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Abgasabzug_an_anderer_Stelle</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Verbindungsstueck</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Verbrennungsluft_Lueftung</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Standsicherheit</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Abstaende</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Schalldaempfer</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Abgasabzug_Geraet</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Abgasabzug_Abgasstutzen</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Abgasabzug_Schalldaempfer</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Verbindungsstueck</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Abgasleitung</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -14077,6 +14051,24 @@ body {
 <tr><td><code>IO</code></td><td>in Ordnung</td></tr>
 <tr><td><code>MA</code></td><td>mangelhaft</td></tr>
 <tr><td><code>NZ</code></td><td>nicht zutreffend</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="enum-card" id="enum-Enum_AbschnittAnlagetyp" data-name="enum_abschnittanlagetyp">
+<div class="enum-header" onclick="toggleEnum(this)">
+<h4>Enum_AbschnittAnlagetyp <span class="enum-count">(2 Werte)</span></h4>
+<span class="enum-toggle">&#9654;</span>
+</div>
+<div class="enum-body" style="display:none;">
+<div class="enum-usage">
+<strong>Verwendet in:</strong> 
+<a href="#table-Abschnitt">Abschnitt.Anlagetyp</a>, <a href="#table-Abnahme_Anlage">Abnahme_Anlage.Anlagetyp</a>
+</div>
+<table class="enum-table">
+<thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
+<tbody>
+<tr><td><code>Abgasanlage</code></td><td>Abschnitt gehört zu einer Abgasanlage</td></tr>
+<tr><td><code>Feuerstaette</code></td><td>Abschnitt ist Verbindungsstück einer Feuerstätte</td></tr>
 </tbody></table>
 </div>
 </div>
@@ -14096,6 +14088,30 @@ body {
 <tr><td><code>N</code></td><td>Unterdruck (N)</td></tr>
 <tr><td><code>P</code></td><td>Überdruck (P)</td></tr>
 <tr><td><code>H</code></td><td>hohen Überdruck (H)</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="enum-card" id="enum-Enum_Anlagetyp" data-name="enum_anlagetyp">
+<div class="enum-header" onclick="toggleEnum(this)">
+<h4>Enum_Anlagetyp <span class="enum-count">(8 Werte)</span></h4>
+<span class="enum-toggle">&#9654;</span>
+</div>
+<div class="enum-body" style="display:none;">
+<div class="enum-usage">
+<strong>Verwendet in:</strong> 
+<a href="#table-Bescheid_Position">Bescheid_Position.Anlagetyp</a>, <a href="#table-Kehrbuch_Anlage">Kehrbuch_Anlage.Anlagetyp</a>
+</div>
+<table class="enum-table">
+<thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
+<tbody>
+<tr><td><code>Abgasanlage</code></td><td></td></tr>
+<tr><td><code>Feuerstaette</code></td><td></td></tr>
+<tr><td><code>Raumluftoeffnung</code></td><td></td></tr>
+<tr><td><code>Dunstabzuganlage_Leitung</code></td><td></td></tr>
+<tr><td><code>Lueftungsanlage</code></td><td></td></tr>
+<tr><td><code>Raumlueftung</code></td><td></td></tr>
+<tr><td><code>Raeucheranlage</code></td><td></td></tr>
+<tr><td><code>Brennstoffversorgungsanlage</code></td><td></td></tr>
 </tbody></table>
 </div>
 </div>
@@ -14278,7 +14294,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage.Benutzungsintensitaet</a>, <a href="#table-Dunstabzugsanlage_Feuerstaette">Dunstabzugsanlage_Feuerstaette.Benutzungsintensitaet</a>, <a href="#table-Feuerstaette">Feuerstaette.Benutzungsintensitaet</a>
+<a href="#table-Abgasanlage">Abgasanlage.Benutzungsintensitaet</a>, <a href="#table-Feuerstaette">Feuerstaette.Benutzungsintensitaet</a>, <a href="#table-Dunstabzugsanlage_Feuerstaette">Dunstabzugsanlage_Feuerstaette.Benutzungsintensitaet</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -14303,7 +14319,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Bundes_KUEO">Bundes_KUEO.Berechnungstyp</a>, <a href="#table-Landesrechtliche_Vorschriften">Landesrechtliche_Vorschriften.Berechnungstyp</a>, <a href="#table-Abnahme">Abnahme.Berechnungstyp</a>, <a href="#table-Anlassbezogene_Ueberpruefung">Anlassbezogene_Ueberpruefung.Berechnungstyp</a>, <a href="#table-Sonstige_Arbeit">Sonstige_Arbeit.Berechnungstyp</a>, <a href="#table-Dunstabzugsanlage_Haube">Dunstabzugsanlage_Haube.Berechnungstyp</a>
+<a href="#table-Bundes_KUEO">Bundes_KUEO.Berechnungstyp</a>, <a href="#table-Landesrechtliche_Vorschrift">Landesrechtliche_Vorschrift.Berechnungstyp</a>, <a href="#table-Abnahme">Abnahme.Berechnungstyp</a>, <a href="#table-Anlassbezogene_Ueberpruefung">Anlassbezogene_Ueberpruefung.Berechnungstyp</a>, <a href="#table-Sonstige_Arbeit">Sonstige_Arbeit.Berechnungstyp</a>, <a href="#table-Dunstabzugsanlage_Haube">Dunstabzugsanlage_Haube.Berechnungstyp</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -14361,7 +14377,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung.Brennstoff</a>, <a href="#table-Dunstabzugsanlage_Feuerstaette">Dunstabzugsanlage_Feuerstaette.Brennstoffart</a>, <a href="#table-Feuerstaette">Feuerstaette.Brennstoff</a>, <a href="#table-Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette">Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette.Brennstoff</a>, <a href="#table-Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette">Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette.Brennstoff</a>, <a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_HK">Mess_Pruefergebnisse_Feststofffeuerstaetten_HK.Brennstoff_gemessen</a>, <a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Brennstoff</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Brennstoff</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Brennstoff</a>
+<a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung.Brennstoff</a>, <a href="#table-Feuerstaette">Feuerstaette.Brennstoff</a>, <a href="#table-Dunstabzugsanlage_Feuerstaette">Dunstabzugsanlage_Feuerstaette.Brennstoffart</a>, <a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_HK">Mess_Pruefergebnis_Feststofffeuerstaette_HK.Brennstoff_gemessen</a>, <a href="#table-Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette">Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette.Brennstoff</a>, <a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Brennstoff</a>, <a href="#table-Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette">Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette.Brennstoff</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Brennstoff</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Brennstoff</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -14421,7 +14437,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Brennstoff_Arten</a>, <a href="#table-Abschnitt">Abschnitt.Brennstoff_Arten</a>, <a href="#table-Feuerstaette">Feuerstaette.Ein_Mehrstoffbetrieb</a>
+<a href="#table-Abschnitt">Abschnitt.Brennstoff_Arten</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Brennstoff_Arten</a>, <a href="#table-Feuerstaette">Feuerstaette.Ein_Mehrstoffbetrieb</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -14637,6 +14653,37 @@ body {
 </tbody></table>
 </div>
 </div>
+<div class="enum-card" id="enum-Enum_DokumentHerkunftstyp" data-name="enum_dokumentherkunftstyp">
+<div class="enum-header" onclick="toggleEnum(this)">
+<h4>Enum_DokumentHerkunftstyp <span class="enum-count">(15 Werte)</span></h4>
+<span class="enum-toggle">&#9654;</span>
+</div>
+<div class="enum-body" style="display:none;">
+<div class="enum-usage">
+<strong>Verwendet in:</strong> 
+<a href="#table-Dokument">Dokument.Herkunftstyp</a>
+</div>
+<table class="enum-table">
+<thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
+<tbody>
+<tr><td><code>Gebaeude_Gebaeudeteil</code></td><td></td></tr>
+<tr><td><code>Nutzungseinheit</code></td><td></td></tr>
+<tr><td><code>Feuerstaettenbescheid_Grunddaten</code></td><td></td></tr>
+<tr><td><code>Abnahme</code></td><td></td></tr>
+<tr><td><code>Anlassbezogene_Ueberpruefung</code></td><td></td></tr>
+<tr><td><code>Pruefergebnis_Feuerstaettenschau</code></td><td></td></tr>
+<tr><td><code>Pruefergebnis_GEG</code></td><td></td></tr>
+<tr><td><code>Mess_Pruefergebnis_Gasfeuerstaette</code></td><td></td></tr>
+<tr><td><code>Mess_Pruefergebnis_Oelfeuerstaette</code></td><td></td></tr>
+<tr><td><code>Mess_Pruefergebnis_Feststofffeuerstaette_HK</code></td><td></td></tr>
+<tr><td><code>Mess_Pruefergebnis_Feststofffeuerstaette_ERF</code></td><td></td></tr>
+<tr><td><code>Mess_Pruefergebnis_Sonderfeuerstaette</code></td><td></td></tr>
+<tr><td><code>Mess_Pruefergebnis_Waermepumpe</code></td><td></td></tr>
+<tr><td><code>Mess_Pruefergebnis_Dunstabzugsleitung</code></td><td></td></tr>
+<tr><td><code>Mess_Pruefergebnis_Raumluftoeffnung</code></td><td></td></tr>
+</tbody></table>
+</div>
+</div>
 <div class="enum-card" id="enum-Enum_Druckklasse18160" data-name="enum_druckklasse18160">
 <div class="enum-header" onclick="toggleEnum(this)">
 <h4>Enum_Druckklasse18160 <span class="enum-count">(9 Werte)</span></h4>
@@ -14645,7 +14692,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage.Druckklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Druckklasse</a>, <a href="#table-Abschnitt">Abschnitt.Druckklasse</a>, <a href="#table-Schicht">Schicht.Druckklasse</a>
+<a href="#table-Abschnitt">Abschnitt.Druckklasse</a>, <a href="#table-Schicht">Schicht.Druckklasse</a>, <a href="#table-Abgasanlage">Abgasanlage.Druckklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Druckklasse</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -14865,7 +14912,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Dunstabzugsleitung">Mess_Pruefergebnisse_Dunstabzugsleitung.Reinigungdurchfuehrung</a>
+<a href="#table-Mess_Pruefergebnis_Dunstabzugsleitung">Mess_Pruefergebnis_Dunstabzugsleitung.Reinigungdurchfuehrung</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15040,7 +15087,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Dunstabzugsleitung">Mess_Pruefergebnisse_Dunstabzugsleitung.Feuerloescher_Brandklasse</a>
+<a href="#table-Mess_Pruefergebnis_Dunstabzugsleitung">Mess_Pruefergebnis_Dunstabzugsleitung.Feuerloescher_Brandklasse</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15061,7 +15108,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Dunstabzugsleitung">Mess_Pruefergebnisse_Dunstabzugsleitung.Feuerloescher_Groesse_Einheit</a>
+<a href="#table-Mess_Pruefergebnis_Dunstabzugsleitung">Mess_Pruefergebnis_Dunstabzugsleitung.Feuerloescher_Groesse_Einheit</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15079,7 +15126,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Dunstabzugsleitung">Mess_Pruefergebnisse_Dunstabzugsleitung.Feuerloescher_Loeschmittel</a>
+<a href="#table-Mess_Pruefergebnis_Dunstabzugsleitung">Mess_Pruefergebnis_Dunstabzugsleitung.Feuerloescher_Loeschmittel</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15139,7 +15186,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung.Geraete_Kategorie</a>, <a href="#table-Dunstabzugsanlage_Feuerstaette">Dunstabzugsanlage_Feuerstaette.Waermeerzeuger_Art</a>, <a href="#table-Feuerstaette">Feuerstaette.Art</a>
+<a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung.Geraete_Kategorie</a>, <a href="#table-Feuerstaette">Feuerstaette.Art</a>, <a href="#table-Dunstabzugsanlage_Feuerstaette">Dunstabzugsanlage_Feuerstaette.Waermeerzeuger_Art</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15262,7 +15309,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage.Feuerwiderstandsklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Feuerwiderstandsklasse</a>, <a href="#table-Abschnitt">Abschnitt.Feuerwiderstandsklasse</a>, <a href="#table-Schicht">Schicht.Feuerwiderstandsklasse</a>
+<a href="#table-Abschnitt">Abschnitt.Feuerwiderstandsklasse</a>, <a href="#table-Schicht">Schicht.Feuerwiderstandsklasse</a>, <a href="#table-Abgasanlage">Abgasanlage.Feuerwiderstandsklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Feuerwiderstandsklasse</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15447,6 +15494,26 @@ body {
 </tbody></table>
 </div>
 </div>
+<div class="enum-card" id="enum-Enum_Herkunftstyp" data-name="enum_herkunftstyp">
+<div class="enum-header" onclick="toggleEnum(this)">
+<h4>Enum_Herkunftstyp <span class="enum-count">(4 Werte)</span></h4>
+<span class="enum-toggle">&#9654;</span>
+</div>
+<div class="enum-body" style="display:none;">
+<div class="enum-usage">
+<strong>Verwendet in:</strong> 
+<a href="#table-Mangel">Mangel.Herkunftstyp</a>
+</div>
+<table class="enum-table">
+<thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
+<tbody>
+<tr><td><code>Kehrbuch_Taetigkeit</code></td><td></td></tr>
+<tr><td><code>Kehrbuch_Abnahme</code></td><td></td></tr>
+<tr><td><code>Kehrbuch_Feuerstaettenschau</code></td><td></td></tr>
+<tr><td><code>Kehrbuch_Anlassbezogene_Ueberpruefung</code></td><td></td></tr>
+</tbody></table>
+</div>
+</div>
 <div class="enum-card" id="enum-Enum_HybridArt" data-name="enum_hybridart">
 <div class="enum-header" onclick="toggleEnum(this)">
 <h4>Enum_HybridArt <span class="enum-count">(3 Werte)</span></h4>
@@ -15537,7 +15604,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage.Kondensatbestaendigkeitsklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Kondensatbestaendigkeitsklasse</a>, <a href="#table-Abschnitt">Abschnitt.Kondensatbestaendigkeitsklasse</a>, <a href="#table-Schicht">Schicht.Kondensatbestaendigkeitsklasse</a>
+<a href="#table-Abschnitt">Abschnitt.Kondensatbestaendigkeitsklasse</a>, <a href="#table-Schicht">Schicht.Kondensatbestaendigkeitsklasse</a>, <a href="#table-Abgasanlage">Abgasanlage.Kondensatbestaendigkeitsklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Kondensatbestaendigkeitsklasse</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15555,7 +15622,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage.Korrosionswiderstandsklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Korrosionswiderstandsklasse</a>, <a href="#table-Abschnitt">Abschnitt.Korrosionswiderstandsklasse</a>, <a href="#table-Schicht">Schicht.Korrosionswiderstandsklasse</a>
+<a href="#table-Abschnitt">Abschnitt.Korrosionswiderstandsklasse</a>, <a href="#table-Schicht">Schicht.Korrosionswiderstandsklasse</a>, <a href="#table-Abgasanlage">Abgasanlage.Korrosionswiderstandsklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Korrosionswiderstandsklasse</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15687,7 +15754,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage.Material</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Material</a>, <a href="#table-Abschnitt">Abschnitt.Material</a>, <a href="#table-Schicht">Schicht.Material</a>
+<a href="#table-Abschnitt">Abschnitt.Material</a>, <a href="#table-Schicht">Schicht.Material</a>, <a href="#table-Abgasanlage">Abgasanlage.Material</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Material</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15743,7 +15810,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_HK">Mess_Pruefergebnisse_Feststofffeuerstaetten_HK.Messart_1BImSchV1</a>, <a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_HK">Mess_Pruefergebnisse_Feststofffeuerstaetten_HK.Messart_1BImSchV2</a>, <a href="#table-Mess_Pruefergebnisse_Feststofffeuerstaetten_HK">Mess_Pruefergebnisse_Feststofffeuerstaetten_HK.Messart_1BImSchV3</a>
+<a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_HK">Mess_Pruefergebnis_Feststofffeuerstaette_HK.Messart_1BImSchV1</a>, <a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_HK">Mess_Pruefergebnis_Feststofffeuerstaette_HK.Messart_1BImSchV2</a>, <a href="#table-Mess_Pruefergebnis_Feststofffeuerstaette_HK">Mess_Pruefergebnis_Feststofffeuerstaette_HK.Messart_1BImSchV3</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15764,7 +15831,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Messart_1BImSchV</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Messart_1BImSchV</a>
+<a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Messart_1BImSchV</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Messart_1BImSchV</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15786,7 +15853,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette">Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette.Messart</a>, <a href="#table-Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette">Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette.Messart</a>
+<a href="#table-Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette">Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette.Messart</a>, <a href="#table-Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette">Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette.Messart</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15823,7 +15890,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Nutzung</a>, <a href="#table-Raeucheranlage">Raeucheranlage.Nutzung</a>, <a href="#table-Abschnitt">Abschnitt.Nutzung</a>, <a href="#table-Feuerstaette">Feuerstaette.Nutzung</a>
+<a href="#table-Abschnitt">Abschnitt.Nutzung</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Nutzung</a>, <a href="#table-Raeucheranlage">Raeucheranlage.Nutzung</a>, <a href="#table-Feuerstaette">Feuerstaette.Nutzung</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -15940,7 +16007,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Querschnittsform</a>, <a href="#table-Verbrennungsluftzufuhr_Element">Verbrennungsluftzufuhr_Element.Querschnittsform_Verbrennungsluftzufuhr_Element</a>, <a href="#table-Abschnitt">Abschnitt.Querschnittsform</a>, <a href="#table-Schicht">Schicht.Querschnittsform</a>
+<a href="#table-Abschnitt">Abschnitt.Querschnittsform</a>, <a href="#table-Schicht">Schicht.Querschnittsform</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Querschnittsform</a>, <a href="#table-Verbrennungsluftzufuhr_Element">Verbrennungsluftzufuhr_Element.Querschnittsform_Verbrennungsluftzufuhr_Element</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -16194,7 +16261,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage.Russbrandbestaendigkeitsklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Russbrandbestaendigkeitsklasse</a>, <a href="#table-Abschnitt">Abschnitt.Russbrandbestaendigkeitsklasse</a>, <a href="#table-Schicht">Schicht.Russbrandbestaendigkeitsklasse</a>
+<a href="#table-Abschnitt">Abschnitt.Russbrandbestaendigkeitsklasse</a>, <a href="#table-Schicht">Schicht.Russbrandbestaendigkeitsklasse</a>, <a href="#table-Abgasanlage">Abgasanlage.Russbrandbestaendigkeitsklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Russbrandbestaendigkeitsklasse</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -16394,7 +16461,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Abgasanlage">Abgasanlage.Temperaturklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Temperaturklasse</a>, <a href="#table-Abschnitt">Abschnitt.Temperaturklasse</a>, <a href="#table-Schicht">Schicht.Temperaturklasse</a>
+<a href="#table-Abschnitt">Abschnitt.Temperaturklasse</a>, <a href="#table-Schicht">Schicht.Temperaturklasse</a>, <a href="#table-Abgasanlage">Abgasanlage.Temperaturklasse</a>, <a href="#table-Abschnitt_Dunstabzugsleitung">Abschnitt_Dunstabzugsleitung.Temperaturklasse</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -16421,7 +16488,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Gasfeuerstaette">Mess_Pruefergebnisse_Gasfeuerstaette.Ueberpruefungsart</a>, <a href="#table-Mess_Pruefergebnisse_Oelfeuerstaette">Mess_Pruefergebnisse_Oelfeuerstaette.Ueberpruefungsart</a>, <a href="#table-Mess_Pruefergebnisse_Sonderfeuerstaetten">Mess_Pruefergebnisse_Sonderfeuerstaetten.Ueberpruefungsart</a>
+<a href="#table-Mess_Pruefergebnis_Gasfeuerstaette">Mess_Pruefergebnis_Gasfeuerstaette.Ueberpruefungsart</a>, <a href="#table-Mess_Pruefergebnis_Oelfeuerstaette">Mess_Pruefergebnis_Oelfeuerstaette.Ueberpruefungsart</a>, <a href="#table-Mess_Pruefergebnis_Sonderfeuerstaette">Mess_Pruefergebnis_Sonderfeuerstaette.Ueberpruefungsart</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -16593,7 +16660,7 @@ body {
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Mess_Pruefergebnisse_Waermepumpe">Mess_Pruefergebnisse_Waermepumpe.Heizkurve</a>
+<a href="#table-Mess_Pruefergebnis_Waermepumpe">Mess_Pruefergebnis_Waermepumpe.Heizkurve</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -16831,15 +16898,15 @@ body {
 </tbody></table>
 </div>
 </div>
-<div class="enum-card" id="enum-Enum_ZubehoerLueftungsanlagen" data-name="enum_zubehoerlueftungsanlagen">
+<div class="enum-card" id="enum-Enum_Zubehoer" data-name="enum_zubehoer">
 <div class="enum-header" onclick="toggleEnum(this)">
-<h4>Enum_ZubehoerLueftungsanlagen <span class="enum-count">(31 Werte)</span></h4>
+<h4>Enum_Zubehoer <span class="enum-count">(31 Werte)</span></h4>
 <span class="enum-toggle">&#9654;</span>
 </div>
 <div class="enum-body" style="display:none;">
 <div class="enum-usage">
 <strong>Verwendet in:</strong> 
-<a href="#table-Dunstabzuganlage_Leitung">Dunstabzuganlage_Leitung.Zubehoer</a>, <a href="#table-Zubehoer">Zubehoer.Zubehoer</a>
+<a href="#table-Zubehoer">Zubehoer.Zubehoer</a>
 </div>
 <table class="enum-table">
 <thead><tr><th>Wert</th><th>Beschreibung</th></tr></thead>
@@ -17018,8 +17085,8 @@ body {
 </div>
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Nach oben">&#8679;</button>
 <footer class="footer">
-<p>ZIV Datenmodell 4.0 &mdash; 89 Tabellen &middot; 140 Relationen &middot; 118 Enums &middot; 1,178 Enum-Werte</p>
-<p>Generiert am 2026-03-10</p>
+<p>ZIV Datenmodell 4.0 &mdash; 89 Tabellen &middot; 117 Relationen &middot; 122 Enums &middot; 1,207 Enum-Werte</p>
+<p>Generiert am 2026-03-11</p>
 </footer>
 <script>
 

@@ -111,7 +111,7 @@ def parse_enums(path):
                 enums[current_enum] = []
             continue
 
-        # INSERT
+        # INSERT with (Wert, Beschreibung)
         ins_match = re.match(r"INSERT\s+INTO\s+(\w+)\s+\(Wert,\s*Beschreibung\)\s+VALUES\s+\('([^']*)',\s*'(.*)'\)\s*;", line, re.IGNORECASE)
         if ins_match:
             enum_name = ins_match.group(1)
@@ -120,6 +120,16 @@ def parse_enums(path):
             if enum_name not in enums:
                 enums[enum_name] = []
             enums[enum_name].append({'wert': wert, 'beschreibung': beschreibung})
+            continue
+
+        # INSERT with (Wert) only (no Beschreibung)
+        ins_match2 = re.match(r"INSERT\s+INTO\s+(\w+)\s+\(Wert\)\s+VALUES\s+\('([^']*)'\)\s*;", line, re.IGNORECASE)
+        if ins_match2:
+            enum_name = ins_match2.group(1)
+            wert = ins_match2.group(2)
+            if enum_name not in enums:
+                enums[enum_name] = []
+            enums[enum_name].append({'wert': wert, 'beschreibung': ''})
 
     return enums
 
@@ -292,24 +302,52 @@ def generate_html(tables, enums, relations, notes, arts):
                         enum_usage[enum_name] = []
                     enum_usage[enum_name].append((tname, col['name']))
 
+    # Pre-compute polymorphic references (discriminator + ID column pattern)
+    # Supported patterns: Anlagetyp/ID_Anlage, Herkunftstyp/ID_Herkunft
+    poly_patterns = [
+        ('Anlagetyp', 'ID_Anlage'),
+        ('Herkunftstyp', 'ID_Herkunft'),
+    ]
+    poly_refs = {}  # table_name -> {id_col: [target_table, ...]}
+    for tname, tdata in tables.items():
+        for disc_col, id_col in poly_patterns:
+            has_disc = None
+            has_id = False
+            for col in tdata['columns']:
+                if col['name'] == disc_col and col['check_values']:
+                    has_disc = col['check_values']
+                if col['name'] == id_col:
+                    has_id = True
+            if has_disc and has_id:
+                targets = [v for v in has_disc if v in tables]
+                if tname not in poly_refs:
+                    poly_refs[tname] = {}
+                poly_refs[tname][id_col] = targets
+                for target in targets:
+                    if tname not in parent_refs:
+                        parent_refs[tname] = []
+                    parent_refs[tname].append((id_col, target, f'polymorph via {disc_col}', 'n:1'))
+                    if target not in child_refs:
+                        child_refs[target] = []
+                    child_refs[target].append((tname, id_col, f'polymorph via {disc_col}', 'n:1'))
+
     # Group tables
     groups = [
         ("Stammdaten/Verwaltung", ['Meta', 'Kehrbezirk', 'Mitarbeiter', 'Vertreter', 'Kommunikation', 'Fremdfirma', 'Untere_Aufsichtsbehoerde']),
         ("Standort", ['Ort', 'Strasse', 'Grundstueck', 'Grundstueck_Eigentuemer', 'Gebaeude_Gebaeudeteil', 'Gebaeude_Eigentuemer', 'Gebaeudeeigenschaft']),
-        ("Abgasanlagen", ['Abgasanlage', 'Abschnitt', 'Schicht', 'Muendung', 'Reinigungsart']),
-        ("Lueftungsanlagen", ['Lueftungsanlage', 'Raumlueftung', 'Raumlueftungsleitung', 'Raumluftoeffnung', 'Mess_Pruefergebnisse_Raumluftoeffnung', 'Zubehoer']),
-        ("Nutzung/Wohnung/Raum", ['Nutzungseinheit', 'Wohnung', 'Raum']),
-        ("Feuerstaetten", ['Feuerstaette', 'Gasfeuerstaette', 'Oelfeuerstaette', 'Feste_Brennstoff_Feuerstaette', 'Sonderfeuerstaetten', 'Waermepumpe', 'Feste_Brennstoff_Ableitbedingungen', 'Nachgeschalteter_Waermeaustauscher', 'Brennstoffversorgungsanlage', 'Raeucheranlage']),
-        ("Messergebnisse", ['Mess_Pruefergebnisse_Gasfeuerstaette', 'Mess_Pruefergebnisse_44BImSchV_Gasfeuerstaette', 'Mess_Pruefergebnisse_Oelfeuerstaette', 'Mess_Pruefergebnisse_44BImSchV_Oelfeuerstaette', 'Mess_Pruefergebnisse_Feststofffeuerstaetten_HK', 'Mess_Pruefergebnisse_Feststofffeuerstaetten_ERF', 'Mess_Pruefergebnisse_Sonderfeuerstaetten', 'Mess_Pruefergebnisse_Waermepumpe', 'Messgeraet', 'Messgeraet_44', 'Messunsicherheit']),
-        ("Dunstabzug", ['Dunstabzuganlage_Leitung', 'Dunstabzugsanlage_Haube', 'Dunstabzugsanlage_Feuerstaette', 'Abschnitt_Dunstabzugsleitung', 'Ventilator_Dunstabzug', 'Mess_Pruefergebnisse_Dunstabzugsleitung']),
+        ("Abgasanlagen", ['Abgasanlage', 'Abschnitt', 'Schicht', 'Muendung', 'Reinigungsart', 'Zubehoer']),
+        ("Lueftungsanlagen", ['Lueftungsanlage', 'Raumlueftung', 'Raumlueftungsleitung', 'Raumluftoeffnung', 'Mess_Pruefergebnis_Raumluftoeffnung']),
+        ("Nutzung/Wohnung/Raum", ['Nutzungseinheit', 'Nutzungseinheit_Eigentuemer', 'Wohnung', 'Raum']),
+        ("Feuerstätten", ['Feuerstaette', 'Gasfeuerstaette', 'Oelfeuerstaette', 'Feste_Brennstoff_Feuerstaette', 'Sonderfeuerstaette', 'Waermepumpe', 'Feste_Brennstoff_Ableitbedingungen', 'Nachgeschalteter_Waermeaustauscher', 'Brennstoffversorgungsanlage', 'Raeucheranlage', 'Effizienzlabel']),
+        ("Messergebnisse", ['Mess_Pruefergebnis_Gasfeuerstaette', 'Mess_Pruefergebnis_44BImSchV_Gasfeuerstaette', 'Mess_Pruefergebnis_Oelfeuerstaette', 'Mess_Pruefergebnis_44BImSchV_Oelfeuerstaette', 'Mess_Pruefergebnis_Feststofffeuerstaette_HK', 'Mess_Pruefergebnis_Feststofffeuerstaette_ERF', 'Mess_Pruefergebnis_Sonderfeuerstaette', 'Mess_Pruefergebnis_Waermepumpe', 'Messgeraet', 'Messgeraet_44', 'Messunsicherheit']),
+        ("Dunstabzug", ['Dunstabzuganlage_Leitung', 'Dunstabzugsanlage_Haube', 'Dunstabzugsanlage_Feuerstaette', 'Abschnitt_Dunstabzugsleitung', 'Ventilator_Dunstabzug', 'Mess_Pruefergebnis_Dunstabzugsleitung']),
         ("Verbrennungsluft", ['Verbrennungsluftzufuhr_Element', 'Feuerst_Verbr_Element']),
-        ("GEG/Effizienz", ['GEG', 'Pruefergebnisse_GEG', 'Effizienzlabel']),
-        ("Hoheitliche Taetigkeiten", ['Abnahme', 'Anlassbezogene_Ueberpruefung', 'Sonstige_Arbeit', 'Feuerstaettenschau', 'Pruefergebnisse_Feuerstaettenschau']),
-        ("Feuerstaettenbescheid", ['Feuerstaettenbescheid_Grunddaten', 'Bescheid_Positionen', 'Bescheid_Termine_Positionen']),
-        ("Abrechnung", ['Leistung', 'Aufteilung_Leistung', 'Datum_Ausfuehrung_Leistung', 'Rechnung', 'Landesrechtliche_Vorschriften', 'Bundes_KUEO']),
-        ("Kehrbuch", ['Kehrbuch', 'Kehrbuch_Gebaeude', 'Kehrbuch_Gebaeude_Eigentuemer', 'Kehrbuch_Nutzungseinheit', 'Kehrbuch_Anlage', 'Kehrbuch_Taetigkeit', 'Kehrbuch_Abnahme', 'Kehrbuch_Anlassbezogene_Ueberpruefung']),
-        ("Berichte/Maengel", ['Bericht', 'Mangel']),
-        ("Sonstiges", ['Dachskizze', 'Dachskizze_Element', 'Belegungsplan', 'Dokument', 'Gefaehrdungsbeurteilung']),
+        ("GEG/Effizienz", ['GEG', 'Pruefergebnis_GEG']),
+        ("Hoheitliche Taetigkeiten", ['Abnahme', 'Abnahme_Anlage', 'Anlassbezogene_Ueberpruefung', 'Sonstige_Arbeit', 'Feuerstaettenschau', 'Pruefergebnis_Feuerstaettenschau']),
+        ("Feuerstättenbescheid", ['Feuerstaettenbescheid_Grunddaten', 'Bescheid_Position', 'Bescheid_Termin_Position']),
+        ("Abrechnung", ['Leistung', 'Aufteilung_Leistung', 'Datum_Ausfuehrung_Leistung', 'Rechnung', 'Landesrechtliche_Vorschrift', 'Bundes_KUEO']),
+        ("Kehrbuch", ['Kehrbuch', 'Kehrbuch_Gebaeude', 'Kehrbuch_Gebaeude_Eigentuemer', 'Kehrbuch_Nutzungseinheit', 'Kehrbuch_Anlage', 'Kehrbuch_Taetigkeit', 'Kehrbuch_Abnahme', 'Kehrbuch_Anlassbezogene_Ueberpruefung', 'Kehrbuch_Feuerstaettenschau', 'Mangel']),
+        ("Sonstiges", ['Dachskizze', 'Dachskizze_Element', 'Dokument', 'Gefaehrdungsbeurteilung']),
     ]
 
     # Count stats
@@ -415,7 +453,10 @@ def generate_html(tables, enums, relations, notes, arts):
                 badges = ''
                 if col['pk']:
                     badges += '<span class="badge badge-pk" title="Primary Key">PK</span> '
-                if col['fk']:
+                if tname in poly_refs and col['name'] in poly_refs[tname]:
+                    disc_name = [d for d, i in poly_patterns if i == col['name']][0]
+                    badges += f'<span class="badge badge-fk" title="Polymorphe Referenz via {disc_name}">FK*</span> '
+                elif col['fk']:
                     badges += '<span class="badge badge-fk" title="Foreign Key">FK</span> '
 
                 h.append(f'<td class="col-name">{badges}<code>{esc(col["name"])}</code></td>')
@@ -436,7 +477,9 @@ def generate_html(tables, enums, relations, notes, arts):
                     desc_parts.append(esc(note))
 
                 # FK reference
-                if col['fk']:
+                if tname in poly_refs and col['name'] in poly_refs[tname]:
+                    pass  # Polymorphe FKs: kein direkter Verweis, FK*-Badge + Relationen reichen
+                elif col['fk']:
                     ref_table = col['fk']['ref_table']
                     desc_parts.append(f'<span class="fk-ref">&#8594; <a href="#table-{ref_table}">{esc(ref_table)}</a></span>')
 
@@ -796,6 +839,7 @@ body {
 }
 .badge-pk { background: #ffd60a; color: #1d1d1f; }
 .badge-fk { background: var(--accent-light); color: var(--accent); }
+.badge-fk[title*="Polymorph"] { background: #e8f5e9; color: #2e7d32; }
 .badge-qs { background: #0071e3; color: #fff; }
 .badge-19 { background: #30d158; color: #fff; }
 .badge-nein { background: #ff3b30; color: #fff; }
