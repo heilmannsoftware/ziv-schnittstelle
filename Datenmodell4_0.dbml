@@ -206,7 +206,7 @@ Table Abgasanlage {
   Temperaturklasse _Temperaturklasse18160 [note: '§ 19_B | Temperaturklasse (Taaa) | Siehe Kennzeichnungstabelle 2.1.3.1']
   Druckklasse _Druckklasse18160 [note: '§ 19_B | Druckklasse (Nx/Px/Hx) | Siehe Kennzeichnungstabelle 2.1.3.2']
   Kondensatbestaendigkeitsklasse _Kondensatbestaendigkeitsklasse18160 [note: '§ 19_B | Kondensatbeständigkeitsklasse (D/W) | Siehe Kennzeichnungstabelle 2.1.3.3']
-  Korrosionswiderstandsklasse _Korrossionswiderstandsklasse18160 [note: '§ 19_B | Korrosionswiderstandsklasse (1/2/3) | Siehe Kennzeichnungstabelle 2.1.3.4']
+  Korrosionswiderstandsklasse _Korrosionswiderstandsklasse18160 [note: '§ 19_B | Korrosionswiderstandsklasse (1/2/3) | Siehe Kennzeichnungstabelle 2.1.3.4']
   Russbrandbestaendigkeitsklasse _Russbrandbestaendigkeitsklasse18160 [note: '§ 19_B | Russbrandbeständigkeitsklasse (G / O) | Siehe Kennzeichnungstabelle 2.1.3.5']
   Abstand_brennbare_Baustoffe float [note: '§ 19_B | Abstand zu brennbaren Baustoffen in mm.']
   Feuerwiderstandsklasse _Feuerwiderstandsklasse18160 [note: '§ 19_B | Feuerwiderstandsklasse (Lzz) | Siehe Kennzeichnungstabelle 2.1.3.7']
@@ -248,7 +248,7 @@ Table Abschnitt {
   Temperaturklasse _Temperaturklasse18160 [note: '§ 19_B | Temperaturklasse (Taaa) | Siehe Kennzeichnungstabelle 2.1.3.1']
   Druckklasse _Druckklasse18160 [note: '§ 19_B | Gasdichtheitsklasse (Nx/Px/Hx) / Druckklasanse | Siehe Kennzeichnungstabelle 2.1.3.2']
   Kondensatbestaendigkeitsklasse _Kondensatbestaendigkeitsklasse18160 [note: '§ 19_B | Kondensatbeständigkeitsklasse (D/W) | Siehe Kennzeichnungstabelle 2.1.3.3']
-  Korrosionswiderstandsklasse _Korrossionswiderstandsklasse18160 [note: '§ 19_B | Korrosionswiderstandsklasse (1/2/3) | Siehe Kennzeichnungstabelle 2.1.3.4']
+  Korrosionswiderstandsklasse _Korrosionswiderstandsklasse18160 [note: '§ 19_B | Korrosionswiderstandsklasse (1/2/3) | Siehe Kennzeichnungstabelle 2.1.3.4']
   Russbrandbestaendigkeitsklasse _Russbrandbestaendigkeitsklasse18160 [note: '§ 19_B | Russbrandbeständigkeitsklasse (G / O) | Siehe Kennzeichnungstabelle 2.1.5']
   Abstand_brennbare_Baustoffe float [note: '§ 19_B | Abstand zu brennbaren Baustoffen. (xx)']
   Feuerwiderstandsklasse _Feuerwiderstandsklasse18160 [note: '§ 19_B | Feuerwiderstandsklasse (Lzz) | Siehe Kennzeichnungstabelle 2.1.7']
@@ -270,7 +270,7 @@ Table Schicht {
   Temperaturklasse _Temperaturklasse18160 [note: '§ 19_B | Temperaturklasse (Taaa) | Siehe Kennzeichnungstabelle 2.1.3.1']
   Druckklasse _Druckklasse18160 [note: '§ 19_B | Gasdichtheitsklasse (Nx/Px/Hx) | Siehe Kennzeichnungstabelle 2.1.3.2']
   Kondensatbestaendigkeitsklasse _Kondensatbestaendigkeitsklasse18160 [note: '§ 19_B | Kondensatbeständigkeitsklasse (D/W) | Siehe Kennzeichnungstabelle 2.1.3.3']
-  Korrosionswiderstandsklasse _Korrossionswiderstandsklasse18160 [note: '§ 19_B | Korrosionswiderstandsklasse (1/2/3) | Siehe Kennzeichnungstabelle 2.1.3.4']
+  Korrosionswiderstandsklasse _Korrosionswiderstandsklasse18160 [note: '§ 19_B | Korrosionswiderstandsklasse (1/2/3) | Siehe Kennzeichnungstabelle 2.1.3.4']
   Russbrandbestaendigkeitsklasse _Russbrandbestaendigkeitsklasse18160 [note: '§ 19_B | Russbrandbeständigkeitsklasse (G / O) | Siehe Kennzeichnungstabelle 2.1.3.5']
   Abstand_brennbare_Baustoffe text [note: '§ 19_B | Abstand zu brennbaren Baustoffen. (xx)']
   Feuerwiderstandsklasse _Feuerwiderstandsklasse18160 [note: '§ 19_B | Feuerwiderstandsklasse (Lzz) | Siehe Kennzeichnungstabelle 2.1.3.7']
@@ -1377,7 +1377,7 @@ Table Abschnitt_Dunstabzugsleitung {
   Temperaturklasse _Temperaturklasse18160 [note: '§ 19_B | Temperaturklasse (Taaa) | Siehe Kennzeichnungstabelle 2.1.3.1']
   Druckklasse _Druckklasse18160 [note: '§ 19_B | Gasdichtheitsklasse (Nx/Px/Hx) / Druckklasse | Siehe Kennzeichnungstabelle 2.1.3.2']
   Kondensatbestaendigkeitsklasse _Kondensatbestaendigkeitsklasse18160 [note: '§ 19_B | Kondensatbeständigkeitsklasse (D/W) | Siehe Kennzeichnungstabelle 2.1.3.3']
-  Korrosionswiderstandsklasse _Korrossionswiderstandsklasse18160 [note: '§ 19_B | Korrosionswiderstandsklasse (1/2/3) | Siehe Kennzeichnungstabelle 2.1.3.4']
+  Korrosionswiderstandsklasse _Korrosionswiderstandsklasse18160 [note: '§ 19_B | Korrosionswiderstandsklasse (1/2/3) | Siehe Kennzeichnungstabelle 2.1.3.4']
   Russbrandbestaendigkeitsklasse _Russbrandbestaendigkeitsklasse18160 [note: '§ 19_B | Russbrandbeständigkeitsklasse (G / O) | Siehe Kennzeichnungstabelle 2.1.5']
   Abstand_brennbare_Baustoffe float [note: '§ 19_B | Abstand zu brennbaren Baustoffen. (xx)']
   Feuerwiderstandsklasse _Feuerwiderstandsklasse18160 [note: '§ 19_B | Feuerwiderstandsklasse (Lzz) | Siehe Kennzeichnungstabelle 2.1.7']
@@ -2337,8 +2337,8 @@ Enum _Kondensatbestaendigkeitsklasse18160 {
   D [note: "für Abgasanlagen, die planmäßig unter Trocken-Bedingungen betrieben werden müssen"]
 }
 
-//Kennzeichnung 2.1.3.4 Korrossionswiderstandsklasse nach DIN V 18160-1
-Enum _Korrossionswiderstandsklasse18160 {
+//Kennzeichnung 2.1.3.4 Korrosionswiderstandsklasse nach DIN V 18160-1
+Enum _Korrosionswiderstandsklasse18160 {
   K1
   K2
   K3

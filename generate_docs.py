@@ -593,8 +593,6 @@ def generate_html(tables, enums, relations, notes, arts):
     # Footer
     h.append('<footer class="footer">')
     h.append(f'<p>ZIV Datenmodell 4.0 &mdash; {total_tables} Tabellen &middot; {total_relations} Relationen &middot; {total_enums} Enums &middot; {total_enum_values:,} Enum-Werte</p>')
-    from datetime import date
-    h.append(f'<p>Generiert am {date.today().isoformat()}</p>')
     h.append('</footer>')
 
     # JavaScript

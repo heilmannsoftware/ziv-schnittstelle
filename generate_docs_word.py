@@ -139,6 +139,8 @@ def format_table_style(table):
 # ============================================================
 def generate_word(tables, enums, relations, notes, arts):
     doc = Document()
+    doc.core_properties.author = ''
+    doc.core_properties.comments = ''
 
     # ---- Page setup: Landscape A4 ----
     section = doc.sections[0]

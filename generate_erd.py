@@ -264,9 +264,6 @@ def generate_html(nodes, links):
     nodes_json = json.dumps(nodes, ensure_ascii=False)
     links_json = json.dumps(links, ensure_ascii=False)
 
-    from datetime import date
-    today = date.today().isoformat()
-
     return f'''<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -381,12 +378,6 @@ body {{
 .tooltip .tt-pk {{ color: #FFD60A; }}
 .tooltip .tt-fk {{ color: #5B8DEF; }}
 
-/* Footer */
-.footer-info {{
-    position: fixed; bottom: 16px; right: 16px; z-index: 100;
-    font-size: 10px; color: #555;
-}}
-
 /* SVG */
 svg {{ display: block; }}
 
@@ -420,8 +411,6 @@ svg {{ display: block; }}
 </div>
 
 <div class="tooltip" id="tooltip"></div>
-<div class="footer-info">Generiert am {today}</div>
-
 <script>
 // ============================================================
 // Data
